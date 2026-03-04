@@ -1,0 +1,8 @@
+# Java
+target/
+*.log
+*.class
+
+# IDE
+.idea/
+.vscode/
