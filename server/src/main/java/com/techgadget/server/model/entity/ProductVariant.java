@@ -16,14 +16,19 @@ public class ProductVariant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String color;
-    private String storage;
+    @Column(nullable = false)
+    private String name;
 
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
-    private Integer stock;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @Column(nullable = false)
+    private Integer stock = 0;
+
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @OneToMany(mappedBy = "variant")

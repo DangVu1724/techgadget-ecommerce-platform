@@ -1,0 +1,23 @@
+attribute_name,data_type
+Product,TEXT
+TypeName,TEXT
+Inches,NUMBER
+ScreenResolution,TEXT
+CPU_Company,TEXT
+CPU_Type,TEXT
+CPU_Frequency (GHz),NUMBER
+RAM (GB),NUMBER
+Memory,TEXT
+GPU_Company,TEXT
+GPU_Type,TEXT
+OpSys,TEXT
+Weight (kg),NUMBER
+5G_or_not,BOOLEAN
+processor_brand,TEXT
+battery_capacity,NUMBER
+ram_capacity,NUMBER
+internal_memory,NUMBER
+screen_size,NUMBER
+refresh_rate,NUMBER
+num_rear_cameras,NUMBER
+os,TEXT

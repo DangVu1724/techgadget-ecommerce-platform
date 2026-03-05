@@ -1,5 +1,6 @@
 package com.techgadget.server.model.entity;
 
+import com.techgadget.server.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,12 +22,14 @@ public class Order {
     private String orderAddress;
     private String orderEmail;
     private LocalDateTime orderDate;
-    private String orderStatus;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 }

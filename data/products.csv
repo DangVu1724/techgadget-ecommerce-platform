@@ -1,0 +1,282 @@
+id,name,description,category_id,brand_id,created_at
+1,MacBook Pro,MacBook Pro - Laptop,1,9,2026-03-05 13:07:11
+2,Macbook Air,Macbook Air - Laptop,1,9,2026-03-05 13:07:11
+3,"MacBook 12""","MacBook 12"" - Laptop",1,9,2026-03-05 13:07:11
+4,MacBook Air,MacBook Air - Laptop,1,9,2026-03-05 13:07:11
+5,Inspiron 5770,Inspiron 5770 - Laptop,1,1,2026-03-05 13:07:11
+6,Vostro 3559,Vostro 3559 - Laptop,1,1,2026-03-05 13:07:11
+7,Inspiron 3567,Inspiron 3567 - Laptop,1,1,2026-03-05 13:07:11
+8,Latitude 7280,Latitude 7280 - Laptop,1,1,2026-03-05 13:07:11
+9,Inspiron 5570,Inspiron 5570 - Laptop,1,1,2026-03-05 13:07:11
+10,Inspiron 7577,Inspiron 7577 - Laptop,1,1,2026-03-05 13:07:11
+11,Inspiron 5567,Inspiron 5567 - Laptop,1,1,2026-03-05 13:07:11
+12,XPS 15,XPS 15 - Laptop,1,1,2026-03-05 13:07:11
+13,Inspiron 5579,Inspiron 5579 - Laptop,1,1,2026-03-05 13:07:11
+14,Vostro 3568,Vostro 3568 - Laptop,1,1,2026-03-05 13:07:11
+15,Alienware 17,Alienware 17 - Laptop,1,1,2026-03-05 13:07:11
+16,Latitude 5590,Latitude 5590 - Laptop,1,1,2026-03-05 13:07:11
+17,XPS 13,XPS 13 - Laptop,1,1,2026-03-05 13:07:11
+18,Latitude E7470,Latitude E7470 - Laptop,1,1,2026-03-05 13:07:11
+19,Latitude 5580,Latitude 5580 - Laptop,1,1,2026-03-05 13:07:11
+20,Inspiron 5578,Inspiron 5578 - Laptop,1,1,2026-03-05 13:07:11
+21,Latitude 5480,Latitude 5480 - Laptop,1,1,2026-03-05 13:07:11
+22,Inspiron 3552,Inspiron 3552 - Laptop,1,1,2026-03-05 13:07:11
+23,Latitude E5470,Latitude E5470 - Laptop,1,1,2026-03-05 13:07:11
+24,EliteBook 850,EliteBook 850 - Laptop,1,3,2026-03-05 13:07:11
+25,Noteb Pav,Noteb Pav - Laptop,1,3,2026-03-05 13:07:11
+26,15-bw000nv (E2-9000e/4GB/500GB/Radeon,15-bw000nv (E2-9000e/4GB/500GB/Radeon - Laptop,1,3,2026-03-05 13:07:11
+27,15-BW037na (A9-9420/4GB/1TB/Radeon,15-BW037na (A9-9420/4GB/1TB/Radeon - Laptop,1,3,2026-03-05 13:07:11
+28,Probook 640,Probook 640 - Laptop,1,3,2026-03-05 13:07:11
+29,EliteBook 1040,EliteBook 1040 - Laptop,1,3,2026-03-05 13:07:11
+30,Probook 440,Probook 440 - Laptop,1,3,2026-03-05 13:07:11
+31,Elitebook 850,Elitebook 850 - Laptop,1,3,2026-03-05 13:07:11
+32,17-Y002nv (A10-9600P/6GB/2TB/Radeon,17-Y002nv (A10-9600P/6GB/2TB/Radeon - Laptop,1,3,2026-03-05 13:07:11
+33,Omen 17-w207nv,Omen 17-w207nv - Laptop,1,3,2026-03-05 13:07:11
+34,15-BS028nv (i3-6006U/4GB/1TB/Radeon,15-BS028nv (i3-6006U/4GB/1TB/Radeon - Laptop,1,3,2026-03-05 13:07:11
+35,EliteBook 840,EliteBook 840 - Laptop,1,3,2026-03-05 13:07:11
+36,Pavilion 14-BK001nv,Pavilion 14-BK001nv - Laptop,1,3,2026-03-05 13:07:11
+37,ProBook 450,ProBook 450 - Laptop,1,3,2026-03-05 13:07:11
+38,15-bs053od (i7-7500U/6GB/1TB/W10),15-bs053od (i7-7500U/6GB/1TB/W10) - Laptop,1,3,2026-03-05 13:07:11
+39,Probook 450,Probook 450 - Laptop,1,3,2026-03-05 13:07:11
+40,Omen 17-AN010nv,Omen 17-AN010nv - Laptop,1,3,2026-03-05 13:07:11
+41,ZBook 15u,ZBook 15u - Laptop,1,3,2026-03-05 13:07:11
+42,255 G6,255 G6 - Laptop,1,3,2026-03-05 13:07:11
+43,15-BS026nv (i5-7200U/8GB/256GB/Radeon,15-BS026nv (i5-7200U/8GB/256GB/Radeon - Laptop,1,3,2026-03-05 13:07:11
+44,ZBook 17,ZBook 17 - Laptop,1,3,2026-03-05 13:07:11
+45,Spectre x360,Spectre x360 - Laptop,1,3,2026-03-05 13:07:11
+46,250 G5,250 G5 - Laptop,1,3,2026-03-05 13:07:11
+47,Probook 470,Probook 470 - Laptop,1,3,2026-03-05 13:07:11
+48,Nitro 5,Nitro 5 - Laptop,1,8,2026-03-05 13:07:11
+49,CB5-132T-C9KK (N3160/4GB/32GB/Chrome,CB5-132T-C9KK (N3160/4GB/32GB/Chrome - Laptop,1,8,2026-03-05 13:07:11
+50,Aspire ES1-572,Aspire ES1-572 - Laptop,1,8,2026-03-05 13:07:11
+51,Chromebook 14,Chromebook 14 - Laptop,1,8,2026-03-05 13:07:11
+52,Aspire E5-576G,Aspire E5-576G - Laptop,1,8,2026-03-05 13:07:11
+53,Aspire 3,Aspire 3 - Laptop,1,8,2026-03-05 13:07:11
+54,Swift 7,Swift 7 - Laptop,1,8,2026-03-05 13:07:11
+55,Spin 5,Spin 5 - Laptop,1,8,2026-03-05 13:07:11
+56,Aspire A315-31,Aspire A315-31 - Laptop,1,8,2026-03-05 13:07:11
+57,Aspire A515-51G,Aspire A515-51G - Laptop,1,8,2026-03-05 13:07:11
+58,E5 774G,E5 774G - Laptop,1,8,2026-03-05 13:07:11
+59,Chromebook C910-C2ST,Chromebook C910-C2ST - Laptop,1,8,2026-03-05 13:07:11
+60,Chromebook CB5-571-C1DZ,Chromebook CB5-571-C1DZ - Laptop,1,8,2026-03-05 13:07:11
+61,Predator G9-793,Predator G9-793 - Laptop,1,8,2026-03-05 13:07:11
+62,Aspire E5-575,Aspire E5-575 - Laptop,1,8,2026-03-05 13:07:11
+63,Aspire A517-51G,Aspire A517-51G - Laptop,1,8,2026-03-05 13:07:11
+64,Chromebook C731-C78G,Chromebook C731-C78G - Laptop,1,8,2026-03-05 13:07:11
+65,Chromebook 15,Chromebook 15 - Laptop,1,8,2026-03-05 13:07:11
+66,Aspire R7,Aspire R7 - Laptop,1,8,2026-03-05 13:07:11
+67,Aspire 7,Aspire 7 - Laptop,1,8,2026-03-05 13:07:11
+68,Aspire 5,Aspire 5 - Laptop,1,8,2026-03-05 13:07:11
+69,GT62VR 7RE,GT62VR 7RE - Laptop,1,10,2026-03-05 13:07:11
+70,GP62MVR 6RF,GP62MVR 6RF - Laptop,1,10,2026-03-05 13:07:11
+71,GS73VR Stealth,GS73VR Stealth - Laptop,1,10,2026-03-05 13:07:11
+72,Leopard GP72M,Leopard GP72M - Laptop,1,10,2026-03-05 13:07:11
+73,GS40 Phantom,GS40 Phantom - Laptop,1,10,2026-03-05 13:07:11
+74,GE73VR 7RE,GE73VR 7RE - Laptop,1,10,2026-03-05 13:07:11
+75,Laptop MSI,Laptop MSI - Laptop,1,10,2026-03-05 13:07:11
+76,GL62 6QF,GL62 6QF - Laptop,1,10,2026-03-05 13:07:11
+77,GS63VR 7RG,GS63VR 7RG - Laptop,1,10,2026-03-05 13:07:11
+78,GL62M 7RD,GL62M 7RD - Laptop,1,10,2026-03-05 13:07:11
+79,GE73VR 7RF,GE73VR 7RF - Laptop,1,10,2026-03-05 13:07:11
+80,GT73EVR 7RE,GT73EVR 7RE - Laptop,1,10,2026-03-05 13:07:11
+81,GS43VR 7RE,GS43VR 7RE - Laptop,1,10,2026-03-05 13:07:11
+82,GE63VR 7RE,GE63VR 7RE - Laptop,1,10,2026-03-05 13:07:11
+83,GL72M 7RDX,GL72M 7RDX - Laptop,1,10,2026-03-05 13:07:11
+84,GE72MVR 7RG,GE72MVR 7RG - Laptop,1,10,2026-03-05 13:07:11
+85,GS63VR 6RF,GS63VR 6RF - Laptop,1,10,2026-03-05 13:07:11
+86,GL72M 7REX,GL72M 7REX - Laptop,1,10,2026-03-05 13:07:11
+87,PL60 7RD,PL60 7RD - Laptop,1,10,2026-03-05 13:07:11
+88,GP62M Leopard,GP62M Leopard - Laptop,1,10,2026-03-05 13:07:11
+89,GL62M 7RDX,GL62M 7RDX - Laptop,1,10,2026-03-05 13:07:11
+90,GT73VR Titan,GT73VR Titan - Laptop,1,10,2026-03-05 13:07:11
+91,GE63VR 7RF,GE63VR 7RF - Laptop,1,10,2026-03-05 13:07:11
+92,GT80S 6QE,GT80S 6QE - Laptop,1,10,2026-03-05 13:07:11
+93,GT62VR 6RD,GT62VR 6RD - Laptop,1,10,2026-03-05 13:07:11
+94,GS63VR 7RF,GS63VR 7RF - Laptop,1,10,2026-03-05 13:07:11
+95,GP72MVR 7RFX,GP72MVR 7RFX - Laptop,1,10,2026-03-05 13:07:11
+96,Legion Y520-15IKBN,Legion Y520-15IKBN - Laptop,1,5,2026-03-05 13:07:11
+97,Yoga 730,Yoga 730 - Laptop,1,5,2026-03-05 13:07:11
+98,IdeaPad Y700-15ISK,IdeaPad Y700-15ISK - Laptop,1,5,2026-03-05 13:07:11
+99,IdeaPad 320-17ISK,IdeaPad 320-17ISK - Laptop,1,5,2026-03-05 13:07:11
+100,Ideapad 310-15ISK,Ideapad 310-15ISK - Laptop,1,5,2026-03-05 13:07:11
+101,Ideapad 320-15IKBN,Ideapad 320-15IKBN - Laptop,1,5,2026-03-05 13:07:11
+102,ThinkPad T470s,ThinkPad T470s - Laptop,1,5,2026-03-05 13:07:11
+103,ThinkPad L470,ThinkPad L470 - Laptop,1,5,2026-03-05 13:07:11
+104,Thinkpad X1,Thinkpad X1 - Laptop,1,5,2026-03-05 13:07:11
+105,IdeaPad 310-15IKB,IdeaPad 310-15IKB - Laptop,1,5,2026-03-05 13:07:11
+106,Legion Y720-15IKB,Legion Y720-15IKB - Laptop,1,5,2026-03-05 13:07:11
+107,IdeaPad 320-15ISK,IdeaPad 320-15ISK - Laptop,1,5,2026-03-05 13:07:11
+108,ThinkPad Yoga,ThinkPad Yoga - Laptop,1,5,2026-03-05 13:07:11
+109,IdeaPad 320-15IKB,IdeaPad 320-15IKB - Laptop,1,5,2026-03-05 13:07:11
+110,ThinkPad X270,ThinkPad X270 - Laptop,1,5,2026-03-05 13:07:11
+111,IdeaPad 520S-14IKB,IdeaPad 520S-14IKB - Laptop,1,5,2026-03-05 13:07:11
+112,ThinkPad T460,ThinkPad T460 - Laptop,1,5,2026-03-05 13:07:11
+113,V110-15ISK (i5-6200U/4GB/500GB/W10),V110-15ISK (i5-6200U/4GB/500GB/W10) - Laptop,1,5,2026-03-05 13:07:11
+114,ThinkPad X1,ThinkPad X1 - Laptop,1,5,2026-03-05 13:07:11
+115,Thinkpad T470p,Thinkpad T470p - Laptop,1,5,2026-03-05 13:07:11
+116,IdeaPad 310-15ISK,IdeaPad 310-15ISK - Laptop,1,5,2026-03-05 13:07:11
+117,Yoga 900-13ISK,Yoga 900-13ISK - Laptop,1,5,2026-03-05 13:07:11
+118,ThinkPad T470,ThinkPad T470 - Laptop,1,5,2026-03-05 13:07:11
+119,X541NA-PD1003Y (N4200/4GB/500GB/W10),X541NA-PD1003Y (N4200/4GB/500GB/W10) - Laptop,1,11,2026-03-05 13:07:11
+120,X541NA-GO020T (N3350/4GB/1TB/W10),X541NA-GO020T (N3350/4GB/1TB/W10) - Laptop,1,11,2026-03-05 13:07:11
+121,X550VX-XX015D (i5-6300HQ/4GB/1TB/GeForce,X550VX-XX015D (i5-6300HQ/4GB/1TB/GeForce - Laptop,1,11,2026-03-05 13:07:11
+122,FX553VD-DM627T (i5-7300HQ/8GB/1TB,FX553VD-DM627T (i5-7300HQ/8GB/1TB - Laptop,1,11,2026-03-05 13:07:11
+123,X553SA-XX021T (N3050/4GB/500GB/W10),X553SA-XX021T (N3050/4GB/500GB/W10) - Laptop,1,11,2026-03-05 13:07:11
+124,FX502VM-DM105T (i7-6700HQ/8GB/1TB/GeForce,FX502VM-DM105T (i7-6700HQ/8GB/1TB/GeForce - Laptop,1,11,2026-03-05 13:07:11
+125,X555BP-XX180T (A9-9420/4GB/1TB/Radeon,X555BP-XX180T (A9-9420/4GB/1TB/Radeon - Laptop,1,11,2026-03-05 13:07:11
+126,FX503VD-E4022T (i7-7700HQ/8GB/1TB/GeForce,FX503VD-E4022T (i7-7700HQ/8GB/1TB/GeForce - Laptop,1,11,2026-03-05 13:07:11
+127,VivoBook S15,VivoBook S15 - Laptop,1,11,2026-03-05 13:07:11
+128,Zenbook UX430UA,Zenbook UX430UA - Laptop,1,11,2026-03-05 13:07:11
+129,L403NA-GA013TS (N3350/4GB/32GB/W10),L403NA-GA013TS (N3350/4GB/32GB/W10) - Laptop,1,11,2026-03-05 13:07:11
+130,ROG G701VO,ROG G701VO - Laptop,1,11,2026-03-05 13:07:11
+131,Rog GL702VS-BA023T,Rog GL702VS-BA023T - Laptop,1,11,2026-03-05 13:07:11
+132,X705UV-BX074T (i3-6006U/4GB/1TB/GeForce,X705UV-BX074T (i3-6006U/4GB/1TB/GeForce - Laptop,1,11,2026-03-05 13:07:11
+133,ZenBook Pro,ZenBook Pro - Laptop,1,11,2026-03-05 13:07:11
+134,UX410UA-GV350T (i5-8250U/8GB/256GB/FHD/W10),UX410UA-GV350T (i5-8250U/8GB/256GB/FHD/W10) - Laptop,1,11,2026-03-05 13:07:11
+135,Rog Strix,Rog Strix - Laptop,1,11,2026-03-05 13:07:11
+136,Pro P2540UA-XO0198T,Pro P2540UA-XO0198T - Laptop,1,11,2026-03-05 13:07:11
+137,Chromebook C202SA,Chromebook C202SA - Laptop,1,11,2026-03-05 13:07:11
+138,X541NA-GO121 (N4200/4GB/1TB/Linux),X541NA-GO121 (N4200/4GB/1TB/Linux) - Laptop,1,11,2026-03-05 13:07:11
+139,K556UR-DM621T (i7-7500U/8GB/256GB/GeForce,K556UR-DM621T (i7-7500U/8GB/256GB/GeForce - Laptop,1,11,2026-03-05 13:07:11
+140,X555QG-DM242T (A10-9620P/4GB/1TB,X555QG-DM242T (A10-9620P/4GB/1TB - Laptop,1,11,2026-03-05 13:07:11
+141,VivoBook E403NA,VivoBook E403NA - Laptop,1,11,2026-03-05 13:07:11
+142,Pro P2540UA-AB51,Pro P2540UA-AB51 - Laptop,1,11,2026-03-05 13:07:11
+143,Rog GL753VE-GC070T,Rog GL753VE-GC070T - Laptop,1,11,2026-03-05 13:07:11
+144,Rog G752VY-GC229T,Rog G752VY-GC229T - Laptop,1,11,2026-03-05 13:07:11
+145,ROG G752VSK-GC493T,ROG G752VSK-GC493T - Laptop,1,11,2026-03-05 13:07:11
+146,Q304UA-BHI5T11 (i5-7200U/6GB/1TB/FHD/W10),Q304UA-BHI5T11 (i5-7200U/6GB/1TB/FHD/W10) - Laptop,1,11,2026-03-05 13:07:11
+147,Apple iPhone 11,Apple iPhone 11 - Smartphone,2,9,2026-03-05 13:07:11
+148,Apple iPhone 11 Pro Max,Apple iPhone 11 Pro Max - Smartphone,2,9,2026-03-05 13:07:11
+149,Apple iPhone 12,Apple iPhone 12 - Smartphone,2,9,2026-03-05 13:07:11
+150,Apple iPhone 12 Mini,Apple iPhone 12 Mini - Smartphone,2,9,2026-03-05 13:07:11
+151,Apple iPhone 12 Pro,Apple iPhone 12 Pro - Smartphone,2,9,2026-03-05 13:07:11
+152,Apple iPhone 13,Apple iPhone 13 - Smartphone,2,9,2026-03-05 13:07:11
+153,Apple iPhone 13 Mini,Apple iPhone 13 Mini - Smartphone,2,9,2026-03-05 13:07:11
+154,Apple iPhone 13 Pro,Apple iPhone 13 Pro - Smartphone,2,9,2026-03-05 13:07:11
+155,Apple iPhone 13 Pro Max,Apple iPhone 13 Pro Max - Smartphone,2,9,2026-03-05 13:07:11
+156,Apple iPhone 14,Apple iPhone 14 - Smartphone,2,9,2026-03-05 13:07:11
+157,Apple iPhone 14 Mini,Apple iPhone 14 Mini - Smartphone,2,9,2026-03-05 13:07:11
+158,Apple iPhone 14 Plus,Apple iPhone 14 Plus - Smartphone,2,9,2026-03-05 13:07:11
+159,Apple iPhone 14 Pro,Apple iPhone 14 Pro - Smartphone,2,9,2026-03-05 13:07:11
+160,Apple iPhone 14 Pro Max,Apple iPhone 14 Pro Max - Smartphone,2,9,2026-03-05 13:07:11
+161,Apple iPhone 15,Apple iPhone 15 - Smartphone,2,9,2026-03-05 13:07:11
+162,Apple iPhone 15 Plus,Apple iPhone 15 Plus - Smartphone,2,9,2026-03-05 13:07:11
+163,Apple iPhone 15 Pro,Apple iPhone 15 Pro - Smartphone,2,9,2026-03-05 13:07:11
+164,Apple iPhone 15 Pro Max,Apple iPhone 15 Pro Max - Smartphone,2,9,2026-03-05 13:07:11
+165,Apple iPhone 15 Ultra,Apple iPhone 15 Ultra - Smartphone,2,9,2026-03-05 13:07:11
+166,Xiaomi 11i 5G,Xiaomi 11i 5G - Smartphone,2,7,2026-03-05 13:07:11
+167,Xiaomi 11i HyperCharge 5G,Xiaomi 11i HyperCharge 5G - Smartphone,2,7,2026-03-05 13:07:11
+168,Xiaomi 11T Pro 5G,Xiaomi 11T Pro 5G - Smartphone,2,7,2026-03-05 13:07:11
+169,Xiaomi 12 Lite 5G,Xiaomi 12 Lite 5G - Smartphone,2,7,2026-03-05 13:07:11
+170,Xiaomi 12 Pro 5G,Xiaomi 12 Pro 5G - Smartphone,2,7,2026-03-05 13:07:11
+171,Xiaomi 12 Ultra 5G,Xiaomi 12 Ultra 5G - Smartphone,2,7,2026-03-05 13:07:11
+172,Xiaomi 12S Ultra,Xiaomi 12S Ultra - Smartphone,2,7,2026-03-05 13:07:11
+173,Xiaomi 12T,Xiaomi 12T - Smartphone,2,7,2026-03-05 13:07:11
+174,Xiaomi 12T Pro 5G,Xiaomi 12T Pro 5G - Smartphone,2,7,2026-03-05 13:07:11
+175,Xiaomi 13 5G,Xiaomi 13 5G - Smartphone,2,7,2026-03-05 13:07:11
+176,Xiaomi 13 Pro 5G,Xiaomi 13 Pro 5G - Smartphone,2,7,2026-03-05 13:07:11
+177,Xiaomi 13 Ultra 5G,Xiaomi 13 Ultra 5G - Smartphone,2,7,2026-03-05 13:07:11
+178,Xiaomi 14,Xiaomi 14 - Smartphone,2,7,2026-03-05 13:07:11
+179,Xiaomi Civi 2,Xiaomi Civi 2 - Smartphone,2,7,2026-03-05 13:07:11
+180,Xiaomi Civi 3,Xiaomi Civi 3 - Smartphone,2,7,2026-03-05 13:07:11
+181,Xiaomi Mi 10 5G,Xiaomi Mi 10 5G - Smartphone,2,7,2026-03-05 13:07:11
+182,Xiaomi Mi 10T 5G,Xiaomi Mi 10T 5G - Smartphone,2,7,2026-03-05 13:07:11
+183,Xiaomi Mi 10T Pro 5G,Xiaomi Mi 10T Pro 5G - Smartphone,2,7,2026-03-05 13:07:11
+184,Xiaomi Mi 11 Lite,Xiaomi Mi 11 Lite - Smartphone,2,7,2026-03-05 13:07:11
+185,Xiaomi Mi 11 Lite NE 5G,Xiaomi Mi 11 Lite NE 5G - Smartphone,2,7,2026-03-05 13:07:11
+186,Xiaomi Mi 11i 5G,Xiaomi Mi 11i 5G - Smartphone,2,7,2026-03-05 13:07:11
+187,Xiaomi Mi 11T Pro 5G,Xiaomi Mi 11T Pro 5G - Smartphone,2,7,2026-03-05 13:07:11
+188,Xiaomi Mi 11X,Xiaomi Mi 11X - Smartphone,2,7,2026-03-05 13:07:11
+189,Xiaomi Mi 11X 5G,Xiaomi Mi 11X 5G - Smartphone,2,7,2026-03-05 13:07:11
+190,Xiaomi Mi 11X Pro,Xiaomi Mi 11X Pro - Smartphone,2,7,2026-03-05 13:07:11
+191,Xiaomi Mi 12 5G,Xiaomi Mi 12 5G - Smartphone,2,7,2026-03-05 13:07:11
+192,Xiaomi Mi Mix Alpha,Xiaomi Mi Mix Alpha - Smartphone,2,7,2026-03-05 13:07:11
+193,Xiaomi Mi Mix Fold,Xiaomi Mi Mix Fold - Smartphone,2,7,2026-03-05 13:07:11
+194,Xiaomi Mix Fold 2 5G,Xiaomi Mix Fold 2 5G - Smartphone,2,7,2026-03-05 13:07:11
+195,Xiaomi Poco F1,Xiaomi Poco F1 - Smartphone,2,7,2026-03-05 13:07:11
+196,Xiaomi Redmi 10,Xiaomi Redmi 10 - Smartphone,2,7,2026-03-05 13:07:11
+197,Xiaomi Redmi 10 Power,Xiaomi Redmi 10 Power - Smartphone,2,7,2026-03-05 13:07:11
+198,Xiaomi Redmi 10 Prime,Xiaomi Redmi 10 Prime - Smartphone,2,7,2026-03-05 13:07:11
+199,Xiaomi Redmi 10 Prime Plus 5G,Xiaomi Redmi 10 Prime Plus 5G - Smartphone,2,7,2026-03-05 13:07:11
+200,Samsung Galaxy A01 Core,Samsung Galaxy A01 Core - Smartphone,2,2,2026-03-05 13:07:11
+201,Samsung Galaxy A03,Samsung Galaxy A03 - Smartphone,2,2,2026-03-05 13:07:11
+202,Samsung Galaxy A03 Core,Samsung Galaxy A03 Core - Smartphone,2,2,2026-03-05 13:07:11
+203,Samsung Galaxy A03s,Samsung Galaxy A03s - Smartphone,2,2,2026-03-05 13:07:11
+204,Samsung Galaxy A04,Samsung Galaxy A04 - Smartphone,2,2,2026-03-05 13:07:11
+205,Samsung Galaxy A04e,Samsung Galaxy A04e - Smartphone,2,2,2026-03-05 13:07:11
+206,Samsung Galaxy A04s,Samsung Galaxy A04s - Smartphone,2,2,2026-03-05 13:07:11
+207,Samsung Galaxy A05,Samsung Galaxy A05 - Smartphone,2,2,2026-03-05 13:07:11
+208,Samsung Galaxy A11,Samsung Galaxy A11 - Smartphone,2,2,2026-03-05 13:07:11
+209,Samsung Galaxy A12,Samsung Galaxy A12 - Smartphone,2,2,2026-03-05 13:07:11
+210,Samsung Galaxy A13,Samsung Galaxy A13 - Smartphone,2,2,2026-03-05 13:07:11
+211,Samsung Galaxy A13 5G,Samsung Galaxy A13 5G - Smartphone,2,2,2026-03-05 13:07:11
+212,Samsung Galaxy A14 5G,Samsung Galaxy A14 5G - Smartphone,2,2,2026-03-05 13:07:11
+213,Samsung Galaxy A15,Samsung Galaxy A15 - Smartphone,2,2,2026-03-05 13:07:11
+214,Samsung Galaxy A21s,Samsung Galaxy A21s - Smartphone,2,2,2026-03-05 13:07:11
+215,Samsung Galaxy A22,Samsung Galaxy A22 - Smartphone,2,2,2026-03-05 13:07:11
+216,Samsung Galaxy A22 5G,Samsung Galaxy A22 5G - Smartphone,2,2,2026-03-05 13:07:11
+217,Samsung Galaxy A23,Samsung Galaxy A23 - Smartphone,2,2,2026-03-05 13:07:11
+218,Samsung Galaxy A23 5G,Samsung Galaxy A23 5G - Smartphone,2,2,2026-03-05 13:07:11
+219,Samsung Galaxy A24,Samsung Galaxy A24 - Smartphone,2,2,2026-03-05 13:07:11
+220,Samsung Galaxy A32,Samsung Galaxy A32 - Smartphone,2,2,2026-03-05 13:07:11
+221,Samsung Galaxy A32 5G,Samsung Galaxy A32 5G - Smartphone,2,2,2026-03-05 13:07:11
+222,Samsung Galaxy A33 5G,Samsung Galaxy A33 5G - Smartphone,2,2,2026-03-05 13:07:11
+223,Samsung Galaxy A34 5G,Samsung Galaxy A34 5G - Smartphone,2,2,2026-03-05 13:07:11
+224,Samsung Galaxy A40,Samsung Galaxy A40 - Smartphone,2,2,2026-03-05 13:07:11
+225,Samsung Galaxy A50s,Samsung Galaxy A50s - Smartphone,2,2,2026-03-05 13:07:11
+226,Vivo S1 Pro,Vivo S1 Pro - Smartphone,2,4,2026-03-05 13:07:11
+227,Vivo S16,Vivo S16 - Smartphone,2,4,2026-03-05 13:07:11
+228,Vivo S16 Pro,Vivo S16 Pro - Smartphone,2,4,2026-03-05 13:07:11
+229,Vivo S17 Pro,Vivo S17 Pro - Smartphone,2,4,2026-03-05 13:07:11
+230,Vivo T1 44W,Vivo T1 44W - Smartphone,2,4,2026-03-05 13:07:11
+231,Vivo T1 5G,Vivo T1 5G - Smartphone,2,4,2026-03-05 13:07:11
+232,Vivo T1 Pro,Vivo T1 Pro - Smartphone,2,4,2026-03-05 13:07:11
+233,Vivo T1 Pro 5G,Vivo T1 Pro 5G - Smartphone,2,4,2026-03-05 13:07:11
+234,Vivo T1x,Vivo T1x - Smartphone,2,4,2026-03-05 13:07:11
+235,Vivo T1x 4G,Vivo T1x 4G - Smartphone,2,4,2026-03-05 13:07:11
+236,Vivo T2 5G,Vivo T2 5G - Smartphone,2,4,2026-03-05 13:07:11
+237,Vivo T2 Pro 5G,Vivo T2 Pro 5G - Smartphone,2,4,2026-03-05 13:07:11
+238,Vivo T2x 5G,Vivo T2x 5G - Smartphone,2,4,2026-03-05 13:07:11
+239,Vivo T3 Pro,Vivo T3 Pro - Smartphone,2,4,2026-03-05 13:07:11
+240,Vivo U3,Vivo U3 - Smartphone,2,4,2026-03-05 13:07:11
+241,Vivo U3x,Vivo U3x - Smartphone,2,4,2026-03-05 13:07:11
+242,Vivo V11i,Vivo V11i - Smartphone,2,4,2026-03-05 13:07:11
+243,Vivo V15 Pro,Vivo V15 Pro - Smartphone,2,4,2026-03-05 13:07:11
+244,Vivo V19,Vivo V19 - Smartphone,2,4,2026-03-05 13:07:11
+245,Vivo V20,Vivo V20 - Smartphone,2,4,2026-03-05 13:07:11
+246,Vivo V20 Pro,Vivo V20 Pro - Smartphone,2,4,2026-03-05 13:07:11
+247,Vivo V20 SE,Vivo V20 SE - Smartphone,2,4,2026-03-05 13:07:11
+248,Vivo V21,Vivo V21 - Smartphone,2,4,2026-03-05 13:07:11
+249,Vivo V21 5G,Vivo V21 5G - Smartphone,2,4,2026-03-05 13:07:11
+250,Vivo V21 Pro,Vivo V21 Pro - Smartphone,2,4,2026-03-05 13:07:11
+251,Vivo V21s,Vivo V21s - Smartphone,2,4,2026-03-05 13:07:11
+252,Vivo V23 5G,Vivo V23 5G - Smartphone,2,4,2026-03-05 13:07:11
+253,Vivo V23 Pro 5G,Vivo V23 Pro 5G - Smartphone,2,4,2026-03-05 13:07:11
+254,Vivo V23e,Vivo V23e - Smartphone,2,4,2026-03-05 13:07:11
+255,Vivo V23e 5G,Vivo V23e 5G - Smartphone,2,4,2026-03-05 13:07:11
+256,Vivo V25,Vivo V25 - Smartphone,2,4,2026-03-05 13:07:11
+257,Vivo V25 5G,Vivo V25 5G - Smartphone,2,4,2026-03-05 13:07:11
+258,Realme 10,Realme 10 - Smartphone,2,6,2026-03-05 13:07:11
+259,Realme 10 5G,Realme 10 5G - Smartphone,2,6,2026-03-05 13:07:11
+260,Realme 10 Pro,Realme 10 Pro - Smartphone,2,6,2026-03-05 13:07:11
+261,Realme 10 Pro Plus,Realme 10 Pro Plus - Smartphone,2,6,2026-03-05 13:07:11
+262,Realme 10s,Realme 10s - Smartphone,2,6,2026-03-05 13:07:11
+263,Realme 11 Pro,Realme 11 Pro - Smartphone,2,6,2026-03-05 13:07:11
+264,Realme 11 Pro Plus,Realme 11 Pro Plus - Smartphone,2,6,2026-03-05 13:07:11
+265,Realme 6,Realme 6 - Smartphone,2,6,2026-03-05 13:07:11
+266,Realme 6 Pro,Realme 6 Pro - Smartphone,2,6,2026-03-05 13:07:11
+267,Realme 7 Pro,Realme 7 Pro - Smartphone,2,6,2026-03-05 13:07:11
+268,Realme 8,Realme 8 - Smartphone,2,6,2026-03-05 13:07:11
+269,Realme 8 5G,Realme 8 5G - Smartphone,2,6,2026-03-05 13:07:11
+270,Realme 8i,Realme 8i - Smartphone,2,6,2026-03-05 13:07:11
+271,Realme 8s 5G,Realme 8s 5G - Smartphone,2,6,2026-03-05 13:07:11
+272,Realme 9 4G,Realme 9 4G - Smartphone,2,6,2026-03-05 13:07:11
+273,Realme 9 5G,Realme 9 5G - Smartphone,2,6,2026-03-05 13:07:11
+274,Realme 9 5G SE,Realme 9 5G SE - Smartphone,2,6,2026-03-05 13:07:11
+275,Realme 9 Pro 5G,Realme 9 Pro 5G - Smartphone,2,6,2026-03-05 13:07:11
+276,Realme 9 Pro Plus 5G,Realme 9 Pro Plus 5G - Smartphone,2,6,2026-03-05 13:07:11
+277,Realme 9i,Realme 9i - Smartphone,2,6,2026-03-05 13:07:11
+278,Realme 9i 5G,Realme 9i 5G - Smartphone,2,6,2026-03-05 13:07:11
+279,Realme A1,Realme A1 - Smartphone,2,6,2026-03-05 13:07:11
+280,Realme C11,Realme C11 - Smartphone,2,6,2026-03-05 13:07:11
+281,Realme C11 2021,Realme C11 2021 - Smartphone,2,6,2026-03-05 13:07:11

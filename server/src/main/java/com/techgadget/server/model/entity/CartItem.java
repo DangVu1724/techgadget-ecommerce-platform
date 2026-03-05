@@ -14,15 +14,11 @@ public class CartItem {
 
     private Integer quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne
-    @JoinColumn(name = "variant_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "variant_id", nullable = false)
     private ProductVariant variant;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
 }
