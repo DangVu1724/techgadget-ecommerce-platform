@@ -7,26 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponse {
+@NoArgsConstructor
+@Builder
+public class ProductSummaryResponse {
     private Long id;
     private String name;
-    private String description;
     private String image;
-    private LocalDateTime createdAt;
-
-    private CategoryResponse category;
-    private BrandResponse brand;
-
-    private List<VariantResponse> variants;
-    private List<ProductAttributeValueResponse> attributes;
-
     private BigDecimal minPrice;
-    private BigDecimal maxPrice;
     private Integer totalStock;
+    private String categoryName;
+    private String brandName;
+    private LocalDateTime createdAt;
 }

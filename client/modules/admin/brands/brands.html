@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Management</title>
+    <link rel="stylesheet" href="brands.css">
+    <link rel="stylesheet" href="../shared/sidebar.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main -->
+        <main class="content">
+            <div class="header">
+                <h2>Brand Management</h2>
+                <!-- Bỏ qua actions nếu không cần -->
+            </div>
+
+            <table class="brand-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Brand Name</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody id="brandTable">
+                    <!-- Dữ liệu sẽ được load từ API -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Templates -->
+    <template id="brand-row-template">
+        <tr>
+            <td class="brand-id"></td>
+            <td class="brand-name"></td>
+            <td class="created-at"></td>
+        </tr>
+    </template>
+
+    <template id="loading-template">
+        <tr>
+            <td colspan="3" class="loading">Loading brands...</td>
+        </tr>
+    </template>
+
+    <template id="no-data-template">
+        <tr>
+            <td colspan="3" class="no-data">No brands found</td>
+        </tr>
+    </template>
+
+    <template id="error-template">
+        <tr>
+            <td colspan="3" class="error">Failed to load brands. Please try again.</td>
+        </tr>
+    </template>
+
+    <script src="brands.js" type="module"></script>
+    <script src="../shared/loadLayout.js"></script>
+</body>
+</html>

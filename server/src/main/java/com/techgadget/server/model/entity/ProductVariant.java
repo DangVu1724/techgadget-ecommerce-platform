@@ -25,6 +25,7 @@ public class ProductVariant {
     @Column(nullable = false)
     private Integer stock = 0;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../shared/sidebar.css" />
+  </head>
+
+  <body>
+    <div id="sidebar-container"></div>
+
+
+    <div class="content">
+      <h1>Dashboard</h1>
+
+      <div class="card">
+        <p>Total Products</p>
+        <h2>120</h2>
+      </div>
+    </div>
+
+    <script>
+      if (localStorage.getItem("adminLoggedIn") !== "true") {
+        window.location.href = "login.html";
+      }
+
+      function logout() {
+        localStorage.removeItem("adminLoggedIn");
+        window.location.href = "login.html";
+      }
+    </script>
+    <script src="../shared/loadLayout.js"></script>
+
+  </body>
+</html>
