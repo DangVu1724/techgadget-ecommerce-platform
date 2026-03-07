@@ -1,4 +1,4 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.attribute;
 
 import com.techgadget.server.model.enums.AttributeType;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.techgadget.server.controller;
 
-import com.techgadget.server.model.dto.BrandResponse;
+import com.techgadget.server.model.dto.brand.BrandResponse;
 import com.techgadget.server.service.BrandService;
 import org.springframework.web.bind.annotation.*;
 

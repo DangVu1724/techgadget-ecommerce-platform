@@ -1,6 +1,6 @@
 package com.techgadget.server.controller;
 
-import com.techgadget.server.model.dto.CategoryResponse;
+import com.techgadget.server.model.dto.category.CategoryResponse;
 import com.techgadget.server.service.CategoryService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

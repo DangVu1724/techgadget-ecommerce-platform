@@ -1,7 +1,6 @@
 package com.techgadget.server.service;
 
-import com.techgadget.server.model.dto.CategoryResponse;
-import com.techgadget.server.model.entity.Category;
+import com.techgadget.server.model.dto.category.CategoryResponse;
 import com.techgadget.server.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 

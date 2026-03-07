@@ -1,4 +1,4 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.brand;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryRequest {
+public class BrandRequest {
 
-    @NotBlank(message = "Tên danh mục không được để trống")
-    private String name;
-
-    private String description;
+    @NotBlank(message = "Tên thương hiệu không được để trống")
+    private String brandName;
 }

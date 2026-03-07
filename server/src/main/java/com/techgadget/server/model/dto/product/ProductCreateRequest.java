@@ -1,6 +1,6 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.product;
 
-import com.techgadget.server.model.dto.ProductAttributeValueRequest;
+import com.techgadget.server.model.dto.attributeValue.ProductAttributeValueRequest;
 import com.techgadget.server.model.dto.variant.VariantRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

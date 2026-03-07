@@ -1,5 +1,6 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.product;
 
+import com.techgadget.server.model.dto.attributeValue.ProductAttributeValueRequest;
 import com.techgadget.server.model.dto.variant.VariantRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

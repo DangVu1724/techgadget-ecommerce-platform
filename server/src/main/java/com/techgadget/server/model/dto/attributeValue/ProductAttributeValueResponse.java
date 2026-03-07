@@ -1,6 +1,6 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.attributeValue;
 
-import com.techgadget.server.model.dto.AttributeResponse;
+import com.techgadget.server.model.dto.attribute.AttributeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

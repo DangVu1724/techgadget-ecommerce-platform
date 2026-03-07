@@ -1,4 +1,4 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.product;
 
 import lombok.*;
 

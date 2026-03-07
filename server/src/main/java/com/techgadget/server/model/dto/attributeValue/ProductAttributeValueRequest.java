@@ -1,4 +1,4 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.attributeValue;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

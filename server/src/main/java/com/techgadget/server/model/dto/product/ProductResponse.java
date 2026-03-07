@@ -1,5 +1,9 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.product;
 
+import com.techgadget.server.model.dto.brand.BrandResponse;
+import com.techgadget.server.model.dto.category.CategoryResponse;
+import com.techgadget.server.model.dto.attributeValue.ProductAttributeValueResponse;
+import com.techgadget.server.model.dto.variant.VariantResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,6 @@
 package com.techgadget.server.service;
 
-import com.techgadget.server.model.dto.BrandResponse;
-import com.techgadget.server.model.entity.Brand;
+import com.techgadget.server.model.dto.brand.BrandResponse;
 import com.techgadget.server.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

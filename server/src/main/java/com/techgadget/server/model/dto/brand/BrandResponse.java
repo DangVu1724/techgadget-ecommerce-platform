@@ -1,4 +1,4 @@
-package com.techgadget.server.model.dto;
+package com.techgadget.server.model.dto.brand;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
