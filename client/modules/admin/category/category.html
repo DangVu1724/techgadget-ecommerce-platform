@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Management</title>
+
+    <link rel="stylesheet" href="category.css" />
+    <link rel="stylesheet" href="../shared/sidebar.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- Sidebar -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main content -->
+      <main class="content">
+        <div class="header">
+          <h2>Category Management</h2>
+        </div>
+
+        <table class="category-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Category Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+
+          <tbody id="categoryTable"></tbody>
+        </table>
+      </main>
+    </div>
+
+    <!-- Row template -->
+    <template id="category-row-template">
+      <tr>
+        <td class="category-id"></td>
+        <td class="category-name"></td>
+        <td class="description"></td>
+      </tr>
+    </template>
+
+    <!-- Loading -->
+    <template id="loading-template">
+      <tr>
+        <td colspan="3" class="loading">Loading categories...</td>
+      </tr>
+    </template>
+
+    <!-- No data -->
+    <template id="no-data-template">
+      <tr>
+        <td colspan="3" class="no-data">No categories found</td>
+      </tr>
+    </template>
+
+    <!-- Error -->
+    <template id="error-template">
+      <tr>
+        <td colspan="3" class="error">Failed to load categories</td>
+      </tr>
+    </template>
+
+    <script src="category.js" type="module"></script>
+    <script src="../shared/loadLayout.js"></script>
+  </body>
+</html>
