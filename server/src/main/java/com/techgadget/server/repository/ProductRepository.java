@@ -1,5 +1,6 @@
 package com.techgadget.server.repository;
 
+import com.techgadget.server.model.dto.ProductSummaryResponse;
 import com.techgadget.server.model.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,11 +13,21 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("""
-SELECT DISTINCT p
+SELECT new com.techgadget.server.model.dto.ProductSummaryResponse(
+    p.id,
+    p.name,
+    p.image,
+    MIN(v.price),
+    SUM(v.stock),
+    c.name,
+    b.brandName,
+    p.createdAt
+)
 FROM Product p
-LEFT JOIN FETCH p.variants
-LEFT JOIN FETCH p.category
-LEFT JOIN FETCH p.brand
+LEFT JOIN p.category c
+LEFT JOIN p.brand b
+LEFT JOIN p.variants v
+GROUP BY p.id, p.name, p.image, c.name, b.brandName,p.createdAt
 """)
-    List<Product> findAllWithDetails();
+    Page<ProductSummaryResponse> findProductSummary(Pageable pageable);
 }

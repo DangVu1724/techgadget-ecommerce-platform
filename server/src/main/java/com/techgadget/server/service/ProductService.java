@@ -4,6 +4,8 @@ import com.techgadget.server.model.dto.ProductSummaryResponse;
 import com.techgadget.server.model.entity.Product;
 import com.techgadget.server.model.entity.ProductVariant;
 import com.techgadget.server.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,47 +21,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductSummaryResponse> getAllProducts() {
-        List<Product> products = productRepository.findAllWithDetails();
-
-        return products.stream().map(this::convertToSummaryResponse).toList();
+    public Page<ProductSummaryResponse> getProducts(Pageable pageable) {
+        return productRepository.findProductSummary(pageable);
     }
 
-    private ProductSummaryResponse convertToSummaryResponse(Product product) {
-        BigDecimal minPrice = getMinPrice(product);
-        Integer totalStock = getTotalStock(product);
 
-        return ProductSummaryResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .image(product.getImage())
-                .minPrice(minPrice)
-                .totalStock(totalStock)
-                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
-                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
-                .build();
-    }
-
-    private BigDecimal getMinPrice(Product product) {
-        if (product.getVariants() == null || product.getVariants().isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-        return product.getVariants().stream()
-                .map(ProductVariant::getPrice)
-                .min(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
-    }
-
-    private Integer getTotalStock(Product product) {
-        if (product.getVariants() == null) {
-            return 0;
-        }
-
-        return product.getVariants()
-                .stream()
-                .map(ProductVariant::getStock)
-                .filter(Objects::nonNull)
-                .mapToInt(Integer::intValue)
-                .sum();
-    }
 }
