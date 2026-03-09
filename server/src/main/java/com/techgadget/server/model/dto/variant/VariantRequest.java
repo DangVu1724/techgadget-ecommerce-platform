@@ -10,14 +10,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class VariantRequest {
-
-    private Long id;
 
     @NotBlank(message = "Tên biến thể không được để trống")
     private String name;
@@ -30,4 +29,9 @@ public class VariantRequest {
     private Integer stock;
 
     private String description;
+
+    private Long productId;
+
+    private List<VariantAttributeRequest> attributes;
+
 }

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "product_variants")
@@ -31,6 +33,9 @@ public class ProductVariant {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<VariantAttributeValue> attributeValues = new HashSet<>();
 
     @OneToMany(mappedBy = "variant")
     private List<OrderDetail> orderDetails;

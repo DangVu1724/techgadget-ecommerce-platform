@@ -4,17 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "product_attribute_values")
+@Table(name = "variant_attribute_values")
 @Getter @Setter
-public class ProductAttributeValue {
+public class VariantAttributeValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @ManyToOne
+    @JoinColumn(name = "variant_id")
+    private ProductVariant variant;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "attribute_id")

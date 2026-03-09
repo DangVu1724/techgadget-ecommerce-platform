@@ -1,6 +1,5 @@
 package com.techgadget.server.model.dto.product;
 
-import com.techgadget.server.model.dto.attributeValue.ProductAttributeValueRequest;
 import com.techgadget.server.model.dto.variant.VariantRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +28,5 @@ public class ProductCreateRequest {
     @NotNull(message = "Thương hiệu không được để trống")
     private Long brandId;
 
-    private List<ProductAttributeValueRequest> attributes;
     private List<VariantRequest> variants;
 }

@@ -1,0 +1,277 @@
+/* variantModal.css - Simple & Clean */
+
+/* Modal container */
+.modal-content {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal header */
+.modal-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.5rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.modal-header .modal-title {
+  font-weight: 600;
+  color: #212529;
+  font-size: 1.1rem;
+}
+
+.modal-header .btn-close {
+  font-size: 0.8rem;
+}
+
+/* Modal body */
+.modal-body {
+  padding: 1.5rem;
+}
+
+/* Form groups - compact */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+/* Input styling - compact */
+.form-control {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.9rem;
+  height: 38px;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.form-control:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+}
+
+/* Validation states */
+.form-control.is-valid {
+  border-color: #198754;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  padding-right: 2rem;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 16px;
+  padding-right: 2rem;
+}
+
+/* Validation message - small and compact */
+.invalid-feedback {
+  font-size: 0.75rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.valid-feedback {
+  font-size: 0.75rem;
+  color: #198754;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Row layout */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.5rem;
+  margin-left: -0.5rem;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+/* Section divider - simple */
+.section-divider {
+  margin: 1.5rem 0 1rem;
+  border-top: 1px solid #e9ecef;
+  position: relative;
+}
+
+.section-divider h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  margin: 0;
+  padding: 0.5rem 0 0;
+}
+
+/* Attributes table - compact */
+.attributes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.attributes-table th {
+  text-align: left;
+  padding: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+  background: #f8f9fa;
+}
+
+.attributes-table td {
+  padding: 0.5rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Attribute inputs - compact */
+.attribute-select,
+.attribute-value {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  height: 32px;
+}
+
+.attribute-select:focus,
+.attribute-value:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.1);
+}
+
+.attribute-select.is-invalid,
+.attribute-value.is-invalid {
+  border-color: #dc3545;
+}
+
+/* Remove button - small */
+.btn-remove-row {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #dc3545;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-remove-row:hover {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+/* Add attribute button - simple */
+.btn-add-attribute {
+  padding: 0.35rem 1rem;
+  background: #198754;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-add-attribute:hover {
+  background: #157347;
+}
+
+/* Modal footer */
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Buttons - compact */
+.btn {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-secondary {
+  background: white;
+  border-color: #dee2e6;
+  color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+}
+
+.btn-primary {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0b5ed7;
+}
+
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Empty state */
+.attribute-empty {
+  text-align: center;
+  padding: 1rem;
+  color: #adb5bd;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}

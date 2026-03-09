@@ -1,6 +1,5 @@
 package com.techgadget.server.model.dto.product;
 
-import com.techgadget.server.model.dto.attributeValue.ProductAttributeValueRequest;
 import com.techgadget.server.model.dto.variant.VariantRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +20,5 @@ public class ProductUpdateRequest {
     private Long categoryId;
     private Long brandId;
 
-    private List<ProductAttributeValueRequest> attributes;
     private List<VariantRequest> variants;
 }
