@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details - Admin Panel</title>
+    <link
+      rel="stylesheet"
+      href="/client/modules/admin/components/layouts/sidebar/sidebar.css"
+    />
+    <link rel="stylesheet" href="./detail.css" />
+    <link rel="stylesheet" href="./variantModal.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div id="sidebar-container"></div>
+
+      <main class="main-content">
+        <div class="product-detail" id="productDetail">
+          <!-- Loading State -->
+          <div class="loading-detail" id="loadingState">
+            <div class="loading-spinner"></div>
+            <p>Loading product details...</p>
+          </div>
+
+          <!-- Product Content (hidden initially) -->
+          <div id="productContent" style="display: none">
+            <!-- Header -->
+            <div class="detail-header">
+              <div class="header-left">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <div class="header-title">
+                  <h1 id="productName">Product Name</h1>
+                </div>
+              </div>
+              <div class="header-actions">
+                <button class="edit-btn" onclick="editProduct()">
+                  <i>✏️</i> Edit Product
+                </button>
+                <button class="delete-btn" onclick="deleteProduct()">
+                  <i>🗑️</i> Delete
+                </button>
+              </div>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+              <!-- Product Images -->
+              <div class="product-images">
+                <div class="main-image" id="mainImage">
+                  <div class="no-image">
+                    <i>📷</i>
+                    <span>No image</span>
+                  </div>
+                </div>
+                <div class="image-thumbnails" id="imageThumbnails">
+                  <div class="upload-btn" onclick="uploadImage()">
+                    <i>+</i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product Info -->
+              <div class="product-info">
+                <div class="info-section">
+                  <div class="section-title"><i>📋</i> Basic Information</div>
+                  <div class="info-row">
+                    <span class="info-label">Product ID</span>
+                    <span class="info-value" id="productId">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Brand</span>
+                    <span class="info-value" id="brandName">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Category</span>
+                    <span class="info-value" id="categoryName">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Description</span>
+                    <span class="info-value" id="productDescription">
+                      No description available.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="info-section">
+                  <div class="section-title"><i>💰</i> Pricing & Stock</div>
+                  <div class="info-row">
+                    <span class="info-label">Min Price</span>
+                    <span class="info-value price" id="minPrice">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Max Price</span>
+                    <span class="info-value price" id="maxPrice">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Total Stock</span>
+                    <span class="info-value" id="totalStock">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Sold</span>
+                    <span class="info-value" id="sold">0</span>
+                  </div>
+                </div>
+
+                <div class="info-section">
+                  <div class="section-title"><i>📅</i> Timestamps</div>
+                  <div class="info-row">
+                    <span class="info-label">Created At</span>
+                    <span class="info-value" id="createdAt">-</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Updated At</span>
+                    <span class="info-value" id="updatedAt">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+              <div class="tab-header">
+                <button class="tab-btn active" onclick="switchTab('variants')">
+                  Variants
+                </button>
+                <button class="tab-btn" onclick="switchTab('description')">
+                  Description
+                </button>
+              </div>
+
+              <!-- Variants Tab -->
+              <div class="tab-content">
+                <div class="tab-pane active" id="variantsTab">
+                  <table class="variants-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="variantsList">
+                      <!-- Variants will be loaded here -->
+                    </tbody>
+                  </table>
+                  <button class="add-variant-btn" onclick="addVariant()">
+                    <i>+</i> Add New Variant
+                  </button>
+                </div>
+
+                <!-- Description Tab -->
+                <div class="tab-pane" id="descriptionTab">
+                  <div class="description-box" id="productDescription">
+                    No description available.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Variant Modal -->
+    <div
+      class="modal fade"
+      id="variantModal"
+      tabindex="-1"
+      aria-labelledby="variantModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="variantModalLabel">Tạo Variant</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Đóng"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="variantForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="variantName">Tên Variant</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="variantName"
+                    title="Nhập tên variant"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label for="variantPrice">Giá</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="variantPrice"
+                    title="Nhập giá variant"
+                  />
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <label for="variantStock">Stock</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="variantStock"
+                    title="Nhập số lượng tồn kho"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label for="variantDescription">Mô tả</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="variantDescription"
+                    title="Nhập mô tả variant"
+                  />
+                </div>
+              </div>
+
+              <hr />
+
+              <h6>Attributes</h6>
+
+              <div id="variantAttributes" class="variant-attributes-form"></div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              title="Hủy thao tác"
+            >
+              Hủy
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="saveVariant()"
+              title="Lưu variant mới"
+            >
+              Lưu Variant
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./detail.js"></script>
+  </body>
+</html>

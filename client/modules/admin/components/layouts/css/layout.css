@@ -1,0 +1,12 @@
+/* Main Layout */
+
+.main-content {
+  margin-left: 280px;
+  min-height: 100vh;
+  background: #f8f9fa;
+  transition: margin-left 0.3s;
+}
+
+.main-content.expanded {
+  margin-left: 80px;
+}
