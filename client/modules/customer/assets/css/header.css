@@ -1,0 +1,137 @@
+/* --- Header Component Styles --- */
+:root {
+    --orange: #ff5e3a;
+    --text-dark: #333;
+    --text-light: #777;
+}
+
+/* Header Styles */
+.top-bar {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    font-size: 11px;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #000000; 
+    text-decoration: none; 
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.8;
+    color: #000000; 
+}
+
+header {
+    padding: 25px 0;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #eee;
+}
+
+/* Navigation Styles */
+nav a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 13px;
+    margin: 0 15px;
+    font-family: 'Montserrat';
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--orange);
+}
+
+nav a.active {
+    color: var(--orange);
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 5px;
+}
+
+/* Header Icons */
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icons i {
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-dark);
+    transition: color 0.3s ease;
+}
+
+.header-icons i:hover {
+    color: var(--orange);
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.cart-icon span {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--orange);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: 600;
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    nav a {
+        margin: 5px 10px;
+    }
+    
+    .header-icons {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar .container {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+}
