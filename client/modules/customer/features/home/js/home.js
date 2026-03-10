@@ -1,6 +1,6 @@
-import { categoryApi } from "/client/modules/customer/core/api/category.api.js";
-import { brandApi } from "/client/modules/customer/core/api/brand.api.js";
-import { productApi } from "/client/modules/customer/core/api/product.api.js";
+import { categoryApi } from "/modules/customer/core/api/category.api.js";
+import { brandApi } from "/modules/customer/core/api/brand.api.js";
+import { productApi } from "/modules/customer/core/api/product.api.js";
 
 const categoryImages = {
   //   smartphone: "/assets/images/categories/smartphone.png",
@@ -22,7 +22,7 @@ async function loadCategories() {
 
     const image =
       categoryImages[key] ||
-      "/client/modules/customer/assets/images/categories/default.png";
+      "/modules/customer/assets/images/categories/default.png";
 
     const card = document.createElement("div");
     card.className = "cat-card";
@@ -75,7 +75,7 @@ async function loadNewProducts() {
 
       const image =
         product.thumbnail ||
-        "/client/modules/customer/assets/images/macbook.png";
+        "/modules/customer/assets/images/macbook.png";
 
       card.innerHTML = `
         <img src="${image}" alt="${product.name}">
@@ -109,7 +109,7 @@ async function loadBestSellingProducts() {
 
       const image =
         product.thumbnail ||
-        "/client/modules/customer/assets/images/macbook.png";
+        "/modules/customer/assets/images/macbook.png";
 
       card.innerHTML = `
         <img src="${image}" alt="${product.name}">

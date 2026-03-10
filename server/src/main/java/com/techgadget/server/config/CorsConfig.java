@@ -16,7 +16,9 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://127.0.0.1:3000",
-                                "http://localhost:3000"
+                                "http://127.0.0.1:5500",
+                                "http://localhost:3000",
+                                "https://techgadget-ecommerce-platform-fxm0l3648-dangvu1724s-projects.vercel.app"
                         )
                         .allowedMethods("*");
             }

@@ -71,11 +71,11 @@ class HeaderComponent {
 
     // Đếm số lượng thư mục để xác định đường dẫn tương đối
     if (path.includes("features/")) {
-      // Nếu đang ở trong thư mục features (VD: /client/modules/customer/features/shop/shop.html)
+      // Nếu đang ở trong thư mục features (VD: /modules/customer/features/shop/shop.html)
       // Cần quay lại thư mục modules/customer
-      return "/client/modules/customer/components/header/header.html";
+      return "/modules/customer/components/header/header.html";
     } else {
-      return "/client/modules/customer/components/header/header.html";
+      return "/modules/customer/components/header.html";
     }
   }
 
@@ -103,7 +103,7 @@ class HeaderComponent {
 
   // Load CSS cho header
   loadHeaderCSS() {
-    const cssPath = "/client/modules/customer/assets/css/header.css";
+    const cssPath = "/modules/customer/assets/css/header.css";
 
     if (!document.querySelector('link[href*="header.css"]')) {
       const link = document.createElement("link");
@@ -126,11 +126,11 @@ class HeaderComponent {
                 <div class="container flex-between">
                     <div class="logo">SHOP<span>LITE</span></div>
                     <nav>
-                        <a href="/client/modules/customer/features/home/home.html" class="nav-link ${this.currentPage === "home" ? "active" : ""}" data-page="home">HOME</a>
-                        <a href="/client/modules/customer/features/shop/shop.html" class="nav-link ${this.currentPage === "shop" ? "active" : ""}" data-page="shop">SHOP</a>
-                        <a href="/client/modules/customer/features/blog/blog.html" class="nav-link ${this.currentPage === "blog" ? "active" : ""}" data-page="blog">BLOG</a>
-                        <a href="/client/modules/customer/features/pages/pages.html" class="nav-link ${this.currentPage === "pages" ? "active" : ""}" data-page="pages">PAGES</a>
-                        <a href="/client/modules/customer/features/contact/contact.html" class="nav-link ${this.currentPage === "contact" ? "active" : ""}" data-page="contact">CONTACT</a>
+                        <a href="/modules/customer/features/home/home.html" class="nav-link ${this.currentPage === "home" ? "active" : ""}" data-page="home">HOME</a>
+                        <a href="/modules/customer/features/shop/shop.html" class="nav-link ${this.currentPage === "shop" ? "active" : ""}" data-page="shop">SHOP</a>
+                        <a href="/modules/customer/features/blog/blog.html" class="nav-link ${this.currentPage === "blog" ? "active" : ""}" data-page="blog">BLOG</a>
+                        <a href="/modules/customer/features/pages/pages.html" class="nav-link ${this.currentPage === "pages" ? "active" : ""}" data-page="pages">PAGES</a>
+                        <a href="/modules/customer/features/contact/contact.html" class="nav-link ${this.currentPage === "contact" ? "active" : ""}" data-page="contact">CONTACT</a>
                     </nav>
                     <div class="header-icons">
                         <i class="fas fa-search"></i>
