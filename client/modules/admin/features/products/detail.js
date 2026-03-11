@@ -1,11 +1,16 @@
 // detail.js
 import { Sidebar } from "../../components/layouts/sidebar/sidebar.js";
-import { authAPI } from "../../core/api/auth.api.js";
+import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 import { productApi } from "../../core/api/product.api.js";
 import { variantApi } from "../../core/api/variant.api.js";
-import { formatCurrency, formatDate, showLoading, renderAttributes } from './helpers.js';
-import { loadAttributes, collectAttributes, resetAttributes } from './modal.js';
-import { validateVariantForm, setSubmitting, getSubmitting } from './modal.js';
+import {
+  formatCurrency,
+  formatDate,
+  showLoading,
+  renderAttributes,
+} from "./helpers.js";
+import { loadAttributes, collectAttributes, resetAttributes } from "./modal.js";
+import { validateVariantForm, setSubmitting, getSubmitting } from "./modal.js";
 // Initialize sidebar
 new Sidebar();
 
@@ -18,12 +23,7 @@ let currentVariant = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const { user } = await authAPI.checkAuth();
-    if (!user) {
-      window.location.href = "../auth/login/login.html";
-      return;
-    }
-
+    requireAdmin();
     if (productId) {
       await loadProductDetails(productId);
     } else {
@@ -62,10 +62,10 @@ async function loadProductDetails(id) {
     showLoading(true);
     const product = await productApi.getById(id);
     currentProduct = product;
-    
+
     updateProductUI(product);
     loadVariants(product);
-    
+
     showLoading(false);
   } catch (error) {
     console.error("Error loading product:", error);
@@ -75,22 +75,34 @@ async function loadProductDetails(id) {
 }
 
 function updateProductUI(product) {
-  document.getElementById("productName").textContent = product.name || "Unnamed Product";
+  document.getElementById("productName").textContent =
+    product.name || "Unnamed Product";
   document.getElementById("productId").textContent = product.id || "-";
-  document.getElementById("brandName").textContent = product.brand?.brandName || "-";
-  document.getElementById("categoryName").textContent = product.category?.name || "-";
-  
+  document.getElementById("brandName").textContent =
+    product.brand?.brandName || "-";
+  document.getElementById("categoryName").textContent =
+    product.category?.name || "-";
+
   const descElement = document.getElementById("productDescription");
   if (descElement) {
-    descElement.textContent = product.description || "No description available.";
+    descElement.textContent =
+      product.description || "No description available.";
   }
 
-  document.getElementById("minPrice").textContent = formatCurrency(product.minPrice);
-  document.getElementById("maxPrice").textContent = product.maxPrice ? formatCurrency(product.maxPrice) : "-";
+  document.getElementById("minPrice").textContent = formatCurrency(
+    product.minPrice,
+  );
+  document.getElementById("maxPrice").textContent = product.maxPrice
+    ? formatCurrency(product.maxPrice)
+    : "-";
   document.getElementById("totalStock").textContent = product.totalStock || 0;
   document.getElementById("sold").textContent = product.sold || 0;
-  document.getElementById("createdAt").textContent = formatDate(product.createdAt);
-  document.getElementById("updatedAt").textContent = formatDate(product.updatedAt);
+  document.getElementById("createdAt").textContent = formatDate(
+    product.createdAt,
+  );
+  document.getElementById("updatedAt").textContent = formatDate(
+    product.updatedAt,
+  );
 
   if (product.imageUrl) {
     const mainImage = document.getElementById("mainImage");
@@ -107,7 +119,7 @@ function loadVariants(product) {
 
   variants.forEach((variant) => {
     const row = document.createElement("tr");
-    
+
     let stockClass = "high";
     let stockText = variant.stock;
 
@@ -135,16 +147,20 @@ function loadVariants(product) {
 }
 
 // Tab switching
-window.switchTab = function(tabName) {
-  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+window.switchTab = function (tabName) {
+  document
+    .querySelectorAll(".tab-btn")
+    .forEach((btn) => btn.classList.remove("active"));
   event.target.classList.add("active");
-  
-  document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("active"));
+
+  document
+    .querySelectorAll(".tab-pane")
+    .forEach((pane) => pane.classList.remove("active"));
   document.getElementById(tabName + "Tab").classList.add("active");
 };
 
 // Navigation
-window.goBack = () => window.location.href = "products.html";
+window.goBack = () => (window.location.href = "products.html");
 
 window.editProduct = () => {
   if (currentProduct) {
@@ -170,13 +186,13 @@ window.addVariant = async () => {
   currentVariant = null;
   const form = document.getElementById("variantForm");
   if (form) form.reset();
-  
+
   const modalTitle = document.getElementById("variantModalLabel");
   if (modalTitle) modalTitle.textContent = "Add Variant";
-  
+
   resetAttributes();
   await loadAttributes();
-  
+
   const modal = document.getElementById("variantModal");
   if (modal) {
     modal.classList.add("show");
@@ -188,10 +204,10 @@ window.editVariant = async (variantId) => {
   currentVariant = variantId;
   const modalTitle = document.getElementById("variantModalLabel");
   if (modalTitle) modalTitle.textContent = "Edit Variant";
-  
+
   resetAttributes();
   await loadAttributes();
-  
+
   const modal = document.getElementById("variantModal");
   if (modal) {
     modal.classList.add("show");
@@ -209,7 +225,7 @@ window.closeVariantModal = () => {
 
 window.saveVariant = async () => {
   if (getSubmitting()) return;
-  
+
   // Validate form
   if (!validateVariantForm()) {
     return;

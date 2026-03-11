@@ -75,7 +75,7 @@ class HeaderComponent {
       // Cần quay lại thư mục modules/customer
       return "/modules/customer/components/header/header.html";
     } else {
-      return "/modules/customer/components/header.html";
+      return "/modules/customer/components/header/header.html";
     }
   }
 

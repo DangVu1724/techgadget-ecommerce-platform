@@ -6,16 +6,19 @@
     <title>Dashboard - Admin Panel</title>
     <link
       rel="stylesheet"
-      href="../../components/layouts/sidebar/sidebar.css"
-    />
-    <link rel="stylesheet" href="dashboard.css" />
-    <link
-      rel="stylesheet"
-      href="/client/modules/admin/components/layouts/css/header.css"
+      href="/modules/admin/components/layouts/sidebar/sidebar.css"
     />
     <link
       rel="stylesheet"
-      href="/client/modules/admin/components/layouts/css/layout.css"
+      href="/modules/admin/features/dashboard/dashboard.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/header.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/layout.css"
     />
   </head>
   <body>
@@ -97,8 +100,7 @@
     </div>
 
     <script type="module">
-      import { Sidebar } from "../../components/layouts/sidebar/sidebar.js";
-      import { authAPI } from "../../core/api/auth.api.js";
+      import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 
       // Initialize sidebar
       new Sidebar();

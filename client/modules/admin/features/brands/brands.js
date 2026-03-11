@@ -1,21 +1,15 @@
-import { Sidebar } from "/client/modules/admin/components/layouts/sidebar/sidebar.js";
-import { Table } from "/client/modules/admin/components/data/table/Table.js";
-import { Modal } from "/client/modules/admin/components/data/table/Modal.js";
-import { authAPI } from "/client/modules/admin/core/api/auth.api.js";
+import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
+import { Table } from "/modules/admin/components/data/table/Table.js";
+import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { brandApi } from "../../core/api/brand.api.js";
+import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const { user } = await authAPI.checkAuth();
-    if (!user) {
-      window.location.href = "../auth/login/login.html";
-      return;
-    }
+    requireAdmin();
 
-    document.getElementById("userName").textContent = user.name;
-    document.getElementById("userAvatar").textContent = user.avatar;
 
     initTable();
   } catch (error) {

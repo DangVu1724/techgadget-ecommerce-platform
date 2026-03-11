@@ -1,4 +1,4 @@
-const BASE_URL = "https://techgadget-ecommerce-platform.onrender.com/api";
+const BASE_URL = "http://localhost:8080/api";
 
 export const brandApi = {
   getAll: async () => {
