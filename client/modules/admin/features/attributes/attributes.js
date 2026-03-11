@@ -1,155 +1,145 @@
-import { Sidebar } from "/client/modules/admin/components/layouts/sidebar/sidebar.js";
-      import { Table } from "/client/modules/admin/components/data/table/Table.js";
-      import { Modal } from "/client/modules/admin/components/data/table/Modal.js";
-      import { authAPI } from "/client/modules/admin/core/api/auth.api.js";
-      import { attributeApi } from "../../core/api/attribute.api.js";
+import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
+import { Table } from "/modules/admin/components/data/table/Table.js";
+import { Modal } from "/modules/admin/components/data/table/Modal.js";
+import { attributeApi } from "../../core/api/attribute.api.js";
+import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 
-      new Sidebar();
+new Sidebar();
 
-      document.addEventListener("DOMContentLoaded", async () => {
-        try {
-          const { user } = await authAPI.checkAuth();
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    requireAdmin();
 
-          if (!user) {
-            window.location.href = "../auth/login/login.html";
-            return;
-          }
+    initTable();
+  } catch (error) {
+    console.error("Auth check failed:", error);
+  }
+});
 
-          document.getElementById("userName").textContent = user.name;
-          document.getElementById("userAvatar").textContent = user.avatar;
+function initTable() {
+  window.attributeTable = new Table({
+    container: document.getElementById("table-container"),
 
-          initTable();
-        } catch (error) {
-          console.error("Auth check failed:", error);
-        }
-      });
+    entityName: "Attribute",
 
-      function initTable() {
-        window.attributeTable = new Table({
-          container: document.getElementById("table-container"),
+    pageSize: 10,
 
-          entityName: "Attribute",
+    columns: [
+      {
+        key: "attributeId",
+        label: "ID",
+      },
 
-          pageSize: 10,
+      {
+        key: "attributeName",
+        label: "Attribute Name",
+      },
 
-          columns: [
-            {
-              key: "attributeId",
-              label: "ID",
-            },
+      {
+        key: "dataType",
+        label: "Data Type",
+      },
+    ],
 
-            {
-              key: "attributeName",
-              label: "Attribute Name",
-            },
+    api: attributeApi,
 
-            {
-              key: "dataType",
-              label: "Data Type",
-            },
-          ],
+    formatters: {
+      createdAt: (value) => {
+        if (!value) return "-";
 
-          api: attributeApi,
-
-          formatters: {
-            createdAt: (value) => {
-              if (!value) return "-";
-
-              return new Date(value).toLocaleDateString("vi-VN", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-            },
-          },
-
-          actions: {
-            add: () => openAttributeModal(),
-
-            edit: (attribute) => openAttributeModal(attribute),
-
-            delete: (attribute) => deleteAttribute(attribute),
-
-            view: (attribute) => viewAttribute(attribute),
-          },
+        return new Date(value).toLocaleDateString("vi-VN", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
         });
-      }
+      },
+    },
 
-      function openAttributeModal(attribute = null) {
-        const modal = new Modal({
-          title: attribute ? "Edit Attribute" : "Add Attribute",
+    actions: {
+      add: () => openAttributeModal(),
 
-          size: "sm",
+      edit: (attribute) => openAttributeModal(attribute),
 
-          data: attribute || {},
+      delete: (attribute) => deleteAttribute(attribute),
 
-          fields: [
-            {
-              name: "attributeName",
-              label: "Attribute Name",
-              type: "text",
-              required: true,
-              placeholder: "Enter attribute name (RAM, CPU, Screen Size...)",
-            },
+      view: (attribute) => viewAttribute(attribute),
+    },
+  });
+}
 
-            {
-              name: "dataType",
-              label: "Data Type",
-              type: "select",
-              required: true,
-              options: [
-                { value: "TEXT", label: "TEXT" },
-                { value: "NUMBER", label: "NUMBER" },
-                { value: "BOOLEAN", label: "BOOLEAN" },
-              ],
-            },
-          ],
+function openAttributeModal(attribute = null) {
+  const modal = new Modal({
+    title: attribute ? "Edit Attribute" : "Add Attribute",
 
-          onSave: async (formData) => {
-            try {
-              if (attribute) {
-                await attributeApi.update(attribute.attributeId, formData);
-                alert("Attribute updated successfully!");
-              } else {
-                await attributeApi.create(formData);
-                alert("Attribute created successfully!");
-              }
+    size: "sm",
 
-              modal.close();
-              window.attributeTable.refresh();
-            } catch (error) {
-              console.error(error);
-              alert("Failed to save attribute: " + error.message);
-            }
-          },
-        });
+    data: attribute || {},
 
-        modal.open();
-      }
+    fields: [
+      {
+        name: "attributeName",
+        label: "Attribute Name",
+        type: "text",
+        required: true,
+        placeholder: "Enter attribute name (RAM, CPU, Screen Size...)",
+      },
 
-      async function deleteAttribute(attribute) {
-        if (
-          confirm(
-            `Are you sure you want to delete "${attribute.attributeName}"?`,
-          )
-        ) {
-          try {
-            await attributeApi.delete(attribute.attributeId);
+      {
+        name: "dataType",
+        label: "Data Type",
+        type: "select",
+        required: true,
+        options: [
+          { value: "TEXT", label: "TEXT" },
+          { value: "NUMBER", label: "NUMBER" },
+          { value: "BOOLEAN", label: "BOOLEAN" },
+        ],
+      },
+    ],
 
-            alert("Attribute deleted successfully!");
-
-            window.attributeTable.refresh();
-          } catch (error) {
-            console.error(error);
-            alert("Failed to delete attribute: " + error.message);
-          }
+    onSave: async (formData) => {
+      try {
+        if (attribute) {
+          await attributeApi.update(attribute.attributeId, formData);
+          alert("Attribute updated successfully!");
+        } else {
+          await attributeApi.create(formData);
+          alert("Attribute created successfully!");
         }
-      }
 
-      function viewAttribute(attribute) {
-        alert(`
+        modal.close();
+        window.attributeTable.refresh();
+      } catch (error) {
+        console.error(error);
+        alert("Failed to save attribute: " + error.message);
+      }
+    },
+  });
+
+  modal.open();
+}
+
+async function deleteAttribute(attribute) {
+  if (
+    confirm(`Are you sure you want to delete "${attribute.attributeName}"?`)
+  ) {
+    try {
+      await attributeApi.delete(attribute.attributeId);
+
+      alert("Attribute deleted successfully!");
+
+      window.attributeTable.refresh();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete attribute: " + error.message);
+    }
+  }
+}
+
+function viewAttribute(attribute) {
+  alert(`
 Attribute Details:
 
 ID: ${attribute.attributeId}
@@ -159,4 +149,4 @@ Name: ${attribute.attributeName}
 Data Type: ${attribute.dataType}
 
 `);
-      }
+}

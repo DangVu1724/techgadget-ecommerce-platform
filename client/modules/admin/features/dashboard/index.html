@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Admin Panel</title>
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/sidebar/sidebar.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/features/dashboard/dashboard.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/header.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/layout.css"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar Container -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+          <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div class="page-title">
+              <h1>Dashboard</h1>
+            </div>
+          </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard">
+          <!-- Stats Cards -->
+          <div class="stats-grid" id="statsContainer">
+            <!-- Stats will be loaded here -->
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-row">
+            <!-- Sales Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Sales Overview</h3>
+                <div class="chart-actions">
+                  <button class="chart-btn active">Week</button>
+                  <button class="chart-btn">Month</button>
+                  <button class="chart-btn">Year</button>
+                </div>
+              </div>
+              <div class="chart-placeholder" id="salesChart">
+                <!-- Chart will be rendered here -->
+              </div>
+            </div>
+
+            <!-- Top Products -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Top Products</h3>
+              </div>
+              <div class="chart-placeholder" id="topProductsChart">
+                <!-- Chart will be rendered here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="recent-orders">
+            <div class="section-header">
+              <h3>Recent Orders</h3>
+              <a href="#" class="view-all">View All →</a>
+            </div>
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <!-- Orders will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script type="module">
+      import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
+
+      // Initialize sidebar
+      new Sidebar();
+    </script>
+  </body>
+</html>
