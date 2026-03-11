@@ -2,23 +2,23 @@
   "rewrites": [
     {
       "source": "/home",
-      "destination": "/modules/customer/features/home/"
+      "destination": "/modules/customer/features/home/index.html"
     },
     {
       "source": "/admin",
-      "destination": "/modules/admin/features/dashboard/"
+      "destination": "/modules/admin/features/dashboard/index.html"
     },
     {
       "source": "/products",
-      "destination": "/modules/admin/features/products/"
+      "destination": "/modules/admin/features/products/products.html"
     },
     {
       "source": "/login",
-      "destination": "/modules/customer/features/auth/login/"
+      "destination": "/modules/customer/features/auth/login/index.html"
     },
     {
       "source": "/admin/dashboard",
-      "destination": "/modules/admin/features/dashboard/"
+      "destination": "/modules/admin/features/dashboard/index.html"
     },
     {
       "source": "/admin/category",
