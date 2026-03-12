@@ -1,13 +1,18 @@
 package com.techgadget.server.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.techgadget.server.model.enums.AttributeType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "attributes")
-@Getter @Setter
+@Getter
+@Setter
 public class Attribute {
 
     @Id
@@ -20,4 +25,7 @@ public class Attribute {
     @Enumerated(EnumType.STRING)
     private AttributeType dataType;
 
+    @ManyToMany(mappedBy = "attributes")
+    @JsonIgnore
+    private Set<Category> categories = new HashSet<>();
 }

@@ -4,6 +4,7 @@ import com.techgadget.server.model.dto.brand.BrandRequest;
 import com.techgadget.server.model.dto.brand.BrandResponse;
 import com.techgadget.server.service.BrandService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,12 +12,9 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("api/brands")
+@RequiredArgsConstructor
 public class BrandController {
     private final BrandService brandService;
-
-    public BrandController(BrandService brandService) {
-        this.brandService = brandService;
-    }
 
     @GetMapping
     public List<BrandResponse> getAllBrands() {

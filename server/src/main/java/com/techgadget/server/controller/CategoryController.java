@@ -6,6 +6,8 @@ import com.techgadget.server.model.dto.category.CategoryRequest;
 import com.techgadget.server.model.dto.category.CategoryResponse;
 import com.techgadget.server.service.CategoryService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,16 +15,18 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("api/category")
+@RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public List<CategoryResponse> getCategories() {
         return categoryService.getCategories();
+    }
+
+    @GetMapping("/{id}/attributes")
+    public ResponseEntity<?> getAttributesByCategory(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.getAttributesByCategory(id));
     }
 
     @PostMapping
