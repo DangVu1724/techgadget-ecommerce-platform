@@ -34,7 +34,7 @@ export const categoryApi = {
   // Lấy category theo ID
   getById: async (id) => {
     try {
-      const res = await fetch(`${BASE_URL}/category/${id}`);
+      const res = await fetch(`${BASE_URL}/category/${id}/attributes`);
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
