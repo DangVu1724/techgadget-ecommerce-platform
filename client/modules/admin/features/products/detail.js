@@ -9,14 +9,24 @@ import {
   showLoading,
   renderAttributes,
 } from "./helpers.js";
-import { loadAttributes, collectAttributes, resetAttributes } from "./modal.js";
-import { validateVariantForm, setSubmitting, getSubmitting } from "./modal.js";
+import {
+  loadAttributes,
+  collectAttributes,
+  resetAttributes,
+} from "/modules/admin/features/products/modal.js";
+import {
+  validateVariantForm,
+  setSubmitting,
+  getSubmitting,
+} from "/modules/admin/features/products/modal.js";
 // Initialize sidebar
 new Sidebar();
 
 // Get product ID from URL
-const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get("id");
+const productId = window.location.pathname.split("/").pop();
+
+console.log("URL:", window.location.pathname);
+console.log("Product ID:", productId);
 
 let currentProduct = null;
 let currentVariant = null;
@@ -160,7 +170,7 @@ window.switchTab = function (tabName) {
 };
 
 // Navigation
-window.goBack = () => (window.location.href = "products.html");
+window.goBack = () => (window.location.href = "/admin/products");
 
 window.editProduct = () => {
   if (currentProduct) {
@@ -184,6 +194,7 @@ window.deleteProduct = async () => {
 // Variant functions
 window.addVariant = async () => {
   currentVariant = null;
+
   const form = document.getElementById("variantForm");
   if (form) form.reset();
 
@@ -191,7 +202,13 @@ window.addVariant = async () => {
   if (modalTitle) modalTitle.textContent = "Add Variant";
 
   resetAttributes();
-  await loadAttributes();
+
+  console.log("Current product category ID:", currentProduct?.category?.id);
+
+  if (currentProduct?.category?.id) {
+    await loadAttributes(currentProduct.category.id);
+    console.log("Attributes loaded for category ID:", currentProduct.category.id);
+  }
 
   const modal = document.getElementById("variantModal");
   if (modal) {

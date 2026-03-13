@@ -179,7 +179,7 @@ async function deleteProduct(product) {
 }
 
 function viewProduct(product) {
-  window.location.href = `product-detail.html?id=${product.id}`;
+  window.location.href = `/admin/products/${product.id}`;
 }
 
 function formatCurrency(value) {

@@ -31,7 +31,6 @@ export const attributeApi = {
     }
   },
   
-  // Lấy brand theo ID
   getById: async (id) => {
     try {
       const res = await fetch(`${BASE_URL}/attributes/${id}`);
