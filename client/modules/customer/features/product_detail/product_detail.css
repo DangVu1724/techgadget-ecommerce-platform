@@ -1,0 +1,405 @@
+/* --- BIẾN MÀU & FONT CHUẨN --- */
+:root {
+    --accent: #FF6F42; /* Cam đỏ chuẩn mẫu */
+    --dark-bg: #2a2a2a;
+    --border-grey: #eeeeee;
+    --font-main: 'Poppins', sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+}
+
+/* THIẾT LẬP CĂN LỀ TOÀN TRANG (Container) */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto; /* Căn giữa màn hình */
+}
+
+/* ÁP DỤNG FONT CHỮ CƠ BẢN */
+body {
+    font-family: var(--font-main);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Layout chung */
+.product-layout { 
+    display: flex; 
+    gap: 40px; 
+    align-items: flex-start; 
+    padding: 50px 0; /* Khoảng cách trên dưới */
+}
+
+/* --- PHẦN GALLERY (BÊN TRÁI) --- */
+.product-gallery { display: flex; gap: 15px; width: 50%; }
+
+.thumbnail-vertical { display: flex; flex-direction: column; gap: 10px; }
+.thumbnail-vertical img { 
+    width: 75px; 
+    height: 75px; 
+    border: 1px solid var(--border-grey); 
+    cursor: pointer; 
+    object-fit: cover; 
+}
+.thumbnail-vertical img.active { border-color: var(--accent); }
+
+.main-image-box { 
+    flex: 1; 
+    border: 1px solid #f9f9f9; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px; 
+}
+.main-image-box img { max-width: 100%; height: auto; }
+
+/* --- PHẦN NỘI DUNG (BÊN PHẢI - CĂN LỀ TRÁI) --- */
+.product-details { 
+    width: 50%; 
+    text-align: left; /* Căn lề trái y hệt mẫu */
+}
+
+.p-title { 
+    font-size: 38px; 
+    font-family: var(--font-heading); /* Font Montserrat sang trọng */
+    font-weight: 300; 
+    letter-spacing: 2px; 
+    text-transform: uppercase;
+}
+
+.p-price { 
+    color: var(--accent); 
+    font-size: 26px; 
+    font-weight: 600; 
+    margin: 10px 0; 
+}
+
+.p-stars { 
+    color: var(--accent); 
+    margin-bottom: 15px; 
+    font-size: 14px; 
+}
+
+.p-short-desc { 
+    color: #888; 
+    font-size: 14px; 
+    line-height: 1.8; 
+    margin-bottom: 20px; 
+}
+
+/* Đường kẻ chéo đặc trưng //// */
+.divider-slanted {
+    height: 12px;
+    background-image: linear-gradient(135deg, transparent 45%, #e0e0e0 50%, transparent 55%);
+    background-size: 8px 8px;
+    margin: 25px 0;
+}
+
+/* Biến thể Color/Size */
+.p-variation { margin-bottom: 20px; }
+
+.v-label { 
+    display: block; 
+    font-family: var(--font-heading); /* Font Montserrat cho nhãn */
+    font-size: 11px; 
+    font-weight: bold; 
+    text-decoration: underline; 
+    margin-bottom: 10px; 
+    color: #333; 
+    letter-spacing: 1px;
+}
+
+.v-options { display: flex; gap: 15px; }
+
+.v-btn { 
+    border: none; 
+    background: none; 
+    cursor: pointer; 
+    font-size: 14px; 
+    color: #999; 
+    padding: 0;
+    font-family: var(--font-main);
+}
+.v-btn.active { color: var(--accent); font-weight: bold; }
+
+.p-stock { font-size: 13px; color: #666; margin: 15px 0; font-style: italic; }
+
+/* THANH HÀNH ĐỘNG - KHÔNG XUỐNG DÒNG */
+.action-bar-nowrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap; 
+    flex-wrap: nowrap !important; /* Cưỡng ép không xuống dòng */
+}
+
+.qty-control { 
+    display: flex; 
+    border: 1px solid #ddd; 
+    border-radius: 25px; 
+    padding: 5px 12px; 
+    height: 45px; 
+    align-items: center; 
+}
+.qty-control button { border: none; background: none; cursor: pointer; padding: 0 10px; color: #888; font-size: 18px; }
+.qty-control input { width: 30px; border: none; text-align: center; font-weight: bold; outline: none; }
+
+.btn-orange { 
+    background: var(--accent); 
+    color: white; 
+    border: none; 
+    padding: 0 25px; 
+    height: 45px; 
+    border-radius: 25px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    font-family: var(--font-heading); /* Font Montserrat cho nút bấm */
+}
+
+.btn-dark { 
+    background: var(--dark-bg); 
+    color: white; 
+    border: none; 
+    padding: 0 25px; 
+    height: 45px; 
+    border-radius: 25px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    font-family: var(--font-heading);
+}
+
+.btn-wishlist { 
+    width: 45px; 
+    height: 45px; 
+    border-radius: 50%; 
+    border: none; 
+    background: var(--dark-bg); 
+    color: white; 
+    cursor: pointer; 
+}
+
+.btn-orange:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* Tabs Section */
+.tabs-section { margin-top: 60px; border-top: 1px solid #eee; padding-top: 30px; }
+.tabs-header { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+.tab-link { 
+    font-family: var(--font-heading); 
+    font-size: 13px; 
+    font-weight: bold; 
+    color: #ccc; 
+    cursor: pointer; 
+    letter-spacing: 1px;
+}
+.tab-link.active { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
+
+/* FOOTER */
+.grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
+.footer{
+    border-top:1px solid var(--border);
+    margin-top:60px;
+    background:#fafafa;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:40px;
+    padding:70px 0;
+}
+
+.footer-info p{
+    font-size:13px;
+    color:#777;
+    margin:15px 0 25px;
+    line-height:1.6;
+    max-width:260px;
+}
+
+.footer-links h4,
+.footer-contact h4{
+    font-family:'Montserrat';
+    font-size:13px;
+    margin-bottom:20px;
+    letter-spacing:1px;
+}
+
+.footer-links a{
+    display:block;
+    text-decoration:none;
+    color:#777;
+    font-size:13px;
+    margin-bottom:12px;
+    transition:.2s;
+}
+
+.footer-links a:hover{
+    color:var(--orange);
+}
+
+.footer-contact p{
+    font-size:13px;
+    color:#777;
+    margin-bottom:10px;
+}
+
+.social-icons i{
+    margin-right:12px;
+    font-size:14px;
+    color:#aaa;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.social-icons i:hover{
+    color:var(--orange);
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+.section-padding{
+    padding:50px 0;
+}
+
+/* REVIEWS */
+
+.review-card{
+    border:1px solid #f0f0f0;
+    padding:35px;
+    border-radius:5px;
+}
+
+.review-card p{
+    font-style:italic;
+    font-size:13px;
+    color:#666;
+    margin-bottom:15px;
+}
+
+.stars{
+    color:var(--orange);
+    font-size:11px;
+    margin-bottom:8px;
+}
+
+.review-card h6{
+    font-size:12px;
+    font-weight:700;
+}
+
+
+/* --- PHẦN ĐÁNH GIÁ & REVIEW FORM --- */
+.existing-reviews { 
+    margin-bottom: 50px; 
+    width: 100%; /* Xóa bỏ giới hạn chiều rộng */
+}
+
+.review-item { 
+    border-bottom: 1px solid #eee; 
+    padding: 20px 0; 
+    display: flex; /* Thêm để avatar sang trái, chữ sang phải */
+    gap: 20px; /* Khoảng cách giữa avatar và nội dung */
+    align-items: flex-start; 
+}
+
+.avatar-circle { 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    flex-shrink: 0; /* Giữ nguyên kích thước ảnh không bị méo */
+}
+
+.review-meta { 
+    font-size: 13px; 
+    color: #333; 
+    margin: 0 0 5px 0; /* Chỉnh lại margin cho cân đối */
+}
+
+.review-text { 
+    font-size: 14px; 
+    color: #777; 
+    line-height: 1.6; 
+}
+
+/* Tiêu đề có gạch chéo //// */
+.section-title-slanted {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin: 40px 0 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.section-title-slanted::after {
+    /* Đã thêm dải gạch chéo vào đây */
+    content: "";
+    color: #eee;
+    margin-left: 15px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 300;
+}
+
+/* Form Styling */
+.add-review-section { 
+    text-align: left; 
+    width: 100%; /* Xóa lề */
+}
+
+.form-note { font-size: 13px; color: #888; margin-bottom: 25px; }
+
+.review-form input[type="text"],
+.review-form input[type="email"],
+.review-form textarea {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-family: var(--font-main);
+    font-size: 14px;
+    background: #fff;
+    box-sizing: border-box; /* Đảm bảo không bị tràn khi để width 100% */
+}
+
+.checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; font-size: 13px; color: #888; }
+.stars-input { color: #ccc; cursor: pointer; font-size: 18px; margin-top: 5px; }
+
+/* --- PHẦN SẢN PHẨM LIÊN QUAN (GRID 5) --- */
+.grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    width: 100%; /* Xóa lề */
+}
+
+.product-card-simple { text-align: center; transition: 0.3s; padding: 10px; }
+.p-img-box { 
+    border: 1px solid #f9f9f9; 
+    padding: 20px; 
+    margin-bottom: 15px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    height: 200px;
+}
+.p-img-box img { max-width: 100%; object-fit: contain; }
+.product-card-simple h4 { font-size: 14px; font-weight: 500; margin-bottom: 5px; color: #333; }
+.product-card-simple .p-price { font-size: 14px; font-weight: 600; color: var(--accent); }
+
+.product-card-simple:hover { transform: translateY(-5px); }
+
+@media (max-width: 992px) { .grid-5 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .grid-5 { grid-template-columns: repeat(2, 1fr); } }
