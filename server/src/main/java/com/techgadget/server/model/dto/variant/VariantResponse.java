@@ -15,6 +15,7 @@ import java.util.List;
 public class VariantResponse {
     private Long id;
     private String name;
+    private String sku;
     private BigDecimal price;
     private Integer stock;
     private String description;
