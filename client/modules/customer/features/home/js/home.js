@@ -21,15 +21,22 @@ async function loadCategories() {
   container.innerHTML = "";
 
   categories.forEach((category) => {
-    const key = category.name.toLowerCase();
-    const image = categoryImages[key] || "/modules/customer/assets/images/categories/default.png";
+    const key = (category.name || "").toLowerCase();
+    const image =
+      categoryImages[key] ||
+      "/modules/customer/assets/images/categories/default.png";
 
     const card = document.createElement("div");
     card.className = "cat-card";
+    const url = `/modules/customer/features/shop/shop.html?categoryId=${category.id || ""}&categoryName=${encodeURIComponent(
+      category.name || "",
+    )}`;
     card.innerHTML = `
-      <img src="${image}" alt="${category.name}">
-      <p>${category.name}</p>
-    `;
+        <a href="${url}" class="cat-link" style="text-decoration:none;color:inherit;">
+          <img src="${image}" alt="${category.name}">
+          <p>${category.name}</p>
+        </a>
+      `;
     container.appendChild(card);
   });
 }
@@ -45,8 +52,11 @@ async function loadBrands() {
   container.innerHTML = "";
 
   brands.forEach((brand) => {
-    const item = document.createElement("span");
+    const item = document.createElement("a");
     item.className = "brand-item";
+    item.href = `/modules/customer/features/shop/shop.html?brandId=${brand.brandId || ""}&brandName=${encodeURIComponent(
+      brand.brandName || "",
+    )}`;
     item.textContent = capitalizeFirstLetter(brand.brandName);
     container.appendChild(item);
   });
@@ -79,11 +89,12 @@ async function loadNewProducts() {
       const card = document.createElement("div");
       card.className = "product-main";
 
-      const image = product.thumbnail || "/modules/customer/assets/images/macbook.png";
+      const image =
+        product.thumbnail || "/modules/customer/assets/images/macbook.png";
 
       // CẬP NHẬT: Thẻ <a> bao bọc ảnh và tiêu đề để click chuyển trang
       card.innerHTML = `
-        <a href="/modules/customer/features/product_detail/product_detail.html" class="product-link" style="text-decoration: none; color: inherit; display: block;">
+        <a href="/modules/customer/features/product_detail/product_detail.html?id=${product.id}" class="product-link">
           <div class="p-img-box">
             <img src="${image}" alt="${product.name}">
           </div>
@@ -119,11 +130,12 @@ async function loadBestSellingProducts() {
       const card = document.createElement("div");
       card.className = "product-main";
 
-      const image = product.thumbnail || "/modules/customer/assets/images/macbook.png";
+      const image =
+        product.thumbnail || "/modules/customer/assets/images/macbook.png";
 
       // CẬP NHẬT: Kết nối đồng bộ với trang chi tiết
       card.innerHTML = `
-        <a href="/modules/customer/features/product_detail/product_detail.html" class="product-link" style="text-decoration: none; color: inherit; display: block;">
+        <a href="/modules/customer/features/product_detail/product_detail.html?id=${product.id}" class="product-link">
           <div class="p-img-box">
             <img src="${image}" alt="${product.name}">
           </div>

@@ -17,8 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VariantRequest {
-
-    @NotBlank(message = "Tên biến thể không được để trống")
     private String name;
 
     @NotNull(message = "Giá không được để trống")

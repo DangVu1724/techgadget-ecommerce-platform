@@ -29,4 +29,66 @@ export const productApi = {
       throw error;
     }
   },
+
+  // Lấy chi tiết sản phẩm theo ID
+  getById: async (id) => {
+    try {
+      const res = await fetch(`${BASE_URL}/products/${id}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      return await res.json();
+    } catch (error) {
+      console.error("Error fetching product by id:", error);
+      throw error;
+    }
+  },
+
+  getByCategory: async (categoryId, params = {}) => {
+    try {
+      const page = params.page || 0;
+      const size = params.size || 20;
+      const sortBy = params.sortBy || "id";
+      const sortDirection = params.sortDirection || "asc";
+
+      const url = `${BASE_URL}/products/category/${categoryId}?page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}`;
+
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      throw error;
+    }
+  },
+
+  getByBrand: async (brandId, params = {}) => {
+  try {
+    const page = params.page || 0;
+    const size = params.size || 20;
+    const sortBy = params.sortBy || "id";
+    const sortDirection = params.sortDirection || "asc";
+
+    const url = `${BASE_URL}/products/brand/${brandId}?page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}`;
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching products by category:", error);
+    throw error;
+  }
+},
 };

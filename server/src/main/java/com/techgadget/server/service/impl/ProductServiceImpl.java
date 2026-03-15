@@ -42,6 +42,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductSummaryResponse> getProductsByCategoryId(Pageable pageable, Long id) {
+        return productRepository.getProductsByCategoryId(pageable,id);
+    }
+
+    @Override
+    public Page<ProductSummaryResponse> getProductsByBrandId(Pageable pageable, Long id) {
+        return productRepository.getProductsByBrandId(pageable,id);
+    }
+
+
+    @Override
     public ProductResponse createProduct(ProductCreateRequest request) {
 
         Brand brand = brandRepository.findById(request.getBrandId())
@@ -125,6 +136,7 @@ public class ProductServiceImpl implements ProductService {
                                 .map(v -> VariantResponse.builder()
                                         .id(v.getId())
                                         .name(v.getName())
+                                        .sku(v.getSku())
                                         .price(v.getPrice())
                                         .stock(v.getStock())
                                         .description(v.getDescription())

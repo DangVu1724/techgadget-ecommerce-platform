@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop - TechGadget</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/modules/customer/features/shop/shop.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-left">
+          <span class="filter-label">
+            <i class="fas fa-filter"></i>
+            <span id="filterLabel">Hiển thị tất cả sản phẩm</span>
+          </span>
+        </div>
+        <div class="filter-right">
+          <div class="sort-dropdown">
+            <select
+              id="sortSelect"
+              class="sort-select"
+              aria-label="Sắp xếp sản phẩm"
+            >
+              <option value="default">Sắp xếp: Mặc định</option>
+              <option value="price-asc">Giá: Thấp đến cao</option>
+              <option value="price-desc">Giá: Cao đến thấp</option>
+              <option value="name-asc">Tên: A-Z</option>
+              <option value="name-desc">Tên: Z-A</option>
+              <option value="newest">Mới nhất</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Filters Panel -->
+      <div class="advanced-filters" id="advancedFilters">
+        <div class="filter-section">
+          <h4>Khoảng giá <i class="fas fa-chevron-down"></i></h4>
+          <div class="filter-content">
+            <div class="price-range">
+              <input
+                type="number"
+                id="minPrice"
+                placeholder="Từ $"
+                min="0"
+                step="10"
+              />
+              <span>-</span>
+              <input
+                type="number"
+                id="maxPrice"
+                placeholder="Đến $"
+                min="0"
+                step="10"
+              />
+              <button id="applyPriceFilter" class="apply-price-btn">
+                Áp dụng
+              </button>
+            </div>
+            <div class="price-presets">
+              <button class="price-preset" data-min="0" data-max="100">
+                Dưới $100
+              </button>
+              <button class="price-preset" data-min="100" data-max="500">
+                $100 - $500
+              </button>
+              <button class="price-preset" data-min="500" data-max="1000">
+                $500 - $1000
+              </button>
+              <button class="price-preset" data-min="1000" data-max="99999">
+                Trên $1000
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h4>RAM <i class="fas fa-chevron-down"></i></h4>
+          <div class="filter-content">
+            <label class="checkbox-label">
+              <input type="checkbox" value="4" class="ram-filter" /> 4GB
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="8" class="ram-filter" /> 8GB
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="16" class="ram-filter" /> 16GB
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="32" class="ram-filter" /> 32GB+
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h4>Bộ nhớ <i class="fas fa-chevron-down"></i></h4>
+          <div class="filter-content">
+            <label class="checkbox-label">
+              <input type="checkbox" value="64" class="storage-filter" /> 64GB
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="128" class="storage-filter" /> 128GB
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="256" class="storage-filter" /> 256GB
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="512" class="storage-filter" />
+              512GB+
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h4>Đánh giá <i class="fas fa-chevron-down"></i></h4>
+          <div class="filter-content">
+            <label class="checkbox-label">
+              <input type="checkbox" value="5" class="rating-filter" /> 5
+              <i class="fas fa-star" style="color: #ffd700"></i>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="4" class="rating-filter" /> 4+
+              <i class="fas fa-star" style="color: #ffd700"></i>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" value="3" class="rating-filter" /> 3+
+              <i class="fas fa-star" style="color: #ffd700"></i>
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button id="clearFilters" class="clear-filters">Xóa bộ lọc</button>
+          <button id="applyFilters" class="apply-filters">Áp dụng</button>
+        </div>
+      </div>
+
+      <!-- Toggle Advanced Filters -->
+      <button class="toggle-filters" id="toggleFilters">
+        <i class="fas fa-sliders-h"></i> Bộ lọc nâng cao
+        <i class="fas fa-chevron-down"></i>
+      </button>
+
+      <!-- Product List -->
+      <div id="productList" class="grid-5"></div>
+
+      <!-- Empty Message -->
+      <p id="emptyMessage" class="empty-message">
+        <i class="fas fa-search"></i> Không tìm thấy sản phẩm phù hợp.
+      </p>
+
+      <!-- Pagination -->
+      <div id="pagination" class="pagination"></div>
+    </div>
+
+    <script
+      type="module"
+      src="/modules/customer/features/shop/shop.js"
+    ></script>
+    <script src="/modules/customer/assets/js/header.js" type="module"></script>
+    <script type="module" src="/modules/customer/assets/js/footer.js"></script>
+  </body>
+</html>

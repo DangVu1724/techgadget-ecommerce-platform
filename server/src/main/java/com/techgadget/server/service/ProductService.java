@@ -16,6 +16,10 @@ public interface ProductService {
 
      ProductResponse getProductById(Long id);
 
+     Page<ProductSummaryResponse> getProductsByCategoryId(Pageable pageable, Long id);
+
+     Page<ProductSummaryResponse> getProductsByBrandId(Pageable pageable, Long id);
+
      ProductResponse createProduct(ProductCreateRequest request);
 
      ProductResponse updateProduct(Long id, ProductUpdateRequest request);

@@ -43,5 +43,46 @@ WHERE p.id = :id
 """)
     Optional<Product> findProductDetail(Long id);
 
+    @Query("""
+SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
+    p.id,
+    p.name,
+    p.image,
+    MIN(v.price),
+    SUM(v.stock),
+    c.name,
+    b.brandName,
+    p.createdAt
+)
+FROM Product p
+LEFT JOIN p.category c
+LEFT JOIN p.brand b
+LEFT JOIN p.variants v
+WHERE c.id = :id
+GROUP BY p.id, p.name, p.image, c.name, b.brandName,p.createdAt
+""")
+    Page<ProductSummaryResponse> getProductsByCategoryId(Pageable pageable, Long id);
+
+
+    @Query("""
+SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
+    p.id,
+    p.name,
+    p.image,
+    MIN(v.price),
+    SUM(v.stock),
+    c.name,
+    b.brandName,
+    p.createdAt
+)
+FROM Product p
+LEFT JOIN p.category c
+LEFT JOIN p.brand b
+LEFT JOIN p.variants v
+WHERE b.id = :id
+GROUP BY p.id, p.name, p.image, c.name, b.brandName,p.createdAt
+""")
+    Page<ProductSummaryResponse> getProductsByBrandId(Pageable pageable, Long id);
+
     boolean existsByName(@NotBlank(message = "Tên sản phẩm không được để trống") String name);
 }
