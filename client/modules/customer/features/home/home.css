@@ -116,6 +116,7 @@ body{
     margin-bottom:10px;
 }
 
+.cat-card a{display:block; text-decoration:none; color:inherit;}
 .cat-card:hover{
     border-color:var(--orange);
     color:var(--orange);

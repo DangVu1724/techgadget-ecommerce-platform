@@ -69,10 +69,7 @@ class HeaderComponent {
     const path = window.location.pathname;
     const depth = (path.match(/\//g) || []).length;
 
-    // Đếm số lượng thư mục để xác định đường dẫn tương đối
     if (path.includes("features/")) {
-      // Nếu đang ở trong thư mục features (VD: /modules/customer/features/shop/shop.html)
-      // Cần quay lại thư mục modules/customer
       return "/modules/customer/components/header/header.html";
     } else {
       return "/modules/customer/components/header/header.html";
