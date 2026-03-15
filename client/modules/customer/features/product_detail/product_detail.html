@@ -3,243 +3,434 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IPHONE 15 PRO MAX - TECHGADGET</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="/modules/customer/features/product_detail/product_detail.css" />
+    <title>Product Detail | TechGadget</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="/modules/customer/features/product_detail/product_detail.css"
+    />
   </head>
   <body>
-    <div class="container margin-top-med">
-      <p class="breadcrumb text-muted" style="font-size: 14px;">Home > <span class="text-dark">iPhone 15 Pro Max</span></p>
+    <!-- Breadcrumb -->
+    <div class="container" style="padding: 20px 0">
+      <p class="breadcrumb text-muted" style="font-size: 14px">
+        <a href="/" style="color: #999; text-decoration: none">Home</a> >
+        <span class="text-dark" id="breadcrumbName">iPhone 15 Pro Max</span>
+      </p>
     </div>
 
-<main class="container section-padding">
-    <div class="product-layout">
-        
+    <main class="container section-padding">
+      <!-- Product Layout -->
+      <div class="product-layout">
+        <!-- Gallery -->
         <div class="product-gallery">
-            <div class="thumbnail-vertical">
-                <img src="/modules/customer/assets/images/macbook.png" class="thumb active" alt="iPhone 15">
-                <img src="/modules/customer/assets/images/banner1.png" class="thumb" alt="iPhone 15">
-                <img src="/modules/customer/assets/images/macbook.png" class="thumb" alt="iPhone 15">
-            </div>
-            <div class="main-image-box">
-                <img src="/modules/customer/assets/images/macbook.png" id="mainImg">
-            </div>
-        </div>
-
-        <div class="product-details">
-            <h1 class="p-title">IPHONE 15 PRO MAX</h1>
-            <p class="p-price">$2000.00</p>
-            <div class="p-stars">★★★★★</div>
-            <p class="p-short-desc">Justo, cum feugiat imperdiet nulla molestie ac vulputate scelerisque amet. Bibendum adipiscing platea blandit sit sed quam semper rhoncus.</p>
-            
-            <div class="divider-slanted"></div>
-
-            <div class="p-variation">
-                <span class="v-label">COLOR</span>
-                <div class="v-options" id="colorOptions">
-                    <button class="v-btn active">Orange</button>
-                    <button class="v-btn">Green</button>
-                    <button class="v-btn">Blue</button>
-                    <button class="v-btn">Black</button>
-                </div>
-            </div>
-
-            <div class="p-variation">
-                <span class="v-label">SIZE</span>
-                <div class="v-options" id="sizeOptions">
-                    <button class="v-btn">XL</button>
-                    <button class="v-btn active">L</button>
-                    <button class="v-btn">M</button>
-                    <button class="v-btn">S</button>
-                </div>
-            </div>
-
-            <p class="p-stock">2 in stock</p>
-
-            <div class="action-bar-nowrap">
-                <div class="qty-control">
-                    <button type="button" onclick="changeQty(-1)">-</button>
-                    <input type="text" id="quantity" value="1" readonly>
-                    <button type="button" onclick="changeQty(1)">+</button>
-                </div>
-                <button class="btn-orange">ORDER NOW</button>
-                <button class="btn-dark">ADD TO CART</button>
-                <button class="btn-wishlist"><i class="far fa-heart"></i></button>
-            </div>
-
-            <div class="divider-slanted"></div>
-
-            <div class="p-meta">
-                <p><strong>SKU:</strong> 1223</p>
-                <p><strong>Category:</strong> Phone, Screen Touch</p>
-                <p><strong>Tags:</strong> Classic, Modern</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="tabs-section">
-        <div class="tabs-header">
-            <span class="tab-link active">DESCRIPTION</span>
-            <span class="tab-link">ADDITIONAL INFORMATION</span>
-            <span class="tab-link">REVIEWS (2)</span>
-        </div>
-        <div class="tabs-content">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede.</p>
-        </div>
-    </div>
-    <div class="reviews-wrapper">
-    <div class="existing-reviews">
-        <div class="review-item flex-row gap-med">
-            <img src="/modules/customer/assets/images/avatar1.png" class="avatar-circle" alt="User">
-            <div class="review-body">
-                <div class="stars text-accent">★★★★★</div>
-                <p class="review-meta"><strong>Emma Chamberlin</strong> – 11/22/2025</p>
-                <p class="review-text">Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis convallis.</p>
-            </div>
-        </div>
-        <div class="review-item flex-row gap-med">
-            <img src="/modules/customer/assets/images/avatar2.png" class="avatar-circle" alt="User">
-            <div class="review-body">
-                <div class="stars text-accent">★★★★★</div>
-                <p class="review-meta"><strong>Thompson J.</strong> – 11/22/2025</p>
-                <p class="review-text">Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis convallis.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="add-review-section">
-        <h3 class="section-title-slanted">ADD A REVIEW</h3>
-        <p class="form-note">Your email address will not be published. Required fields are marked *</p>
-        
-        <form class="review-form">
-            <div class="rating-input margin-bottom-small">
-                <span>Your rating *</span>
-                <div class="stars-input">☆☆☆☆☆</div>
-            </div>
-
-            <div class="file-input margin-bottom-small">
-                <label>Choose your photo</label>
-                <input type="file" class="btn-file-custom">
-            </div>
-
-            <textarea placeholder="Write your review here *" rows="4"></textarea>
-
-            <div class="grid-2-cols gap-small">
-                <input type="text" placeholder="Write your name here *">
-                <input type="email" placeholder="Write your email here *">
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="save-info">
-                <label for="save-info">Save my name, email, and website in this browser for the next time.</label>
-            </div>
-
-            <button type="submit" class="btn-orange text-uppercase">SUBMIT</button>
-        </form>
-    </div>
-</div>
-
-<section class="related-products section-padding">
-    <h3 class="section-title-slanted">RELATED ITEMS</h3>
-    <div class="grid-5 gap-small">
-        <div class="product-card-simple">
-            <div class="p-img-box"><img src="/modules/customer/assets/images/ipad.png" alt="iPad"></div>
-            <h4>iPad (9th Gen)</h4>
-            <p class="p-price">$870</p>
-        </div>
-        <div class="product-card-simple">
-            <div class="p-img-box"><img src="/modules/customer/assets/images/drone.png" alt="Drone"></div>
-            <h4>Drone With Camera</h4>
-            <p class="p-price">$600</p>
-        </div>
-        <div class="product-card-simple">
-            <div class="p-img-box"><img src="/modules/customer/assets/images/watch.png" alt="Watch"></div>
-            <h4>Apple Watch (2nd Gen)</h4>
-            <p class="p-price">$400</p>
-        </div>
-        <div class="product-card-simple">
-            <div class="p-img-box"><img src="/modules/customer/assets/images/monitor.png" alt="Monitor"></div>
-            <h4>Ultra HD TV</h4>
-            <p class="p-price">$2000</p>
-        </div>
-        <div class="product-card-simple">
-            <div class="p-img-box"><img src="/modules/customer/assets/images/speaker.png" alt="Speaker"></div>
-            <h4>Bluetooth Speaker</h4>
-            <p class="p-price">$75</p>
-        </div>
-    </div>
-</section>
-<section class="section-padding">
-      <h3 class="section-header">CUSTOMERS REVIEWS</h3>
-      <div class="grid-3">
-        <div class="review-card">
-          <p>"Excellent quality and fast shipping. Highly recommend!"</p>
-          <div class="stars">★★★★★</div>
-          <h6>Emma Chamberlin</h6>
-        </div>
-        <div class="review-card">
-          <p>"The customer service is outstanding. Will buy again."</p>
-          <div class="stars">★★★★★</div>
-          <h6>Thomas John</h6>
-        </div>
-        <div class="review-card">
-          <p>"Best tech website I've ever used. 5 stars."</p>
-          <div class="stars">★★★★★</div>
-          <h6>Kevin Bryan</h6>
-        </div>
-      </div>
-    </section>
-</main>
-
-    <footer class="footer">
-      <div class="container footer-grid">
-        <div class="footer-info">
-          <h2 class="logo">TECH<span>GADGET</span></h2>
-          <p>
-            TechGadget là cửa hàng chuyên cung cấp laptop, điện thoại và phụ
-            kiện công nghệ chính hãng. Chúng tôi giúp bạn dễ dàng tìm kiếm, so
-            sánh và mua sắm các thiết bị công nghệ mới nhất.
-          </p>
-
-          <div class="social-icons">
-            <i class="fab fa-facebook-f"></i>
-            <i class="fab fa-twitter"></i>
-            <i class="fab fa-instagram"></i>
+          <div class="thumbnail-vertical">
+            <img
+              src="/modules/customer/assets/images/macbook.png"
+              class="thumb active"
+              alt="Product thumbnail 1"
+            />
+            <img
+              src="/modules/customer/assets/images/banner1.png"
+              class="thumb"
+              alt="Product thumbnail 2"
+            />
+            <img
+              src="/modules/customer/assets/images/macbook.png"
+              class="thumb"
+              alt="Product thumbnail 3"
+            />
+          </div>
+          <div class="main-image-box">
+            <img
+              src="/modules/customer/assets/images/macbook.png"
+              id="mainImg"
+              alt="Main product image"
+            />
           </div>
         </div>
 
-        <div class="footer-links">
-          <h4>QUICK LINKS</h4>
-          <a href="/home">Home</a>
-          <a href="/shop">Shop</a>
-          <a href="/products">Products</a>
-          <a href="/contact">Contact</a>
-        </div>
+        <!-- Product Details -->
+        <div class="product-details">
+          <h1 class="p-title" id="productTitle"></h1>
+          <p class="selected-variant-label" id="selectedVariantLabel"></p>
+          <p class="p-price" id="productPrice"></p>
+          <p class="p-short-desc" id="productDescription"></p>
 
-        <div class="footer-links">
-          <h4>HELP & INFO</h4>
-          <a href="#">Track Order</a>
-          <a href="#">Returns</a>
-          <a href="#">Shipping Policy</a>
-          <a href="#">FAQ</a>
-        </div>
+          <!-- Meta Info -->
+          <div class="p-meta">
+            <p>
+              <strong>Category:</strong> <span id="productCategory">Phone</span>
+            </p>
+          </div>
 
-        <div class="footer-contact">
-          <h4>CONTACT US</h4>
-          <p>Email: michael.scott@techgadget.com</p>
-          <p>Phone: +84 111 222 333</p>
-          <p>Owner: Michael Scott</p>
-          <p>TechGadget Electronics Store</p>
+          <!-- Color Options -->
+          <div class="p-variation">
+            <span class="v-label">COLOR</span>
+            <div class="v-options" id="colorOptions"></div>
+          </div>
+
+          <!-- Variant Options -->
+          <div class="p-variation">
+            <span class="v-label">VARIANT</span>
+            <div class="v-options" id="variantOptions">
+              <button class="v-btn active">Default</button>
+            </div>
+          </div>
+
+          <!-- Stock -->
+          <p class="p-stock" id="productStock">2 in stock</p>
+
+          <!-- Action Bar -->
+          <div class="action-bar">
+            <div class="qty-control">
+              <button
+                type="button"
+                onclick="window.changeQty(-1)"
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <input
+                type="text"
+                id="quantity"
+                value="1"
+                readonly
+                aria-label="Quantity"
+              />
+              <button
+                type="button"
+                onclick="window.changeQty(1)"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+            <button class="btn-primary">ORDER NOW</button>
+            <button class="btn-secondary">ADD TO CART</button>
+            <button class="btn-wishlist" aria-label="Add to wishlist">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+
+          <div class="divider-slanted"></div>
         </div>
       </div>
 
-      <div class="footer-bottom">
-        <p>© 2026 TechGadget. All rights reserved.</p>
+      <!-- Tabs Section -->
+      <div class="tabs-section">
+        <div class="tabs-header">
+          <span class="tab-link active" data-tab="description"
+            >DESCRIPTION</span
+          >
+          <span class="tab-link" data-tab="information"
+            >ADDITIONAL INFORMATION</span
+          >
+          <span class="tab-link" data-tab="reviews">REVIEWS (2)</span>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tabs-content">
+          <!-- Description Tab -->
+          <div class="tab-pane active" id="tab-description">
+            <p id="descriptionText">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+              odio. Quisque volutpat mattis eros. Nullam malesuada erat ut
+              turpis. Suspendisse urna viverra non, semper suscipit, posuere a,
+              pede.
+            </p>
+
+            <div class="attributes-wrapper">
+              <h4>Specifications</h4>
+              <div id="attributeTableContainer"></div>
+            </div>
+          </div>
+
+          <!-- Information Tab -->
+          <div class="tab-pane" id="tab-information" style="display: none">
+            <h4>Customer Information Privacy Policy</h4>
+
+            <h5>1. Purpose of Information Collection</h5>
+            <p>
+              TechGadget is committed to protecting customer information. We may
+              collect basic personal information such as name, phone number,
+              email address, shipping address, and purchase history. This
+              information is used to:
+            </p>
+            <ul>
+              <li>Process and confirm customer orders</li>
+              <li>Provide customer support</li>
+              <li>Deliver products and update order status</li>
+              <li>
+                Send promotions and special offers (with customer consent)
+              </li>
+              <li>Improve our services and shopping experience</li>
+            </ul>
+
+            <h5>2. Use of Information</h5>
+            <p>
+              Customer information is used only within TechGadget and trusted
+              delivery partners for shipping purposes. We commit to:
+            </p>
+            <ul>
+              <li>
+                Not selling or sharing customer information with third parties
+              </li>
+              <li>Only providing information when required by law</li>
+              <li>Using data only for the purposes stated above</li>
+            </ul>
+
+            <h5>3. Data Storage</h5>
+            <p>
+              Customer information will be stored until the customer requests
+              deletion or automatically removed after 5 years from the last
+              interaction. Customers can request data deletion at any time.
+            </p>
+
+            <h5>4. Company Information</h5>
+            <p>
+              <strong>TechGadget Vietnam Co., Ltd</strong><br />
+              Address: 123 XYZ Street, Binh Thanh District, Ho Chi Minh City,
+              Vietnam<br />
+              Email: support@techgadget.vn<br />
+              Hotline: 1900 1234 (8:00 - 22:00 daily)
+            </p>
+
+            <h5>5. Access and Update Information</h5>
+            <p>Customers can review or update their personal information by:</p>
+            <ul>
+              <li>Logging into their TechGadget account</li>
+              <li>Contacting customer support via email or hotline</li>
+              <li>Submitting a request through the support form</li>
+            </ul>
+
+            <h5>6. Security Commitment</h5>
+            <p>
+              TechGadget uses modern security measures to protect customer data,
+              including SSL encryption, firewall systems, and regular data
+              backups.
+            </p>
+
+            <h5>7. Security Incident Handling</h5>
+            <p>
+              If a security issue occurs, TechGadget will notify affected
+              customers and work with authorities to resolve the issue and
+              improve system security.
+            </p>
+
+            <p>
+              <em>
+                This privacy policy was last updated on January 1, 2026.
+                TechGadget may update this policy and will notify customers
+                through the website or email.
+              </em>
+            </p>
+          </div>
+
+          <!-- Reviews Tab -->
+          <div class="tab-pane" id="tab-reviews" style="display: none">
+            <div class="reviews-wrapper">
+              <div class="existing-reviews">
+                <div class="review-item">
+                  <img
+                    src="/modules/customer/assets/images/avatar1.png"
+                    class="avatar-circle"
+                    alt="Emma Chamberlin"
+                  />
+                  <div class="review-body">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-meta">
+                      <strong>Emma Chamberlin</strong> – November 22, 2025
+                    </p>
+                    <p class="review-text">
+                      Vitae tortor condimentum lacinia quis vel eros donec ac.
+                      Nam at lectus urna duis convallis convallis.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="review-item">
+                  <img
+                    src="/modules/customer/assets/images/avatar2.png"
+                    class="avatar-circle"
+                    alt="Thompson J."
+                  />
+                  <div class="review-body">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-meta">
+                      <strong>Thompson J.</strong> – November 22, 2025
+                    </p>
+                    <p class="review-text">
+                      Vitae tortor condimentum lacinia quis vel eros donec ac.
+                      Nam at lectus urna duis convallis convallis.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="add-review-section">
+                <h3 class="section-title-slanted">ADD A REVIEW</h3>
+                <p class="form-note">
+                  Your email address will not be published. Required fields are
+                  marked *
+                </p>
+
+                <form class="review-form" id="reviewForm">
+                  <div class="rating-input">
+                    <span>Your rating *</span>
+                    <div class="stars-input" id="ratingStars">☆☆☆☆☆</div>
+                  </div>
+
+                  <div class="file-input">
+                    <label for="reviewPhoto">Choose your photo</label>
+                    <input type="file" id="reviewPhoto" accept="image/*" />
+                  </div>
+
+                  <textarea
+                    id="reviewText"
+                    placeholder="Write your review here *"
+                    rows="4"
+                    required
+                  ></textarea>
+
+                  <div class="grid-2-cols">
+                    <input
+                      type="text"
+                      id="reviewerName"
+                      placeholder="Write your name here *"
+                      required
+                    />
+                    <input
+                      type="email"
+                      id="reviewerEmail"
+                      placeholder="Write your email here *"
+                      required
+                    />
+                  </div>
+
+                  <div class="checkbox-group">
+                    <input type="checkbox" id="save-info" />
+                    <label for="save-info">
+                      Save my name, email, and website in this browser for the
+                      next time.
+                    </label>
+                  </div>
+
+                  <button type="submit" class="btn-primary text-uppercase">
+                    SUBMIT REVIEW
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </footer>
-    <script type="module" src="/modules/customer/features/product_detail/product_detail.js"></script>
-    <script src="/modules/customer/assets/js/header.js" type="module"></script>
-    <script type="module" src="/modules/customer/features/home/js/home.js"></script>
+
+      <!-- Related Products -->
+      <section class="related-products">
+        <h3 class="section-title-slanted">RELATED ITEMS</h3>
+        <div class="grid-5">
+          <div class="product-card-simple">
+            <div class="p-img-box">
+              <img
+                src="/modules/customer/assets/images/ipad.png"
+                alt="iPad 9th Gen"
+              />
+            </div>
+            <h4>iPad (9th Gen)</h4>
+            <p class="p-price">$870</p>
+          </div>
+
+          <div class="product-card-simple">
+            <div class="p-img-box">
+              <img
+                src="/modules/customer/assets/images/drone.png"
+                alt="Drone with Camera"
+              />
+            </div>
+            <h4>Drone With Camera</h4>
+            <p class="p-price">$600</p>
+          </div>
+
+          <div class="product-card-simple">
+            <div class="p-img-box">
+              <img
+                src="/modules/customer/assets/images/watch.png"
+                alt="Apple Watch"
+              />
+            </div>
+            <h4>Apple Watch (2nd Gen)</h4>
+            <p class="p-price">$400</p>
+          </div>
+
+          <div class="product-card-simple">
+            <div class="p-img-box">
+              <img
+                src="/modules/customer/assets/images/monitor.png"
+                alt="Ultra HD Monitor"
+              />
+            </div>
+            <h4>Ultra HD TV</h4>
+            <p class="p-price">$2000</p>
+          </div>
+
+          <div class="product-card-simple">
+            <div class="p-img-box">
+              <img
+                src="/modules/customer/assets/images/speaker.png"
+                alt="Bluetooth Speaker"
+              />
+            </div>
+            <h4>Bluetooth Speaker</h4>
+            <p class="p-price">$75</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customer Reviews Grid -->
+      <section class="section-padding">
+        <h3 class="section-title-slanted">CUSTOMER REVIEWS</h3>
+        <div class="grid-3">
+          <div class="review-card">
+            <p>"Excellent quality and fast shipping. Highly recommend!"</p>
+            <div class="stars">★★★★★</div>
+            <h6>Emma Chamberlin</h6>
+          </div>
+
+          <div class="review-card">
+            <p>"The customer service is outstanding. Will buy again."</p>
+            <div class="stars">★★★★★</div>
+            <h6>Thomas John</h6>
+          </div>
+
+          <div class="review-card">
+            <p>"Best tech website I've ever used. 5 stars."</p>
+            <div class="stars">★★★★★</div>
+            <h6>Kevin Bryan</h6>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script
+      type="module"
+      src="/modules/customer/features/product_detail/js/product-detail.main.js"
+    ></script>
+    <script type="module" src="/modules/customer/assets/js/header.js"></script>
+    <script type="module" src="/modules/customer/assets/js/footer.js"></script>
   </body>
 </html>
