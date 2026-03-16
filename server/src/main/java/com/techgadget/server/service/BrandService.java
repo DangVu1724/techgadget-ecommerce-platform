@@ -10,6 +10,8 @@ public interface BrandService {
 
     List<BrandResponse> getAllBrands();
 
+    List<BrandResponse> getAllBrandsByCategoryId(Long id);
+
     BrandResponse createBrand(BrandRequest request);
 
     BrandResponse updateBrand(Long brandId, BrandRequest request);

@@ -1,10 +1,47 @@
 import { productApi } from "/modules/customer/core/api/product.api.js";
+import { categoryApi } from "/modules/customer/core/api/category.api.js";
+import { brandApi } from "/modules/customer/core/api/brand.api.js";
 
-let currentProducts = [];
-let currentPage = 1;
-let totalPages = 1;
-const PAGE_SIZE = 20;
+// ===== State Management =====
+const state = {
+  currentProducts: [],
+  currentPage: 1,
+  totalPages: 1,
+  queryParams: {},
+  categoryBrands: [],
+  PAGE_SIZE: 20,
+};
 
+// ===== DOM Cache =====
+const elements = {
+  productList: null,
+  emptyMessage: null,
+  pagination: null,
+  advancedFilters: null,
+  toggleFilters: null,
+  breadcrumb: null,
+  categoryBrandsWrapper: null,
+  categoryBrandList: null,
+  filterLabel: null,
+  sortSelect: null,
+};
+
+const initElements = () => {
+  elements.productList = document.getElementById("productList");
+  elements.emptyMessage = document.getElementById("emptyMessage");
+  elements.pagination = document.getElementById("pagination");
+  elements.advancedFilters = document.getElementById("advancedFilters");
+  elements.toggleFilters = document.getElementById("toggleFilters");
+  elements.breadcrumb = document.getElementById("breadcrumb");
+  elements.categoryBrandsWrapper = document.getElementById(
+    "categoryBrandsWrapper",
+  );
+  elements.categoryBrandList = document.getElementById("categoryBrandList");
+  elements.filterLabel = document.getElementById("filterLabel");
+  elements.sortSelect = document.getElementById("sortSelect");
+};
+
+// ===== URL & Query Params =====
 const getQueryParams = () => {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -16,16 +53,10 @@ const getQueryParams = () => {
   };
 };
 
-const setText = (selector, text) => {
-  const el = document.getElementById(selector);
-  if (el) el.textContent = text;
-};
-
 const getPageFromQuery = () => {
   const params = new URLSearchParams(window.location.search);
   const page = Number(params.get("page"));
-  if (!page || Number.isNaN(page) || page < 1) return 1;
-  return page;
+  return page && !Number.isNaN(page) && page > 0 ? page : 1;
 };
 
 const updatePageInUrl = (page) => {
@@ -35,18 +66,50 @@ const updatePageInUrl = (page) => {
   } else {
     params.delete("page");
   }
-  const url = `${window.location.pathname}?${params.toString()}`;
+  const query = params.toString();
+  const url = query
+    ? `${window.location.pathname}?${query}`
+    : window.location.pathname;
   window.history.replaceState({}, "", url);
 };
 
+// ===== Breadcrumb Rendering =====
+const renderBreadcrumb = (categoryName, brandName) => {
+  if (!elements.breadcrumb) return;
+
+  const fragments = [{ name: "Trang chủ", href: "/" }];
+
+  if (categoryName) {
+    fragments.push({
+      name: capitalize(categoryName),
+      href: `/modules/customer/features/shop/shop.html?categoryId=${state.queryParams.categoryId}`,
+    });
+  }
+
+  if (brandName) {
+    fragments.push({
+      name: capitalize(brandName),
+      href: "#",
+    });
+  }
+
+  elements.breadcrumb.innerHTML = fragments
+    .map((item, idx) =>
+      idx === fragments.length - 1
+        ? `<span class="breadcrumb-item active">${item.name}</span>`
+        : `<a href="${item.href}" class="breadcrumb-item">${item.name}</a>`,
+    )
+    .join('<span class="breadcrumb-separator">/</span>');
+};
+
+// ===== Pagination Rendering =====
 const renderPagination = (currentP, totalP) => {
-  const container = document.getElementById("pagination");
-  if (!container || totalP <= 1) {
-    if (container) container.innerHTML = "";
+  if (!elements.pagination || totalP <= 1) {
+    if (elements.pagination) elements.pagination.innerHTML = "";
     return;
   }
 
-  container.innerHTML = "";
+  elements.pagination.innerHTML = "";
 
   const createBtn = (label, value, active = false, disabled = false) => {
     const btn = document.createElement("button");
@@ -58,7 +121,7 @@ const renderPagination = (currentP, totalP) => {
     return btn;
   };
 
-  container.appendChild(
+  elements.pagination.appendChild(
     createBtn("◀", Math.max(1, currentP - 1), false, currentP === 1),
   );
 
@@ -70,14 +133,14 @@ const renderPagination = (currentP, totalP) => {
   }
 
   for (let i = start; i <= end; i += 1) {
-    container.appendChild(createBtn(String(i), i, i === currentP));
+    elements.pagination.appendChild(createBtn(String(i), i, i === currentP));
   }
 
-  container.appendChild(
+  elements.pagination.appendChild(
     createBtn("▶", Math.min(totalP, currentP + 1), false, currentP === totalP),
   );
 
-  container.querySelectorAll(".page-btn").forEach((btn) => {
+  elements.pagination.querySelectorAll(".page-btn").forEach((btn) => {
     if (btn.disabled) return;
     btn.addEventListener("click", () => {
       const page = Number(btn.dataset.page);
@@ -89,19 +152,18 @@ const renderPagination = (currentP, totalP) => {
   });
 };
 
+// ===== Product List Rendering =====
 const renderProducts = (products) => {
-  const list = document.getElementById("productList");
-  const empty = document.getElementById("emptyMessage");
-  if (!list) return;
+  if (!elements.productList) return;
 
-  list.innerHTML = "";
+  elements.productList.innerHTML = "";
 
   if (!products.length) {
-    if (empty) empty.classList.add("show");
+    elements.emptyMessage?.classList.add("show");
     return;
   }
 
-  if (empty) empty.classList.remove("show");
+  elements.emptyMessage?.classList.remove("show");
 
   products.forEach((product) => {
     const card = document.createElement("div");
@@ -110,30 +172,89 @@ const renderProducts = (products) => {
     const image =
       product.thumbnail || "/modules/customer/assets/images/macbook.png";
     const productLink = `/modules/customer/features/product_detail/product_detail.html?id=${product.id}`;
+    const price = Number(product.minPrice || 0);
+    const oldPrice = price * 1.15;
+    const rating = ((product.id % 2) + 4).toFixed(1);
+
+    const stars = Array(5)
+      .fill()
+      .map((_, i) =>
+        i < Math.round(rating)
+          ? `<i class="fas fa-star"></i>`
+          : `<i class="far fa-star"></i>`,
+      )
+      .join("");
 
     card.innerHTML = `
-    
-      <a href="${productLink}" style="text-decoration:none;color:inherit;">
-        <div class="p-img-box"><img src="${image}" alt="${product.name || "Product"}" loading="lazy" /></div>
+      <a href="${productLink}" class="product-link">
+        <div class="p-img-box">
+          <img src="${image}" alt="${product.name || "Product"}" loading="lazy">
+        </div>
         <h4>${product.name || "Unnamed product"}</h4>
+        <div class="product-rating">
+          <div class="stars">${stars}</div>
+          <span class="rating-count">(${Math.floor(Math.random() * 200) + 20})</span>
+        </div>
+        <div class="product-price">
+          <span class="current-price">$${price.toFixed(2)}</span>
+          <span class="old-price">$${oldPrice.toFixed(2)}</span>
+        </div>
       </a>
-      <p class="p-price">${product.minPrice ? `$${Number(product.minPrice).toFixed(2)}` : "$0.00"}</p>
     `;
 
-    list.appendChild(card);
+    elements.productList.appendChild(card);
   });
 };
 
-const setupFilters = () => {
-  const toggleBtn = document.getElementById("toggleFilters");
-  const advancedFilters = document.getElementById("advancedFilters");
+// ===== Category Brands Rendering =====
+const renderCategoryBrands = async (categoryId) => {
+  if (!elements.categoryBrandsWrapper || !elements.categoryBrandList) return;
 
-  if (toggleBtn && advancedFilters) {
-    toggleBtn.addEventListener("click", () => {
-      advancedFilters.classList.toggle("show");
-      const icon = toggleBtn.querySelector("i:last-child");
+  categoryId = Number(categoryId);
+
+  if (!categoryId) {
+    elements.categoryBrandsWrapper.style.display = "none";
+    return;
+  }
+
+  try {
+    const brands = await brandApi.getByCategory(categoryId);
+
+    if (!brands || brands.length === 0) {
+      elements.categoryBrandsWrapper.style.display = "none";
+      return;
+    }
+
+    elements.categoryBrandsWrapper.style.display = "block";
+    elements.categoryBrandList.innerHTML = "";
+
+    brands.forEach((brand) => {
+      const item = document.createElement("a");
+      item.className = "brand-item";
+      item.href = `/modules/customer/features/shop/shop.html?categoryId=${categoryId}&categoryName=${encodeURIComponent(
+        state.queryParams.categoryName || "",
+      )}&brandId=${brand.brandId || ""}&brandName=${encodeURIComponent(
+        brand.brandName || "",
+      )}`;
+      item.textContent = capitalize(brand.brandName);
+      elements.categoryBrandList.appendChild(item);
+    });
+  } catch (error) {
+    console.error("Render category brands error:", error);
+    elements.categoryBrandsWrapper.style.display = "none";
+  }
+};
+
+// ===== Filter Setup =====
+const setupFilters = () => {
+  if (elements.toggleFilters && elements.advancedFilters) {
+    elements.toggleFilters.addEventListener("click", () => {
+      elements.advancedFilters.classList.toggle("show");
+      const icon = elements.toggleFilters.querySelector("i:last-child");
       if (icon) {
-        icon.style.transform = advancedFilters.classList.contains("show")
+        icon.style.transform = elements.advancedFilters.classList.contains(
+          "show",
+        )
           ? "rotate(180deg)"
           : "rotate(0)";
       }
@@ -158,9 +279,8 @@ const setupFilters = () => {
     });
   });
 
-  const sortSelect = document.getElementById("sortSelect");
-  if (sortSelect) {
-    sortSelect.addEventListener("change", (e) => {
+  if (elements.sortSelect) {
+    elements.sortSelect.addEventListener("change", (e) => {
       // UI only - no data manipulation
     });
   }
@@ -172,79 +292,62 @@ const setupFilters = () => {
         .forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const productList = document.getElementById("productList");
-      if (productList) {
+      if (elements.productList) {
         if (btn.dataset.view === "list") {
-          productList.classList.add("list-view");
+          elements.productList.classList.add("list-view");
         } else {
-          productList.classList.remove("list-view");
+          elements.productList.classList.remove("list-view");
         }
       }
     });
   });
 };
 
+// ===== Load Shop Products =====
 const loadShopProducts = async () => {
-  const { categoryId, categoryName, brandId, brandName } = getQueryParams();
-  currentPage = getPageFromQuery();
-  const pageZero = currentPage > 0 ? currentPage - 1 : 0;
-
-  const titleParts = [];
-  if (categoryName)
-    titleParts.push(`Danh mục: ${decodeURIComponent(categoryName)}`);
-  if (brandName)
-    titleParts.push(`Thương hiệu: ${decodeURIComponent(brandName)}`);
-  const title = titleParts.length ? titleParts.join(" • ") : "Tất cả sản phẩm";
-
-  setText("shopTitle", "Danh sách sản phẩm");
-  setText("shopSubtitle", title);
-
-  const filterLabel = [];
-  if (categoryName)
-    filterLabel.push(`Danh mục: ${decodeURIComponent(categoryName)}`);
-  if (brandName)
-    filterLabel.push(`Thương hiệu: ${decodeURIComponent(brandName)}`);
-  setText(
-    "filterLabel",
-    filterLabel.length ? filterLabel.join(" | ") : "Hiển thị tất cả sản phẩm",
-  );
+  state.queryParams = getQueryParams();
+  state.currentPage = getPageFromQuery();
+  const pageZero = state.currentPage - 1;
 
   try {
-    let res;
-    if (categoryId) {
-      res = await productApi.getByCategory(categoryId, {
-        page: pageZero,
-        size: PAGE_SIZE,
-      });
-    } else if (brandId) {
-      res = await productApi.getByBrand(brandId, {
-        page: pageZero,
-        size: PAGE_SIZE,
-      });
-    } else {
-      res = await productApi.getAll({
-        page: pageZero,
-        size: PAGE_SIZE,
-      });
-    }
+    const res = await productApi.filterProducts({
+      page: pageZero,
+      size: state.PAGE_SIZE,
+      categoryId: state.queryParams.categoryId,
+      brandId: state.queryParams.brandId,
+    });
 
-    currentProducts = res.content || [];
-    renderProducts(currentProducts);
+    state.currentProducts = res.content || [];
+    state.totalPages = res.totalPages || 1;
 
-    totalPages = Number.isFinite(res.totalPages) ? res.totalPages : 1;
-    const safeCurrent = Math.min(
-      Math.max(1, currentPage),
-      Math.max(1, totalPages),
+    renderProducts(state.currentProducts);
+    renderPagination(state.currentPage, state.totalPages);
+    renderBreadcrumb(
+      state.queryParams.categoryName,
+      state.queryParams.brandName,
     );
-    renderPagination(safeCurrent, totalPages);
+
+    if (state.queryParams.categoryId && !state.queryParams.brandId) {
+      await renderCategoryBrands(state.queryParams.categoryId);
+    } else {
+      if (elements.categoryBrandsWrapper) {
+        elements.categoryBrandsWrapper.style.display = "none";
+      }
+    }
   } catch (error) {
-    console.error("Load shop products error:", error);
-    renderProducts([]);
-    renderPagination(1, 1);
+    console.error("Error loading shop products:", error);
   }
 };
 
+// ===== Utility Functions =====
+const capitalize = (str) => {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
+// ===== Initialize =====
 document.addEventListener("DOMContentLoaded", () => {
+  initElements();
   loadShopProducts();
   setupFilters();
 });

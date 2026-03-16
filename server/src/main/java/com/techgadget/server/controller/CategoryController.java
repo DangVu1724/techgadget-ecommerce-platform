@@ -29,6 +29,12 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAttributesByCategory(id));
     }
 
+    @GetMapping("/brand/{brandId}")
+    public List<CategoryResponse> getCategoriesByBrand(@PathVariable Long brandId) {
+        return categoryService.getCategoriesByBrand(brandId);
+    }
+
+
     @PostMapping
     public CategoryResponse createBrand(@Valid @RequestBody CategoryRequest request) {
         return categoryService.createCategory(request);

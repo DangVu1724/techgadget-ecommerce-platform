@@ -22,42 +22,18 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping
+    @GetMapping()
     public Page<ProductSummaryResponse> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection
-    ) {
-        Sort sort = sortDirection.equalsIgnoreCase("desc")  ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.getProducts(pageable);
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public Page<ProductSummaryResponse> getProductsByCategory(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
-            @PathVariable Long categoryId
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long brandId
     ) {
         Sort sort = sortDirection.equalsIgnoreCase("desc")  ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.getProductsByCategoryId(pageable,categoryId);
-    }
-
-    @GetMapping("/brand/{brandId}")
-    public Page<ProductSummaryResponse> getProductsByBrand(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection,
-            @PathVariable Long brandId
-    ) {
-        Sort sort = sortDirection.equalsIgnoreCase("desc")  ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.getProductsByBrandId(pageable,brandId);
+        return productService.filterProducts(pageable,brandId,categoryId);
     }
 
     @GetMapping("/{id}")

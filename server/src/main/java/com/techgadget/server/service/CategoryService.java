@@ -11,6 +11,8 @@ import java.util.Set;
 public interface CategoryService {
     List<CategoryResponse> getCategories();
 
+    List<CategoryResponse> getCategoriesByBrand(Long brandId);
+
     Set<Attribute> getAttributesByCategory(Long categoryId);
 
     CategoryResponse createCategory(CategoryRequest request);

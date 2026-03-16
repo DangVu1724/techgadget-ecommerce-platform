@@ -16,9 +16,7 @@ public interface ProductService {
 
      ProductResponse getProductById(Long id);
 
-     Page<ProductSummaryResponse> getProductsByCategoryId(Pageable pageable, Long id);
-
-     Page<ProductSummaryResponse> getProductsByBrandId(Pageable pageable, Long id);
+     Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId);
 
      ProductResponse createProduct(ProductCreateRequest request);
 

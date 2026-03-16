@@ -15,7 +15,75 @@ body {
   margin: 30px auto;
   padding-top: 20px; ;
 }
-/* Filter Bar */
+
+/* ===== Breadcrumb ===== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.breadcrumb-item {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-item:hover {
+  color: #ff6f42;
+}
+
+.breadcrumb-item.active {
+  color: #ff6f42;
+  font-weight: 600;
+}
+
+.breadcrumb-separator {
+  color: #ccc;
+  margin: 0 4px;
+}
+
+/* ===== Category Brands Section ===== */
+.category-brands-wrapper {
+  margin-bottom: 24px;
+}
+
+.category-brands-wrapper h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.brand-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.brand-item {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.brand-item:hover {
+  border-color: #ff6f42;
+  color: #ff6f42;
+  background: #fff8f5;
+}
+
+/* ===== Filter Bar ===== */
 .filter-bar {
   display: flex;
   justify-content: space-between;
@@ -160,40 +228,6 @@ body {
 }
 
 /* Price Range */
-.price-range {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.price-range input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 13px;
-}
-
-.price-range input:focus {
-  outline: none;
-  border-color: #ff6f42;
-}
-
-.apply-price-btn {
-  padding: 8px 12px;
-  background: #ff6f42;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.apply-price-btn:hover {
-  background: #ff5a2b;
-}
 
 .price-presets {
   display: flex;
@@ -432,6 +466,60 @@ body {
   font-size: 12px;
   color: #999;
   text-decoration: line-through;
+}
+
+.product-link{
+  text-decoration:none;
+  color:inherit;
+}
+
+/* badge */
+.badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  font-size:11px;
+  font-weight:600;
+  padding:4px 8px;
+  border-radius:20px;
+  color:#fff;
+}
+
+.badge.hot{
+  background:#ff6f42;
+}
+
+/* action buttons */
+.product-actions{
+  position:absolute;
+  right:10px;
+  top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  opacity:0;
+  transform:translateX(10px);
+  transition:.2s;
+}
+
+.product-main:hover .product-actions{
+  opacity:1;
+  transform:translateX(0);
+}
+
+.product-actions button{
+  border:none;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  background:#fff;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+.product-actions button:hover{
+  background:#ff6f42;
+  color:#fff;
 }
 
 

@@ -29,6 +29,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryResponse> getCategoriesByBrand(Long brandId) {
+        return categoryRepository.getCategoriesByBrand(brandId).stream().map(category -> {
+            CategoryResponse categoryResponse = new CategoryResponse();
+            categoryResponse.setId(category.getId());
+            categoryResponse.setName(category.getName());
+            return  categoryResponse;
+        }).toList();
+    }
+
+
+    @Override
     public Set<Attribute> getAttributesByCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found"));
 
