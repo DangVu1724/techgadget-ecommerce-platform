@@ -1,0 +1,14 @@
+$kind: http-request
+name: LoginAPI
+url: http://localhost:8086/api/auth/login
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"kien@gmail.com\",\r
+
+    \  \"password\": \"123456\"\r
+
+    }"
+order: 3973862127853456

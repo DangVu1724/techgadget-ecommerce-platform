@@ -5,6 +5,7 @@ import com.techgadget.server.model.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Size(min = 6)
     @NotBlank
     @Column(nullable = false)
     private String password;

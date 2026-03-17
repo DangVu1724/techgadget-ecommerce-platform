@@ -1,0 +1,176 @@
+:root {
+    --primary: #0056b3;
+    --secondary: #ff7a00;
+    --bg: #f4f7f9;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* CARD */
+.card {
+    background: white;
+    display: flex;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.card.register {
+    width: 950px;
+    flex-direction: row-reverse;
+    border: 2px solid var(--secondary);
+}
+
+.card.login {
+    width: 900px;
+    border: 2px solid var(--primary);
+}
+
+.form-side {
+    flex: 1;
+    padding: 50px;
+}
+
+.image-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card.register .image-side {
+    background: #fff5ed;
+}
+
+.card.login .image-side {
+    background: #eef2f7;
+}
+
+/* TEXT */
+.logo {
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.login .logo { color: var(--primary); }
+.register .logo { color: var(--primary); }
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* INPUT */
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--secondary);
+}
+
+/* GRID */
+.grid-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* BUTTON */
+.btn {
+    width: 100%;
+    padding: 14px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.register .btn { background: var(--secondary); }
+.login .btn { background: var(--primary); }
+
+/* EXTRA */
+.checkbox-row {
+    display: flex;
+    align-items: center; /* Căn giữa checkbox và chữ theo chiều dọc */
+    gap: 10px;           /* Khoảng cách giữa ô vuông và chữ */
+    margin: 15px 0 25px; /* Giữ khoảng cách trên dưới */
+    width: 100%;         /* Đảm bảo khung chiếm hết chiều ngang */
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 16px;         /* Cố định kích thước ô check */
+    height: 16px;
+    margin: 0;           /* Bỏ margin mặc định của trình duyệt */
+    cursor: pointer;
+}
+
+.checkbox-row label {
+    margin: 0;           /* Quan trọng: Bỏ margin-bottom của label gốc */
+    font-weight: 500;    /* Chỉnh độ đậm vừa phải */
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline;      /* Ép label không chiếm hết 1 dòng để nằm cạnh checkbox */
+}
+
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.footer-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login a { color: var(--primary); }
+.register a { color: var(--secondary); }
+
+img {
+    max-width: 80%;
+}
