@@ -10,6 +10,12 @@ const state = {
   queryParams: {},
   categoryBrands: [],
   PAGE_SIZE: 20,
+  filters: {
+    minPrice: null,
+    maxPrice: null,
+    ram: [],
+    storage: [],
+  },
 };
 
 // ===== DOM Cache =====
@@ -24,6 +30,10 @@ const elements = {
   categoryBrandList: null,
   filterLabel: null,
   sortSelect: null,
+  minPrice: null,
+  maxPrice: null,
+  applyFilters: null,
+  clearFilters: null,
 };
 
 const initElements = () => {
@@ -39,6 +49,10 @@ const initElements = () => {
   elements.categoryBrandList = document.getElementById("categoryBrandList");
   elements.filterLabel = document.getElementById("filterLabel");
   elements.sortSelect = document.getElementById("sortSelect");
+  elements.minPrice = document.getElementById("minPrice");
+  elements.maxPrice = document.getElementById("maxPrice");
+  elements.applyFilters = document.getElementById("applyFilters");
+  elements.clearFilters = document.getElementById("clearFilters");
 };
 
 // ===== URL & Query Params =====
@@ -170,7 +184,7 @@ const renderProducts = (products) => {
     card.className = "product-main";
 
     const image =
-      product.thumbnail || "/modules/customer/assets/images/macbook.png";
+      product.image || "/modules/customer/assets/images/macbook.png";
     const productLink = `/modules/customer/features/product_detail/product_detail.html?id=${product.id}`;
     const price = Number(product.minPrice || 0);
     const oldPrice = price * 1.15;
@@ -246,6 +260,34 @@ const renderCategoryBrands = async (categoryId) => {
 };
 
 // ===== Filter Setup =====
+const getFilterValues = () => {
+  const minPrice = elements.minPrice?.value
+    ? Number(elements.minPrice.value)
+    : null;
+  const maxPrice = elements.maxPrice?.value
+    ? Number(elements.maxPrice.value)
+    : null;
+
+  const ramFilters = Array.from(
+    document.querySelectorAll(".ram-filter:checked"),
+  )
+    .map((el) => el.value)
+    .join(",");
+
+  const storageFilters = Array.from(
+    document.querySelectorAll(".storage-filter:checked"),
+  )
+    .map((el) => el.value)
+    .join(",");
+
+  return {
+    minPrice,
+    maxPrice,
+    ram: ramFilters || null,
+    storage: storageFilters || null,
+  };
+};
+
 const setupFilters = () => {
   if (elements.toggleFilters && elements.advancedFilters) {
     elements.toggleFilters.addEventListener("click", () => {
@@ -258,6 +300,28 @@ const setupFilters = () => {
           ? "rotate(180deg)"
           : "rotate(0)";
       }
+    });
+  }
+
+  // Apply Filters Button
+  if (elements.applyFilters) {
+    elements.applyFilters.addEventListener("click", () => {
+      state.currentPage = 1;
+      loadShopProducts();
+    });
+  }
+
+  // Clear Filters Button
+  if (elements.clearFilters) {
+    elements.clearFilters.addEventListener("click", () => {
+      if (elements.minPrice) elements.minPrice.value = "";
+      if (elements.maxPrice) elements.maxPrice.value = "";
+      document
+        .querySelectorAll(".ram-filter, .storage-filter, .rating-filter")
+        .forEach((el) => (el.checked = false));
+      state.filters = { minPrice: null, maxPrice: null, ram: [], storage: [] };
+      state.currentPage = 1;
+      loadShopProducts();
     });
   }
 
@@ -309,12 +373,19 @@ const loadShopProducts = async () => {
   state.currentPage = getPageFromQuery();
   const pageZero = state.currentPage - 1;
 
+  // Get filter values
+  state.filters = getFilterValues();
+
   try {
     const res = await productApi.filterProducts({
       page: pageZero,
       size: state.PAGE_SIZE,
       categoryId: state.queryParams.categoryId,
       brandId: state.queryParams.brandId,
+      minPrice: state.filters.minPrice,
+      maxPrice: state.filters.maxPrice,
+      ram: state.filters.ram,
+      storage: state.filters.storage,
     });
 
     state.currentProducts = res.content || [];

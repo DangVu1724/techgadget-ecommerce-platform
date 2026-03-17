@@ -3,11 +3,11 @@ import { brandApi } from "/modules/customer/core/api/brand.api.js";
 import { productApi } from "/modules/customer/core/api/product.api.js";
 
 const categoryImages = {
-  // smartphone: "/assets/images/categories/smartphone.png",
-  // laptop: "/assets/images/categories/laptop.png",
-  // headphone: "/assets/images/categories/headphone.png",
-  // tablet: "/assets/images/categories/tablet.png",
-  // camera: "/assets/images/categories/camera.png",
+  smartphone: "/modules/customer/assets/images/categories/phone.jpg",
+  laptop: "/modules/customer/assets/images/categories/mac.jpg",
+  headphone: "/modules/customer/assets/images/categories/headphone.png",
+  tablet: "/modules/customer/assets/images/categories/tablet.png",
+  camera: "/modules/customer/assets/images/categories/camera.png",
 };
 
 /**
@@ -90,7 +90,7 @@ async function loadNewProducts() {
       card.className = "home-product-card";
 
       const image =
-        product.thumbnail || "/modules/customer/assets/images/macbook.png";
+        product.image || "/modules/customer/assets/images/macbook.png";
 
       const price = formatPrice(product.minPrice);
 
@@ -164,7 +164,7 @@ async function loadBestSellingProducts() {
       card.className = "home-product-card";
 
       const image =
-        product.thumbnail || "/modules/customer/assets/images/macbook.png";
+        product.image || "/modules/customer/assets/images/macbook.png";
 
       const price = formatPrice(product.minPrice);
 

@@ -7,7 +7,7 @@ import com.techgadget.server.model.dto.product.ProductSummaryResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
+import java.math.BigDecimal;
 
 
 public interface ProductService {
@@ -16,7 +16,10 @@ public interface ProductService {
 
      ProductResponse getProductById(Long id);
 
-     Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId);
+     Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId, BigDecimal minPrice,
+                                                 BigDecimal maxPrice,
+                                                 String ram,
+                                                 String storage);
 
      ProductResponse createProduct(ProductCreateRequest request);
 

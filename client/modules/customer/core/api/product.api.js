@@ -13,6 +13,12 @@ export const productApi = {
     if (params.brandId) query.append("brandId", params.brandId);
     if (params.categoryId) query.append("categoryId", params.categoryId);
     if (params.search) query.append("search", params.search);
+    if (params.minPrice !== null && params.minPrice !== undefined)
+      query.append("minPrice", params.minPrice);
+    if (params.maxPrice !== null && params.maxPrice !== undefined)
+      query.append("maxPrice", params.maxPrice);
+    if (params.ram) query.append("ram", params.ram);
+    if (params.storage) query.append("storage", params.storage);
 
     const res = await fetch(`${BASE_URL}/products?${query.toString()}`);
 

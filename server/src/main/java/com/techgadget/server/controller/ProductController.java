@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -23,17 +25,24 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping()
-    public Page<ProductSummaryResponse> getProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection,
+    public Page<ProductSummaryResponse> filterProducts(
+            @RequestParam(required = false) Long brandId,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Long brandId
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String ram,
+            @RequestParam(required = false) String storage,
+            Pageable pageable
     ) {
-        Sort sort = sortDirection.equalsIgnoreCase("desc")  ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.filterProducts(pageable,brandId,categoryId);
+        return productService.filterProducts(
+                pageable,
+                brandId,
+                categoryId,
+                minPrice,
+                maxPrice,
+                ram,
+                storage
+        );
     }
 
     @GetMapping("/{id}")

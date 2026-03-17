@@ -42,8 +42,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId) {
-        return productRepository.filterProducts(pageable,brandId,categoryId);
+    public Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId, BigDecimal minPrice,
+                                                       BigDecimal maxPrice,
+                                                       String ram,
+                                                       String storage) {
+        return productRepository.filterProducts(pageable,brandId,categoryId,minPrice,maxPrice,ram,storage);
     }
 
 

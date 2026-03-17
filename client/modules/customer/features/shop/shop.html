@@ -18,17 +18,25 @@
     <div class="container">
       <!-- Breadcrumb -->
       <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb">
-        <a href="/">
+        <a href="/" aria-label="Trang chủ">
           <i class="fas fa-home"></i>
         </a>
       </nav>
 
+      <!-- Promo Banner -->
+      <div class="shop-promo-banner">
+        <div class="promo-badge">
+          <i class="fas fa-lightning-bolt"></i>
+          FLASH SALE
+        </div>
+        <div class="promo-message">
+          Giảm giá tới <strong>50%</strong> cho sản phẩm được chọn
+        </div>
+        <button class="promo-cta">Xem ngay</button>
+      </div>
+
       <!-- Category Brands Section -->
-      <div
-        class="category-brands-wrapper"
-        id="categoryBrandsWrapper"
-        style="display: none"
-      >
+      <div class="category-brands-wrapper" id="categoryBrandsWrapper">
         <h3>Thương hiệu</h3>
         <div id="categoryBrandList" class="brand-list"></div>
       </div>
@@ -38,6 +46,23 @@
         <div class="filter-section">
           <h4>Khoảng giá</h4>
           <div class="filter-content">
+            <div class="price-inputs">
+              <input
+                type="number"
+                id="minPrice"
+                placeholder="Giá tối thiểu"
+                min="0"
+                class="price-input"
+              />
+              <span>-</span>
+              <input
+                type="number"
+                id="maxPrice"
+                placeholder="Giá tối đa"
+                min="0"
+                class="price-input"
+              />
+            </div>
             <div class="price-presets">
               <button class="price-preset" data-min="0" data-max="100">
                 Dưới $100
@@ -97,15 +122,15 @@
           <div class="filter-content">
             <label class="checkbox-label">
               <input type="checkbox" value="5" class="rating-filter" /> 5
-              <i class="fas fa-star" style="color: #ffd700"></i>
+              <i class="fas fa-star star-rating"></i>
             </label>
             <label class="checkbox-label">
               <input type="checkbox" value="4" class="rating-filter" /> 4+
-              <i class="fas fa-star" style="color: #ffd700"></i>
+              <i class="fas fa-star star-rating"></i>
             </label>
             <label class="checkbox-label">
               <input type="checkbox" value="3" class="rating-filter" /> 3+
-              <i class="fas fa-star" style="color: #ffd700"></i>
+              <i class="fas fa-star star-rating"></i>
             </label>
           </div>
         </div>

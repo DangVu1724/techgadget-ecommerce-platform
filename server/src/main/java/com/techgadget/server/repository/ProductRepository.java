@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
@@ -49,7 +50,7 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.name,
     p.image,
     MIN(v.price),
-    SUM(v.stock),
+    COALESCE(SUM(v.stock),0),
     c.name,
     b.brandName,
     p.createdAt
@@ -58,14 +59,45 @@ FROM Product p
 LEFT JOIN p.category c
 LEFT JOIN p.brand b
 LEFT JOIN p.variants v
+
 WHERE (:brandId IS NULL OR b.id = :brandId)
 AND (:categoryId IS NULL OR c.id = :categoryId)
+
+AND (:minPrice IS NULL OR v.price >= :minPrice)
+AND (:maxPrice IS NULL OR v.price <= :maxPrice)
+
+AND (
+    :ram IS NULL OR EXISTS (
+        SELECT 1
+        FROM VariantAttributeValue vav
+        JOIN vav.attribute a
+        WHERE vav.variant = v
+        AND a.attributeName = 'RAM'
+        AND vav.value = :ram
+    )
+)
+
+AND (
+    :storage IS NULL OR EXISTS (
+        SELECT 1
+        FROM VariantAttributeValue vav2
+        JOIN vav2.attribute a2
+        WHERE vav2.variant = v
+        AND a2.attributeName = 'Storage'
+        AND CAST(vav2.value AS text) LIKE CONCAT('%', CAST(:storage AS text), '%')
+                               )
+)
+
 GROUP BY p.id, p.name, p.image, c.name, b.brandName, p.createdAt
 """)
     Page<ProductSummaryResponse> filterProducts(
             Pageable pageable,
             Long brandId,
-            Long categoryId
+            Long categoryId,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            String ram,
+            String storage
     );
 
 
