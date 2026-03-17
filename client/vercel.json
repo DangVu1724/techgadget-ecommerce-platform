@@ -1,0 +1,48 @@
+{
+  "rewrites": [
+    {
+      "source": "/home",
+      "destination": "/modules/customer/features/home/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/modules/admin/features/dashboard/index.html"
+    },
+    {
+      "source": "/products",
+      "destination": "/modules/admin/features/products/products.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/modules/customer/features/auth/login/index.html"
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/modules/admin/features/dashboard/index.html"
+    },
+    {
+      "source": "/admin/category",
+      "destination": "/modules/admin/features/category/category.html"
+    },
+    {
+      "source": "/admin/brands",
+      "destination": "/modules/admin/features/brands/brands.html"
+    },
+    {
+      "source": "/admin/attributes",
+      "destination": "/modules/admin/features/attributes/attributes.html"
+    },
+    {
+      "source": "/admin/products",
+      "destination": "/modules/admin/features/products/products.html"
+    },
+    {
+      "source": "/admin/products/:id",
+      "destination": "/modules/admin/features/products/product-detail.html"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/modules/admin/features/auth/login/login.html"
+    }
+  ]
+}

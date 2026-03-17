@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - TechGadget</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="card login">
+    <div class="form-side">
+        <div class="logo">TechGadget</div>
+
+        <h1>Đăng Nhập</h1>
+        <p class="subtitle">Chào mừng bạn quay trở lại!</p>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Email của bạn</label>
+                <input id="loginEmail" type="email" placeholder="name@company.com" required>
+            </div>
+
+            <div class="input-group">
+                <div class="flex-row">
+                    <label>Mật khẩu</label>
+                    <a href="#" style="font-size: 12px;">Quên mật khẩu?</a>
+                </div>
+                <input id="loginPassword" type="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn">ĐĂNG NHẬP</button>
+        </form>
+
+        <p class="footer-link">
+            Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
+        </p>
+    </div>
+
+    <div class="image-side">
+        <img src="https://cdni.iconscout.com/illustration/premium/thumb/login-page-4437045-3684811.png" alt="Login">
+    </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

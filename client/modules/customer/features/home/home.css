@@ -1,0 +1,291 @@
+:root{
+    --orange:#ff5e3a;
+    --text-dark:#333;
+    --border:#eee;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    color:var(--text-dark);
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+.section-padding{
+    padding:50px 0;
+}
+
+/* HERO */
+
+.hero{
+    padding:20px 0;
+    background:#f9f9f9;
+}
+
+.hero-banner img{
+    width:100%;
+    border-radius:10px;
+    display:block;
+}
+
+/* GRID */
+
+.grid-4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
+
+.grid-5{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:20px;
+}
+
+.grid-6{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+}
+
+.grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
+
+/* FEATURES */
+
+.f-item{
+    text-align:center;
+    padding:20px;
+}
+
+.f-item i{
+    font-size:36px;
+    color:var(--orange);
+    margin-bottom:15px;
+}
+
+.f-item h4{
+    font-size:16px;
+    margin-bottom:8px;
+}
+
+.f-desc{
+    font-size:13px;
+    color:#888;
+}
+
+/* SECTION HEADER */
+
+.section-header{
+    font-family:'Montserrat';
+    font-size:14px;
+    letter-spacing:2px;
+    color:#888;
+    border-bottom:1px dashed #ddd;
+    padding-bottom:10px;
+    margin-bottom:30px;
+}
+
+/* CATEGORY */
+
+.cat-card{
+    border:1px solid var(--border);
+    padding:25px;
+    text-align:center;
+    border-radius:8px;
+    transition:0.3s;
+}
+
+.cat-card img{
+    width:50px;
+    height:50px;
+    object-fit:contain;
+    margin-bottom:10px;
+}
+
+.cat-card a{display:block; text-decoration:none; color:inherit;}
+.cat-card:hover{
+    border-color:var(--orange);
+    color:var(--orange);
+}
+
+/* PRODUCT */
+
+.product-main{
+    text-align:center;
+}
+
+.product-main img{
+    width:100%;
+    border-radius:5px;
+    margin-bottom:15px;
+    background:#f4f4f4;
+}
+
+.product-main h4{
+    font-size:14px;
+}
+
+.price{
+    color:var(--orange);
+    font-weight:600;
+}
+
+/* REVIEWS */
+
+.review-card{
+    border:1px solid #f0f0f0;
+    padding:35px;
+    border-radius:5px;
+}
+
+.review-card p{
+    font-style:italic;
+    font-size:13px;
+    color:#666;
+    margin-bottom:15px;
+}
+
+.stars{
+    color:var(--orange);
+    font-size:11px;
+    margin-bottom:8px;
+}
+
+.review-card h6{
+    font-size:12px;
+    font-weight:700;
+}
+
+/* BRANDS */
+.brands-bar{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+    gap:18px;
+    padding:20px 0;
+}
+
+.brand-item{
+    font-family:'Montserrat';
+    font-weight:600;
+    color:#999;
+    font-size:16px;
+    text-align:center;
+    padding:14px 10px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    transition:all .25s ease;
+    text-transform:capitalize;
+}
+
+.brand-item:hover{
+    color:var(--orange);
+    border-color:var(--orange);
+    background:#fff7f4;
+    transform:translateY(-2px);
+}
+/* FOOTER */
+.footer{
+    border-top:1px solid var(--border);
+    margin-top:60px;
+    background:#fafafa;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:40px;
+    padding:70px 0;
+}
+
+.footer-info p{
+    font-size:13px;
+    color:#777;
+    margin:15px 0 25px;
+    line-height:1.6;
+    max-width:260px;
+}
+
+.footer-links h4,
+.footer-contact h4{
+    font-family:'Montserrat';
+    font-size:13px;
+    margin-bottom:20px;
+    letter-spacing:1px;
+}
+
+.footer-links a{
+    display:block;
+    text-decoration:none;
+    color:#777;
+    font-size:13px;
+    margin-bottom:12px;
+    transition:.2s;
+}
+
+.footer-links a:hover{
+    color:var(--orange);
+}
+
+.footer-contact p{
+    font-size:13px;
+    color:#777;
+    margin-bottom:10px;
+}
+
+.social-icons i{
+    margin-right:12px;
+    font-size:14px;
+    color:#aaa;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.social-icons i:hover{
+    color:var(--orange);
+}
+
+/* bottom bar */
+
+.footer-bottom{
+    border-top:1px solid var(--border);
+    text-align:center;
+    padding:20px 0;
+    font-size:12px;
+    color:#888;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    .grid-4,
+    .grid-5,
+    .grid-6,
+    .grid-3{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:768px){
+
+.footer-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+}
+
+}

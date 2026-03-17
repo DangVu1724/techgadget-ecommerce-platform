@@ -6,3 +6,5 @@ target/
 # IDE
 .idea/
 .vscode/
+.vercel
+.env*.local
