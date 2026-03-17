@@ -42,13 +42,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductSummaryResponse> getProductsByCategoryId(Pageable pageable, Long id) {
-        return productRepository.getProductsByCategoryId(pageable,id);
-    }
-
-    @Override
-    public Page<ProductSummaryResponse> getProductsByBrandId(Pageable pageable, Long id) {
-        return productRepository.getProductsByBrandId(pageable,id);
+    public Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId, BigDecimal minPrice,
+                                                       BigDecimal maxPrice,
+                                                       String ram,
+                                                       String storage) {
+        return productRepository.filterProducts(pageable,brandId,categoryId,minPrice,maxPrice,ram,storage);
     }
 
 

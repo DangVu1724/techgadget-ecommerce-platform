@@ -5,6 +5,10 @@
       "destination": "/modules/customer/features/home/index.html"
     },
     {
+      "source": "/products/:id",
+      "destination": "/modules/customer/features/product_detail/product_detail.html"
+    },
+    {
       "source": "/admin",
       "destination": "/modules/admin/features/dashboard/index.html"
     },

@@ -143,7 +143,7 @@ function loadVariants(product) {
 
     row.innerHTML = `
       <td><span class="variant-sku">${variant.id}</span></td>
-      <td>${variant.name || "-"}</td>
+      <td>${variant.sku || "-"}</td>
       <td><span class="variant-price">${formatCurrency(variant.price)}</span></td>
       <td><span class="variant-stock ${stockClass}">${stockText}</span></td>
       <td><span class="variant-attributes">${renderAttributes(variant.attributes)}</span></td>
@@ -250,7 +250,6 @@ window.saveVariant = async () => {
 
   const variantData = {
     productId: currentProduct.id,
-    name: document.getElementById("variantName").value,
     price: parseFloat(document.getElementById("variantPrice").value),
     stock: parseInt(document.getElementById("variantStock").value),
     description: document.getElementById("variantDescription").value,

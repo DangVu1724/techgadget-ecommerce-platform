@@ -21,6 +21,11 @@ public class BrandController {
         return brandService.getAllBrands();
     }
 
+    @GetMapping("/category/{categoryId}")
+    public List<BrandResponse> getBrandsByCategoryId(@PathVariable Long categoryId) {
+        return  brandService.getAllBrandsByCategoryId(categoryId);
+    }
+
     @PostMapping
     public BrandResponse createBrand(@Valid @RequestBody BrandRequest request) {
         return brandService.createBrand(request);
