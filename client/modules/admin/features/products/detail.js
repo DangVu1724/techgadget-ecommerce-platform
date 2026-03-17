@@ -1,6 +1,5 @@
 // detail.js
 import { Sidebar } from "../../components/layouts/sidebar/sidebar.js";
-import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 import { productApi } from "../../core/api/product.api.js";
 import { variantApi } from "../../core/api/variant.api.js";
 import {
@@ -33,7 +32,6 @@ let currentVariant = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    requireAdmin();
     if (productId) {
       await loadProductDetails(productId);
     } else {

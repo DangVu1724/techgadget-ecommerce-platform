@@ -6,6 +6,8 @@ import com.techgadget.server.model.dto.variant.VariantResponse;
 
 public interface VariantService {
 
+     VariantResponse getCurrentVariant(Long variantId);
+
      VariantResponse createVariant(VariantRequest request);
 
      VariantResponse updateVariant(Long id, VariantRequest request);

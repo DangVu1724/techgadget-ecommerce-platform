@@ -1,4 +1,7 @@
 import { productApi } from "/modules/customer/core/api/product.api.js";
+import { cartAPI } from "/modules/customer/core/api/cart.api.js";
+import { authAPI } from "/modules/customer/core/api/auth.api.js";
+import { showLoginModal } from "/modules/customer/components/login-modal/login-modal.js";
 import {
   isSmartphoneCategory,
   groupSmartphoneVariants,
@@ -180,11 +183,61 @@ window.changeQty = (amount) => {
   }
 };
 
+// ==================== ADD TO CART ====================
+const setupAddToCart = () => {
+  const addToCartBtn = document.querySelector(".btn-secondary");
+  if (!addToCartBtn) return;
+
+  addToCartBtn.addEventListener("click", async () => {
+    // Check login
+    if (!authAPI.isLoggedIn()) {
+      showLoginModal(() => {
+        window.location.href = "/login";
+      });
+      return;
+    }
+
+    if (!selectedVariant) {
+      alert("Vui lòng chọn một variant!");
+      return;
+    }
+
+    const quantity = parseInt(document.getElementById("quantity").value) || 1;
+
+    try {
+      await cartAPI.addToCart(selectedVariant.id, quantity);
+      alert("Thêm vào giỏ hàng thành công!");
+    } catch (error) {
+      alert("Lỗi: " + error.message);
+    }
+  });
+};
+
+const setupOrderNow = () => {
+  const orderNowBtn = document.querySelector(".btn-primary");
+  if (!orderNowBtn) return;
+
+  orderNowBtn.addEventListener("click", () => {
+    // Check login
+    if (!authAPI.isLoggedIn()) {
+      showLoginModal(() => {
+        window.location.href = "/login";
+      });
+      return;
+    }
+
+    // TODO: Redirect to checkout
+    alert("Chức năng order sẽ được cập nhật!");
+  });
+};
+
 // ==================== INITIALIZATION ====================
 document.addEventListener("DOMContentLoaded", () => {
   loadProductFromDb();
   setupWishlist();
   setupTabs();
+  setupAddToCart();
+  setupOrderNow();
 
   const reviewForm = document.getElementById("reviewForm");
   if (reviewForm) {

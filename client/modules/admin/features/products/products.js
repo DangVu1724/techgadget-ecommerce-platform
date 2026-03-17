@@ -4,14 +4,12 @@ import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { productApi } from "../../core/api/product.api.js";
 import { brandApi } from "../../core/api/brand.api.js";
 import { categoryApi } from "../../core/api/category.api.js";
-import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    requireAdmin();
 
     initTable();
   } catch (error) {

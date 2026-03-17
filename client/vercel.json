@@ -5,6 +5,26 @@
       "destination": "/modules/customer/features/home/index.html"
     },
     {
+      "source": "/login",
+      "destination": "/modules/customer/features/auth/login.html"
+    },
+    {
+      "source": "/account",
+      "destination": "/modules/customer/features/account/account.html"
+    },
+    {
+      "source": "/register",
+      "destination": "/modules/customer/features/auth/register.html"
+    },
+    {
+      "source": "/cart",
+      "destination": "/modules/customer/features/cart/cart.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/modules/customer/features/checkout/checkout.html"
+    },
+    {
       "source": "/products/:id",
       "destination": "/modules/customer/features/product_detail/product_detail.html"
     },

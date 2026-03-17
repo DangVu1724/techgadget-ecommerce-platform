@@ -36,17 +36,10 @@ public class User {
     private String password;
 
     private String fullName;
-    private String billingAddress;
-    private String defaultShippingAddress;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-
-    private String phone;
-
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

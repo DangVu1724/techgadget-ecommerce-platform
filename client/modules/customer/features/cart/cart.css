@@ -19,22 +19,32 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
 
 /* CART HEADER */
 .cart-header-section { 
-    text-align: center; padding: 80px 0; background: #fafafa; 
-    margin-bottom: 60px; border-bottom: 1px solid var(--border-grey);
+    background: #fafafa; 
+    margin-bottom: 40px; border-bottom: 1px solid var(--border-grey);
+    display: flex;
+    justify-content: center;
+}
+.cart-header-section > div {
+    width: 90%;
+    max-width: 1200px;
+    padding: 30px 0;
 }
 .cart-header-section h1 { 
-    font-family: var(--font-heading); font-size: 42px; font-weight: 300; 
-    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+    font-family: var(--font-heading); font-size: 32px; font-weight: 300; 
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
 }
-.cart-header-section p { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+.cart-header-section p { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
 .cart-header-section span { color: var(--text-dark); font-weight: 600; }
 
 /* TABLE LAYOUT */
 .cart-thead { 
-    display: flex; font-family: var(--font-heading); font-weight: 600; 
-    color: #bbb; font-size: 12px; letter-spacing: 1px; padding-bottom: 20px; text-transform: uppercase;
+    display: flex; font-family: var(--font-heading); font-weight: 700; 
+    color: #333; font-size: 13px; letter-spacing: 1.5px; padding: 20px 0; text-transform: uppercase;
+    border-top: 2px solid var(--border-grey);
+    border-bottom: 2px solid var(--border-grey);
+    background: #fafafa;
 }
-.col-product { flex: 2; }
+.col-product { flex: 2; padding-left: 10px; }
 .col-qty, .col-subtotal { flex: 1; text-align: center; }
 
 .slanted-divider {
@@ -96,78 +106,6 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
 .review-card { border: 1px solid #f0f0f0; padding: 30px; border-radius: 10px; text-align: center; }
 .stars { color: var(--accent); margin-bottom: 10px; }
 
-/* Thêm đoạn này nếu chưa có để đảm bảo tiêu đề có dấu gạch chéo //// */
-.section-title-slanted {
-    font-family: var(--font-heading);
-    font-size: 22px;
-    letter-spacing: 1px;
-    margin: 0 0 20px;
-    position: relative;
-    display: inline-block;
-}
 
-.section-title-slanted::after {
-    content: "////";
-    color: #ddd;
-    margin-left: 15px;
-    font-weight: 300;
-    font-size: 18px;
-}
 
-/* Copy nguyên cụm RELATED PRODUCTS từ file bạn gửi */
-.grid-5 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 25px;
-    margin-top: 30px;
-}
 
-.product-card-simple { 
-    text-align: center; 
-    transition: all 0.3s; 
-    padding: 15px; 
-    border-radius: 10px;
-    background: var(--white);
-    border: 1px solid #f0f0f0;
-}
-
-.product-card-simple:hover { 
-    transform: translateY(-8px);
-    box-shadow: var(--shadow);
-    border-color: transparent;
-}
-
-/* Copy nguyên cụm REVIEWS GRID từ file bạn gửi */
-.grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 30px;
-}
-
-.review-card {
-    border: 1px solid #f0f0f0;
-    padding: 30px;
-    border-radius: 10px;
-    background: var(--white);
-    transition: all 0.3s;
-    text-align: center;
-}
-
-.review-card:hover {
-    box-shadow: var(--shadow);
-    transform: translateY(-5px);
-}
-
-.review-card p {
-    font-style: italic;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 20px;
-    line-height: 1.7;
-}
-
-.review-card .stars {
-    color: var(--accent); /* Đảm bảo sao có màu cam */
-    margin-bottom: 15px;
-}

@@ -2,13 +2,11 @@ import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { Table } from "/modules/admin/components/data/table/Table.js";
 import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { attributeApi } from "../../core/api/attribute.api.js";
-import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    requireAdmin();
 
     initTable();
   } catch (error) {

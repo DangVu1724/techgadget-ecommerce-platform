@@ -1,6 +1,7 @@
 package com.techgadget.server.service.impl;
 
 import com.techgadget.server.model.dto.variant.VariantAttributeRequest;
+import com.techgadget.server.model.dto.variant.VariantAttributeResponse;
 import com.techgadget.server.model.dto.variant.VariantRequest;
 import com.techgadget.server.model.dto.variant.VariantResponse;
 import com.techgadget.server.model.entity.Attribute;
@@ -14,10 +15,7 @@ import com.techgadget.server.service.VariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +23,16 @@ public class VariantServiceImpl implements VariantService {
     private final VariantRepository variantRepository;
     private final ProductRepository productRepository;
     private final AttributeRepository attributeRepository;
+
+
+    @Override
+    public VariantResponse getCurrentVariant(Long variantId) {
+
+        ProductVariant variant = variantRepository.findDetailById(variantId)
+                .orElseThrow(() -> new RuntimeException("Variant not found"));
+
+        return mapToResponse(variant);
+    }
 
     @Override
     public VariantResponse createVariant(VariantRequest request) {
@@ -119,6 +127,14 @@ public class VariantServiceImpl implements VariantService {
         response.setPrice(variant.getPrice());
         response.setStock(variant.getStock());
         response.setDescription(variant.getDescription());
+        response.setAttributes(variant.getAttributeValues().stream().map(av -> VariantAttributeResponse.builder()
+                        .attributeId(av.getAttribute().getAttributeId())
+                        .attributeName(av.getAttribute().getAttributeName())
+                        .value(av.getValue())
+                        .build())
+                .toList());
+        response.setProductId(variant.getProduct().getId());
+        response.setProductName(variant.getProduct().getName());
 
         return response;
     }

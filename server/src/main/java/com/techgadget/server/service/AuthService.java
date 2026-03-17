@@ -21,12 +21,12 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     // REGISTER
-    public String register(RegisterRequest input){
+    public User register(RegisterRequest input){
 
         Optional<User> existingUser = userRepository.findByEmail(input.getEmail());
 
         if(existingUser.isPresent()){
-            return "Email đã tồn tại";
+            throw new RuntimeException("Email already exists");
         }
 
         User user = new User();
@@ -34,24 +34,20 @@ public class AuthService {
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setRole(Role.CUSTOMER);
-        userRepository.save(user);
 
-        return "Đăng ký thành công";
+        return userRepository.save(user);
     }
 
     // LOGIN
-    public String login(LoginRequest input){
+    public User login(LoginRequest input){
 
-        Optional<User> user = userRepository.findByEmail(input.getEmail());
+        User user = userRepository.findByEmail(input.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        if(user.isEmpty()){
-            return "Sai email hoặc password";
+        if(!passwordEncoder.matches(input.getPassword(), user.getPassword())){
+            throw new RuntimeException("Invalid email or password");
         }
 
-        if(!passwordEncoder.matches(input.getPassword(), user.get().getPassword())){
-            return "Sai email hoặc password";
-        }
-
-        return "Login thành công";
+        return user;
     }
 }
