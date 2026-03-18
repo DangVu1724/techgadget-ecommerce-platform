@@ -17,5 +17,4 @@ public class CartItemResponseDTO {
 
     private BigDecimal price;
     private Integer quantity;
-
 }

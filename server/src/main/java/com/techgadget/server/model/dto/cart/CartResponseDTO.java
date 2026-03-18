@@ -3,6 +3,7 @@ package com.techgadget.server.model.dto.cart;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -14,7 +15,7 @@ public class CartResponseDTO {
 
     private List<CartItemResponseDTO> items;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     private Integer totalItems;
 
 }

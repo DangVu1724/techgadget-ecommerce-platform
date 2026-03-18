@@ -32,11 +32,13 @@ async function loadCategories() {
       category.name || "",
     )}`;
     card.innerHTML = `
-        <a href="${url}" class="cat-link" style="text-decoration:none;color:inherit;">
-          <img src="${image}" alt="${category.name}">
-          <p>${category.name}</p>
-        </a>
-      `;
+  <a href="${url}" class="cat-link">
+    <div class="cat-icon">
+      <img src="${image}" alt="${category.name}">
+    </div>
+    <p>${category.name}</p>
+  </a>
+`;
     container.appendChild(card);
   });
 }
@@ -346,6 +348,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
   slider.init();
 });
-
-
-

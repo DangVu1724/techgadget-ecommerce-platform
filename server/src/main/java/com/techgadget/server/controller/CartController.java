@@ -2,9 +2,9 @@ package com.techgadget.server.controller;
 
 import com.techgadget.server.model.dto.cart.CartItemRequestDTO;
 import com.techgadget.server.model.dto.cart.CartResponseDTO;
-import com.techgadget.server.repository.CartItemRepository;
 import com.techgadget.server.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,35 +12,40 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequiredArgsConstructor
 public class CartController {
+
     private final CartService cartService;
 
-    // Lấy giỏ hàng của user
-    @GetMapping("/{userId}")
-    public CartResponseDTO getCart(@PathVariable Long userId) {
-        return cartService.getCart(userId);
+    // Lấy email từ JWT
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
     }
 
-    // Thêm sản phẩm vào giỏ
-    @PostMapping("/{userId}/items")
-    public void addToCart(
-            @PathVariable Long userId,
-            @RequestBody CartItemRequestDTO request
-    ) {
-        cartService.addToCart(userId, request);
+    // ===== GET CART =====
+    @GetMapping
+    public CartResponseDTO getCart() {
+        return cartService.getCart(getCurrentUserEmail());
     }
 
-    // Update số lượng sản phẩm
-    @PutMapping("/{userId}/items")
-    public void updateQuantity(
-            @PathVariable Long userId,
-            @RequestBody CartItemRequestDTO request
-    ) {
-        cartService.updateQuantity(userId, request);
+    // ===== ADD TO CART =====
+    @PostMapping("/items")
+    public Object addToCart(@RequestBody CartItemRequestDTO request) {
+        cartService.addToCart(getCurrentUserEmail(), request);
+        return java.util.Map.of("message", "Added to cart");
     }
 
-    // Xóa item khỏi cart
-    @DeleteMapping("/item/{cartItemId}")
-    public void removeItem(@PathVariable Long cartItemId) {
-        cartService.removeFromCart(cartItemId);
+    // ===== UPDATE =====
+    @PutMapping("/items")
+    public Object updateQuantity(@RequestBody CartItemRequestDTO request) {
+        cartService.updateQuantity(getCurrentUserEmail(), request);
+        return java.util.Map.of("message", "Updated");
+    }
+
+    // ===== DELETE ITEM =====
+    @DeleteMapping("/items/{cartItemId}")
+    public Object removeItem(@PathVariable Long cartItemId) {
+        cartService.removeFromCart(getCurrentUserEmail(), cartItemId);
+        return java.util.Map.of("message", "Deleted");
     }
 }

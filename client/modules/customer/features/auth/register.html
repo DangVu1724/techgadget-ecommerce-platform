@@ -1,63 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng ký - TechGadget</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/modules/customer/features/auth/styles.css" />
+  </head>
 
-<body>
-<div class="card register">
-    <div class="form-side">
+  <body>
+    <div class="card register">
+      <div class="form-side">
         <div class="logo">TechGadget</div>
 
         <h1>Tạo tài khoản</h1>
         <p class="subtitle">Trải nghiệm mua sắm công nghệ tuyệt vời nhất.</p>
 
         <form id="registerForm">
-            <div class="grid-inputs">
-                <div class="input-group">
-                    <label>Họ</label>
-                    <input id="firstName" type="text" placeholder="Nguyễn" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Tên</label>
-                    <input id="lastName" type="text" placeholder="Văn A" required>
-                </div>
+          <div class="grid-inputs">
+            <div class="input-group">
+              <label>Họ</label>
+              <input id="firstName" type="text" placeholder="Nguyễn" required />
             </div>
 
             <div class="input-group">
-                <label>Email</label>
-                <input id="registerEmail" type="email" placeholder="example@gmail.com" required>
+              <label>Tên</label>
+              <input id="lastName" type="text" placeholder="Văn A" required />
             </div>
+          </div>
 
-            <div class="input-group">
-                <label>Mật khẩu</label>
-                <input id="registerPassword" type="password" placeholder="Tối thiểu 8 ký tự" required>
-            </div>
+          <div class="input-group">
+            <label>Email</label>
+            <input
+              id="registerEmail"
+              type="email"
+              placeholder="example@gmail.com"
+              required
+            />
+          </div>
 
-            <div class="checkbox-row">
-                <input type="checkbox" id="tos" required>
-                <label for="tos">Tôi đồng ý với Điều khoản sử dụng</label>
-            </div>
+          <div class="input-group">
+            <label>Mật khẩu</label>
+            <input
+              id="registerPassword"
+              type="password"
+              placeholder="Tối thiểu 8 ký tự"
+              required
+            />
+          </div>
 
-            <button type="submit" class="btn">ĐĂNG KÝ NGAY</button>
+          <div class="checkbox-row">
+            <input type="checkbox" id="tos" required />
+            <label for="tos">Tôi đồng ý với Điều khoản sử dụng</label>
+          </div>
+
+          <button type="submit" class="btn">ĐĂNG KÝ NGAY</button>
         </form>
 
         <p class="footer-link">
-            Đã có tài khoản? <a href="login.html">Đăng nhập tại đây</a>
+          Đã có tài khoản? <a href="/login">Đăng nhập tại đây</a>
         </p>
+      </div>
+
+      <div class="image-side">
+        <img src="/modules/customer/assets/images/logo.jpg" alt="Register" />
+      </div>
     </div>
 
-    <div class="image-side">
-        <img src="https://cdni.iconscout.com/illustration/premium/thumb/sign-up-4437048-3684814.png" alt="Register">
-    </div>
-</div>
-
-<script src="auth.js"></script>
-</body>
+    <script
+      src="/modules/customer/features/auth/auth.js"
+      type="module"
+    ></script>
+  </body>
 </html>
