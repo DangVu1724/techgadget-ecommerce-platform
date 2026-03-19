@@ -18,6 +18,8 @@ import {
   setSubmitting,
   getSubmitting,
 } from "/modules/admin/features/products/modal.js";
+import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
+
 // Initialize sidebar
 new Sidebar();
 
@@ -32,6 +34,7 @@ let currentVariant = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    checkAdmin();
     if (productId) {
       await loadProductDetails(productId);
     } else {
@@ -205,7 +208,10 @@ window.addVariant = async () => {
 
   if (currentProduct?.category?.id) {
     await loadAttributes(currentProduct.category.id);
-    console.log("Attributes loaded for category ID:", currentProduct.category.id);
+    console.log(
+      "Attributes loaded for category ID:",
+      currentProduct.category.id,
+    );
   }
 
   const modal = document.getElementById("variantModal");
