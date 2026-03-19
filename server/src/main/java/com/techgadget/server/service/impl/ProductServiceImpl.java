@@ -2,10 +2,7 @@ package com.techgadget.server.service.impl;
 
 import com.techgadget.server.model.dto.brand.BrandResponse;
 import com.techgadget.server.model.dto.category.CategoryResponse;
-import com.techgadget.server.model.dto.product.ProductCreateRequest;
-import com.techgadget.server.model.dto.product.ProductResponse;
-import com.techgadget.server.model.dto.product.ProductSummaryResponse;
-import com.techgadget.server.model.dto.product.ProductUpdateRequest;
+import com.techgadget.server.model.dto.product.*;
 import com.techgadget.server.model.dto.variant.VariantAttributeResponse;
 import com.techgadget.server.model.dto.variant.VariantResponse;
 import com.techgadget.server.model.entity.Brand;
@@ -14,14 +11,17 @@ import com.techgadget.server.model.entity.Product;
 import com.techgadget.server.model.entity.ProductVariant;
 import com.techgadget.server.repository.BrandRepository;
 import com.techgadget.server.repository.CategoryRepository;
+import com.techgadget.server.repository.OrderDetailRepository;
 import com.techgadget.server.repository.ProductRepository;
 import com.techgadget.server.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     @Override
     public Page<ProductSummaryResponse> getProducts(Pageable pageable) {
@@ -103,6 +104,35 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         productRepository.delete(product);
+    }
+
+
+    @Override
+    public List<TopProductResponse> getTopSellingProducts(int limit) {
+        return orderDetailRepository.findTopSellingProducts(
+                PageRequest.of(0, limit)
+        );
+    }
+
+    @Override
+    public List<TopProductResponse> getNewestProducts(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+
+        return productRepository.findAll(pageable).getContent().stream()
+                .map(p -> new TopProductResponse(
+                        p.getId(),
+                        p.getName(),
+                        p.getImage(),
+                        p.getVariants().stream()
+                                .map(ProductVariant::getPrice)
+                                .min(BigDecimal::compareTo)
+                                .orElse(BigDecimal.ZERO),
+                        p.getVariants().stream()
+                                .map(ProductVariant::getPrice)
+                                .max(BigDecimal::compareTo)
+                                .orElse(BigDecimal.ZERO),
+                        0L
+                )).toList();
     }
 
 

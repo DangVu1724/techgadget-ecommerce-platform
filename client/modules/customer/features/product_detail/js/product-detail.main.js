@@ -191,6 +191,10 @@ const setupAddToCart = () => {
   addToCartBtn.addEventListener("click", async () => {
     // Check login
     if (!authAPI.isLoggedIn()) {
+      const currentURL = window.location.href;
+
+      localStorage.setItem("redirectAfterLogin", currentURL);
+      
       showLoginModal(() => {
         window.location.href = "/login";
       });

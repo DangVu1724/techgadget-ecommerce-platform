@@ -79,12 +79,9 @@ async function loadNewProducts() {
   if (!container) return;
 
   try {
-    const res = await productApi.filterProducts({
-      page: 0,
-      size: 5,
-    });
+    const res = await productApi.getNewest(5);
 
-    const products = res.content;
+    const products = res;
     container.innerHTML = "";
 
     products.forEach((product) => {
@@ -153,12 +150,9 @@ async function loadBestSellingProducts() {
   if (!container) return;
 
   try {
-    const res = await productApi.filterProducts({
-      page: 0,
-      size: 5,
-    });
+    const res = await productApi.getTopSelling(5);
 
-    const products = res.content;
+    const products = res;
     container.innerHTML = "";
 
     products.forEach((product) => {

@@ -271,7 +271,7 @@ const setupCartActions = () => {
 
   if (btnContinueShopping) {
     btnContinueShopping.addEventListener("click", () => {
-      window.location.href = "/shop";
+      window.location.href = "/home";
     });
   }
 

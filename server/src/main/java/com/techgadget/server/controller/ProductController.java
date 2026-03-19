@@ -1,9 +1,6 @@
 package com.techgadget.server.controller;
 
-import com.techgadget.server.model.dto.product.ProductCreateRequest;
-import com.techgadget.server.model.dto.product.ProductResponse;
-import com.techgadget.server.model.dto.product.ProductSummaryResponse;
-import com.techgadget.server.model.dto.product.ProductUpdateRequest;
+import com.techgadget.server.model.dto.product.*;
 import com.techgadget.server.model.entity.Product;
 import com.techgadget.server.service.ProductService;
 import jakarta.validation.Valid;
@@ -12,9 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @RestController
@@ -63,6 +62,19 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void deleteProductById(@PathVariable Long id) {
         productService.deleteProduct(id);
+    }
+
+    @GetMapping("/top-selling")
+    public ResponseEntity<List<TopProductResponse>> getTopSellingProducts(
+            @RequestParam(defaultValue = "5") int limit) {
+        List<TopProductResponse> products = productService.getTopSellingProducts(limit);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/newest")
+    public List<TopProductResponse> getNewest(
+            @RequestParam(defaultValue = "5") int limit) {
+        return productService.getNewestProducts(limit);
     }
 
 
