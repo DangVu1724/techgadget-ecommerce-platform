@@ -52,15 +52,14 @@ if (loginForm) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      const redirectByRole = (user) => {
-        switch (user?.role) {
-          case "ADMIN":
-            return "/admin";
-          default:
-            return "/home";
-        }
-      };
-      window.location.href = redirectByRole(data.user);
+      const redirectUrl = localStorage.getItem("redirectAfterLogin");
+
+      if (redirectUrl) {
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirectUrl;
+      } else {
+        window.location.href = "/home";
+      }
     } catch (err) {
       alert(err.message);
     }

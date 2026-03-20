@@ -2,11 +2,14 @@ import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { Table } from "/modules/admin/components/data/table/Table.js";
 import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { attributeApi } from "../../core/api/attribute.api.js";
+import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
+
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    checkAdmin();
 
     initTable();
   } catch (error) {

@@ -31,9 +31,13 @@
         <!-- Top Header -->
         <header class="top-header">
           <div class="header-left">
-            <button class="menu-toggle" id="menuToggle">☰</button>
             <div class="page-title">
               <h1>Dashboard</h1>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="user-info">
+              <span class="user-name" id="userName">Admin</span>
             </div>
           </div>
         </header>
@@ -43,6 +47,11 @@
           <!-- Stats Cards -->
           <div class="stats-grid" id="statsContainer">
             <!-- Stats will be loaded here -->
+            <div class="stat-card">
+              <div class="stat-info">
+                <h3>Loading...</h3>
+              </div>
+            </div>
           </div>
 
           <!-- Charts Row -->
@@ -67,8 +76,9 @@
               <div class="chart-header">
                 <h3>Top Products</h3>
               </div>
-              <div class="chart-placeholder" id="topProductsChart">
-                <!-- Chart will be rendered here -->
+              <div class="top-products-list" id="topProductsList">
+                <!-- Top products will be loaded here -->
+                <div class="no-data">Loading products...</div>
               </div>
             </div>
           </div>
@@ -77,21 +87,25 @@
           <div class="recent-orders">
             <div class="section-header">
               <h3>Recent Orders</h3>
-              <a href="#" class="view-all">View All →</a>
+              <a
+                href="/modules/admin/features/orders/orders.html"
+                class="view-all"
+                >View All →</a
+              >
             </div>
             <table class="orders-table">
               <thead>
                 <tr>
                   <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Product</th>
                   <th>Amount</th>
                   <th>Status</th>
                   <th>Date</th>
                 </tr>
               </thead>
               <tbody id="ordersTableBody">
-                <!-- Orders will be loaded here -->
+                <tr>
+                  <td colspan="6" class="no-data">Loading orders...</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -101,9 +115,12 @@
 
     <script type="module">
       import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
+      import { initDashboard } from "/modules/admin/features/dashboard/dashboard.js";
 
       // Initialize sidebar
       new Sidebar();
+
+      // Dashboard will auto-initialize from the module
     </script>
   </body>
 </html>

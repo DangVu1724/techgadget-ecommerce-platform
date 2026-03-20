@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .cors(cors -> {}) // Giữ lại CORS nếu bạn cần gọi API từ trình duyệt khác domain
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/category/**").permitAll()
                         .requestMatchers("/api/brands/**").permitAll()

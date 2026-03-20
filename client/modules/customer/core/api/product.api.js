@@ -84,26 +84,58 @@ export const productApi = {
   },
 
   getByBrand: async (brandId, params = {}) => {
-  try {
-    const page = params.page || 0;
-    const size = params.size || 20;
-    const sortBy = params.sortBy || "id";
-    const sortDirection = params.sortDirection || "asc";
+    try {
+      const page = params.page || 0;
+      const size = params.size || 20;
+      const sortBy = params.sortBy || "id";
+      const sortDirection = params.sortDirection || "asc";
 
-    const url = `${BASE_URL}/products/brand/${brandId}?page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}`;
+      const url = `${BASE_URL}/products/brand/${brandId}?page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}`;
 
-    const res = await fetch(url);
+      const res = await fetch(url);
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      throw error;
     }
+  },
+  getTopSelling: async (limit = 5) => {
+    try {
+      const res = await fetch(
+        `${BASE_URL}/products/top-selling?limit=${limit}`,
+      );
 
-    const data = await res.json();
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
 
-    return data;
-  } catch (error) {
-    console.error("Error fetching products by category:", error);
-    throw error;
-  }
-},
+      return await res.json();
+    } catch (error) {
+      console.error("Error fetching top selling products:", error);
+      throw error;
+    }
+  },
+
+  // Lấy sản phẩm mới nhất
+  getNewest: async (limit = 5) => {
+    try {
+      const res = await fetch(`${BASE_URL}/products/newest?limit=${limit}`);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      return await res.json();
+    } catch (error) {
+      console.error("Error fetching newest products:", error);
+      throw error;
+    }
+  },
 };

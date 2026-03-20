@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,6 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             try {
                 String username = jwtUtil.extractUsername(token);
+                System.out.println("Looking for email: " + username);
+                String role = jwtUtil.extractRole(token);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -40,16 +43,16 @@ public class JwtFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(
                                     username,
                                     null,
-                                    List.of() //
+                                    List.of(new SimpleGrantedAuthority(role))
                             );
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
 
             } catch (ExpiredJwtException e) {
-                System.out.println("Token hết hạn 🧨");
+                System.out.println("Token hết hạn");
             } catch (JwtException e) {
-                System.out.println("Token không hợp lệ 🚫");
+                System.out.println("Token không hợp lệ ");
             } catch (Exception e) {
                 System.out.println("Lỗi auth: " + e.getMessage());
             }

@@ -1,0 +1,193 @@
+<!-- orders.html -->
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Đơn Hàng</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/features/order/css/orders.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/sidebar/sidebar.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/header.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/layout.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div id="sidebar-container"></div>
+
+      <!-- Header -->
+      <div class="header">
+        <h1>Quản Lý Đơn Hàng</h1>
+        <p class="subtitle">Theo dõi và quản lý tất cả đơn hàng</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Tổng đơn</h3>
+            <div class="stat-number" id="totalOrders">0</div>
+          </div>
+          <div class="stat-icon pending">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Chờ xác nhận</h3>
+            <div class="stat-number" id="pendingOrders">0</div>
+          </div>
+          <div class="stat-icon pending">
+            <i class="fas fa-clock"></i>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Đang giao</h3>
+            <div class="stat-number" id="shippingOrders">0</div>
+          </div>
+          <div class="stat-icon shipping">
+            <i class="fas fa-truck"></i>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Đã giao</h3>
+            <div class="stat-number" id="deliveredOrders">0</div>
+          </div>
+          <div class="stat-icon delivered">
+            <i class="fas fa-check-circle"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Tìm kiếm theo mã đơn, tên khách hàng..."
+          />
+        </div>
+        <button class="filter-btn" id="filterBtn">
+          <i class="fas fa-filter"></i>
+          Bộ lọc
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-status="all">
+          <i class="fas fa-list"></i>
+          Tất cả
+        </button>
+        <button class="tab" data-status="PENDING">
+          <i class="fas fa-clock"></i>
+          Chờ xác nhận
+        </button>
+        <button class="tab" data-status="CONFIRMED">
+          <i class="fas fa-check-circle"></i>
+          Đã xác nhận
+        </button>
+        <button class="tab" data-status="PROCESSING">
+          <i class="fas fa-box"></i>
+          Chuẩn bị hàng
+        </button>
+        <button class="tab" data-status="SHIPPING">
+          <i class="fas fa-truck"></i>
+          Đang giao
+        </button>
+        <button class="tab" data-status="DELIVERED">
+          <i class="fas fa-check-double"></i>
+          Đã giao
+        </button>
+        <button class="tab" data-status="CANCELLED">
+          <i class="fas fa-times-circle"></i>
+          Đã hủy
+        </button>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error" id="errorMessage">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText"></span>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="orders-table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Ngày đặt</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th>Thanh toán</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr class="loading">
+              <td colspan="7">
+                <i class="fas fa-spinner fa-spin"></i>
+                Đang tải dữ liệu...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div class="modal" id="updateStatusModal" style="display: none">
+      <div class="modal-content">
+        <h3>Cập nhật trạng thái</h3>
+        <select id="statusSelect">
+          <option value="PENDING">Chờ xác nhận</option>
+          <option value="CONFIRMED">Đã xác nhận</option>
+          <option value="PROCESSING">Chuẩn bị hàng</option>
+          <option value="SHIPPING">Đang giao</option>
+          <option value="DELIVERED">Đã giao</option>
+          <option value="CANCELLED">Đã hủy</option>
+        </select>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="window.orderManager.closeModal()">
+            Hủy
+          </button>
+          <button
+            class="btn-confirm"
+            onclick="window.orderManager.confirmUpdateStatus()"
+          >
+            Cập nhật
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="/modules/admin/features/order/js/orders.js"
+      type="module"
+    ></script>
+  </body>
+</html>

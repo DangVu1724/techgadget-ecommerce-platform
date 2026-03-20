@@ -36,6 +36,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(String email, CartItemRequestDTO request) {
+        System.out.println("Looking for email: " + email);
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
         Cart cart = cartRepository.findCartWithItems(user.getId())
@@ -63,8 +64,10 @@ public class CartServiceImpl implements CartService {
             newItem.setVariant(variant);
             newItem.setQuantity(request.getQuantity());
 
-            if (request.getQuantity() > variant.getStock()) {
-                throw new RuntimeException("Quantity exceeds stock");
+            int available = variant.getStock() - variant.getReservedStock();
+
+            if (request.getQuantity() > available) {
+                throw new RuntimeException("Sản phẩm không đủ hàng");
             }
 
             cartItemRepository.save(newItem);
@@ -100,8 +103,10 @@ public class CartServiceImpl implements CartService {
                 .findByCartIdAndVariantId(cart.getId(), variant.getId())
                 .orElseThrow(() -> new RuntimeException("CartItem not found"));
 
-        if (request.getQuantity() > variant.getStock()) {
-            throw new RuntimeException("Quantity exceeds stock");
+        int available = variant.getStock() - variant.getReservedStock();
+
+        if (request.getQuantity() > available) {
+            throw new RuntimeException("Sản phẩm không đủ hàng");
         }
 
         if (request.getQuantity() == 0) {

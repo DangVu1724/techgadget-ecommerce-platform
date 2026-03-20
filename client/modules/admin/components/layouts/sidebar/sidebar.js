@@ -1,3 +1,5 @@
+import { authAPI } from "/modules/admin/core/api/auth.api.js";
+
 const ADMIN_BASE = "/admin";
 export class Sidebar {
   constructor() {
@@ -7,6 +9,7 @@ export class Sidebar {
   async init() {
     this.render();
     this.setActiveLink();
+    this.initLogout(); // Gọi hàm initLogout
   }
 
   render() {
@@ -41,6 +44,10 @@ export class Sidebar {
             Products
           </a>
 
+          <a href="${ADMIN_BASE}/order" class="nav-link">
+            Orders
+          </a>
+
         </nav>
 
         <div class="sidebar-footer">
@@ -53,10 +60,23 @@ export class Sidebar {
     `;
   }
 
-  // attachEvents() {
-  //   const logoutBtn = document.getElementById("logoutBtn");
+  initLogout() {
+    // Sửa từ const thành method
+    const logoutBtn = document.getElementById("logoutBtn"); // Sửa id từ "logout-link" thành "logoutBtn"
 
-  // }
+    if (logoutBtn) {
+      // Kiểm tra element tồn tại
+      logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+          authAPI.logout();
+          alert("Đã đăng xuất thành công!");
+          window.location.href = "/home";
+        }
+      });
+    }
+  }
 
   setActiveLink() {
     const path = window.location.pathname;
