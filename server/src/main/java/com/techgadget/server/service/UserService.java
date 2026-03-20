@@ -1,5 +1,6 @@
 package com.techgadget.server.service;
 
+import com.techgadget.server.exception.NotFoundException;
 import com.techgadget.server.model.entity.User;
 import com.techgadget.server.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,11 +18,9 @@ public class UserService {
 
     public void updateAdminPassword(Long id, String newPassword) {
         User user = userRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        // encode password mới
         user.setPassword(passwordEncoder.encode(newPassword));
-
         userRepo.save(user);
     }
 }

@@ -1,5 +1,7 @@
 package com.techgadget.server.service.impl;
 
+import com.techgadget.server.exception.ConflictException;
+import com.techgadget.server.exception.NotFoundException;
 import com.techgadget.server.model.dto.attribute.AttributeRequest;
 import com.techgadget.server.model.dto.attribute.AttributeResponse;
 import com.techgadget.server.model.entity.Attribute;
@@ -29,14 +31,14 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public AttributeResponse getAttributeById(Long id) {
         Attribute attribute = attributeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy attribute với ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Attribute not found with id: " + id));
         return convertToResponse(attribute);
     }
 
     @Override
     public AttributeResponse createAttribute(AttributeRequest request) {
         if (attributeRepository.existsByAttributeName(request.getAttributeName())) {
-            throw new RuntimeException("Tên attribute đã tồn tại");
+            throw new ConflictException("Attribute name already exists.");
         }
 
         Attribute attribute = new Attribute();
@@ -50,12 +52,11 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public AttributeResponse updateAttribute(Long id, AttributeRequest request) {
         Attribute attribute = attributeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy attribute với ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Attribute not found with id: " + id));
 
-        // Kiểm tra tên mới có bị trùng không (nếu đổi tên)
-        if (!request.getAttributeName().equals(attribute.getAttributeName()) &&
-                attributeRepository.existsByAttributeName(request.getAttributeName())) {
-            throw new RuntimeException("Tên attribute đã tồn tại");
+        if (!request.getAttributeName().equals(attribute.getAttributeName())
+                && attributeRepository.existsByAttributeName(request.getAttributeName())) {
+            throw new ConflictException("Attribute name already exists.");
         }
 
         attribute.setAttributeName(request.getAttributeName());
@@ -68,7 +69,7 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public void deleteAttribute(Long id) {
         if (!attributeRepository.existsById(id)) {
-            throw new RuntimeException("Không tìm thấy attribute với ID: " + id);
+            throw new NotFoundException("Attribute not found with id: " + id);
         }
         attributeRepository.deleteById(id);
     }

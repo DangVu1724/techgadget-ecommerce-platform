@@ -1,5 +1,8 @@
 package com.techgadget.server.service.impl;
 
+import com.techgadget.server.exception.BadRequestException;
+import com.techgadget.server.exception.NotFoundException;
+import com.techgadget.server.exception.UnauthorizedException;
 import com.techgadget.server.model.dto.cart.CartItemRequestDTO;
 import com.techgadget.server.model.dto.cart.CartItemResponseDTO;
 import com.techgadget.server.model.dto.cart.CartResponseDTO;
@@ -28,62 +31,43 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponseDTO getCart(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException(" User not found"));
-        Cart cart = cartRepository.findCartWithItems(user.getId())
-                .orElseGet(() -> createCart(user));
-        return mapToDTO(cart) ;
+        User user = getUserByEmail(email);
+        Cart cart = cartRepository.findCartWithItems(user.getId()).orElseGet(() -> createCart(user));
+        return mapToDTO(cart);
     }
 
     @Override
     public void addToCart(String email, CartItemRequestDTO request) {
-        System.out.println("Looking for email: " + email);
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = getUserByEmail(email);
+        Cart cart = cartRepository.findCartWithItems(user.getId()).orElseGet(() -> createCart(user));
+        ProductVariant variant = getVariantById(request.getVariantId());
 
-        Cart cart = cartRepository.findCartWithItems(user.getId())
-                .orElseGet(() -> createCart(user));
-
-        ProductVariant variant = variantRepository.findById(request.getVariantId())
-                .orElseThrow(() -> new RuntimeException("Variant not found"));
-
-        CartItem item = cartItemRepository
-                .findByCartIdAndVariantId(cart.getId(), variant.getId())
-                .orElse(null);
-
+        CartItem item = cartItemRepository.findByCartIdAndVariantId(cart.getId(), variant.getId()).orElse(null);
         if (item != null) {
             int newQuantity = item.getQuantity() + request.getQuantity();
-
-            if (newQuantity > variant.getStock()) {
-                throw new RuntimeException("Quantity exceeded stock");
-            }
-
+            validateStock(newQuantity, variant);
             item.setQuantity(newQuantity);
             cartItemRepository.save(item);
-        } else {
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            newItem.setVariant(variant);
-            newItem.setQuantity(request.getQuantity());
-
-            int available = variant.getStock() - variant.getReservedStock();
-
-            if (request.getQuantity() > available) {
-                throw new RuntimeException("Sản phẩm không đủ hàng");
-            }
-
-            cartItemRepository.save(newItem);
+            return;
         }
+
+        validateStock(request.getQuantity(), variant);
+
+        CartItem newItem = new CartItem();
+        newItem.setCart(cart);
+        newItem.setVariant(variant);
+        newItem.setQuantity(request.getQuantity());
+        cartItemRepository.save(newItem);
     }
 
     @Override
     public void removeFromCart(String email, Long cartItemId) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-
-
+        User user = getUserByEmail(email);
         CartItem item = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new NotFoundException("Cart item not found with id: " + cartItemId));
 
         if (!item.getCart().getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You are not allowed to modify this cart item.");
         }
 
         cartItemRepository.delete(item);
@@ -91,33 +75,40 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateQuantity(String email, CartItemRequestDTO request) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-
+        User user = getUserByEmail(email);
         Cart cart = cartRepository.findCartWithItems(user.getId())
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+                .orElseThrow(() -> new NotFoundException("Cart not found for user id: " + user.getId()));
+        ProductVariant variant = getVariantById(request.getVariantId());
 
-        ProductVariant variant = variantRepository.findById(request.getVariantId())
-                .orElseThrow(() -> new RuntimeException("Variant not found"));
-
-        CartItem cartItem = cartItemRepository
-                .findByCartIdAndVariantId(cart.getId(), variant.getId())
-                .orElseThrow(() -> new RuntimeException("CartItem not found"));
-
-        int available = variant.getStock() - variant.getReservedStock();
-
-        if (request.getQuantity() > available) {
-            throw new RuntimeException("Sản phẩm không đủ hàng");
-        }
+        CartItem cartItem = cartItemRepository.findByCartIdAndVariantId(cart.getId(), variant.getId())
+                .orElseThrow(() -> new NotFoundException("Cart item not found for variant id: " + request.getVariantId()));
 
         if (request.getQuantity() == 0) {
             cartItemRepository.delete(cartItem);
             return;
         }
 
+        validateStock(request.getQuantity(), variant);
         cartItem.setQuantity(request.getQuantity());
         cartItemRepository.save(cartItem);
     }
 
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
+    }
+
+    private ProductVariant getVariantById(Long variantId) {
+        return variantRepository.findById(variantId)
+                .orElseThrow(() -> new NotFoundException("Variant not found with id: " + variantId));
+    }
+
+    private void validateStock(int quantity, ProductVariant variant) {
+        int available = variant.getStock() - variant.getReservedStock();
+        if (quantity > available) {
+            throw new BadRequestException("Requested quantity exceeds available stock.");
+        }
+    }
 
     private Cart createCart(User user) {
         Cart cart = new Cart();
@@ -126,30 +117,24 @@ public class CartServiceImpl implements CartService {
     }
 
     private CartResponseDTO mapToDTO(Cart cart) {
-
         CartResponseDTO dto = new CartResponseDTO();
-
         dto.setId(cart.getId());
         dto.setUserId(cart.getUser().getId());
-        List<CartItemResponseDTO> items = cart.getItems().stream().map(item-> {
-            CartItemResponseDTO cartItemResponseDTO = new CartItemResponseDTO();
 
-            cartItemResponseDTO.setId(item.getId());
-            cartItemResponseDTO.setVariantId(item.getVariant().getId());
-            cartItemResponseDTO.setQuantity(item.getQuantity());
-            cartItemResponseDTO.setProductName(item.getVariant().getProduct().getName());
-            cartItemResponseDTO.setPrice(item.getVariant().getPrice());
-
-            return cartItemResponseDTO;
+        List<CartItemResponseDTO> items = cart.getItems().stream().map(item -> {
+            CartItemResponseDTO response = new CartItemResponseDTO();
+            response.setId(item.getId());
+            response.setVariantId(item.getVariant().getId());
+            response.setQuantity(item.getQuantity());
+            response.setProductName(item.getVariant().getProduct().getName());
+            response.setPrice(item.getVariant().getPrice());
+            return response;
         }).toList();
 
         dto.setItems(items);
-
-        dto.setTotalPrice(
-                items.stream()
-                        .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
+        dto.setTotalPrice(items.stream()
+                .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         return dto;
     }
