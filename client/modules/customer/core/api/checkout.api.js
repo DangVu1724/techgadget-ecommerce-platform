@@ -1,28 +1,32 @@
 import { request } from "./base.api.js";
 
 export const checkoutAPI = {
-  checkoutFromCart: (orderRequest) =>
-    request("/orders/checkout/cart", {
+  checkoutFromCart(orderRequest) {
+    return request("/orders/checkout/cart", {
       method: "POST",
       body: JSON.stringify(orderRequest),
-    }),
+    });
+  },
 
-  checkoutBuyNow: (orderRequest) =>
-    request("/orders/checkout/buynow", {
+  checkoutBuyNow(orderRequest) {
+    return request("/orders/checkout/buynow", {
       method: "POST",
       body: JSON.stringify(orderRequest),
-    }),
+    });
+  },
 
+  getOrder(orderId) {
+    return request(`/orders/${orderId}`);
+  },
 
-  getOrder: (orderId) => request(`/orders/${orderId}`),
-
-
-  createPayOSPayment: (paymentData) =>
-    request("/payments/payos", {
+  createPayOSPayment(paymentData) {
+    return request("/payments/payos", {
       method: "POST",
       body: JSON.stringify(paymentData),
-    }),
+    });
+  },
 
-  checkPayOSStatus: (transactionId) =>
-    request(`/payments/payos/${transactionId}`),
+  checkPayOSStatus(transactionId) {
+    return request(`/payments/payos/${transactionId}`);
+  },
 };

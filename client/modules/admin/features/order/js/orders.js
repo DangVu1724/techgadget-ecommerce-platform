@@ -1,5 +1,6 @@
 import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { orderApi } from "/modules/admin/core/api/order.api.js";
+import { showToast } from "/shared/ui/toast.js";
 
 class OrderManager {
   constructor() {
@@ -372,7 +373,7 @@ class OrderManager {
   }
 
   showSuccess(message) {
-    alert(message);
+    showToast(message, "success");
   }
 
   addModalStyles() {

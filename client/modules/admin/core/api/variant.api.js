@@ -1,68 +1,23 @@
-const BASE_URL = "http://localhost:8080/api";
+import { request } from "./base.api.js";
 
 export const variantApi = {
+  createVariant(data) {
+    return request("/variants", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
 
-  createVariant: async (data) => {
-    try {
-      const res = await fetch(`${BASE_URL}/variants`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(error || `HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error('Error creating variant:', error);
-      throw error;
-    }
+  updateVariant(id, data) {
+    return request(`/variants/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
   },
-  
-  // Cập nhật variant
-  updateVariant: async (id, data) => {
-    try {
-      const res = await fetch(`${BASE_URL}/variants/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(error || `HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error(`Error updating variant ${id}:`, error);
-      throw error;
-    }
+
+  deleteVariant(id) {
+    return request(`/variants/${id}`, {
+      method: "DELETE",
+    });
   },
-  
-  // Xóa variant
-  deleteVariant: async (id) => {
-    try {
-      const res = await fetch(`${BASE_URL}/variants/${id}`, {
-        method: 'DELETE'
-      });
-      
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(error || `HTTP error! status: ${res.status}`);
-      }
-      
-      return true;
-    } catch (error) {
-      console.error(`Error deleting variant ${id}:`, error);
-      throw error;
-    }
-  }
 };

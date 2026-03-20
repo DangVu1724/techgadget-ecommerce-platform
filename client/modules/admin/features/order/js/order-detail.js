@@ -1,5 +1,6 @@
 import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { orderApi } from "/modules/admin/core/api/order.api.js";
+import { showToast } from "/shared/ui/toast.js";
 
 class OrderDetailManager {
   constructor() {
@@ -376,7 +377,13 @@ class OrderDetailManager {
   }
 
   async cancelOrder() {
-    if (!confirm("Bạn có chắc chắn muốn hủy đơn hàng này?")) return;
+    const confirmed = await window.showConfirmModal?.("Cancel this order?", {
+      title: "Cancel order",
+      confirmText: "Cancel order",
+      cancelText: "Keep order",
+      variant: "danger",
+    });
+    if (!confirmed) return;
 
     const allowedCancellation = ["PENDING", "CONFIRMED", "PROCESSING"].includes(
       this.orderDetail.orderStatus,
@@ -423,7 +430,7 @@ class OrderDetailManager {
   }
 
   showSuccess(message) {
-    alert(message);
+    showToast(message, "success");
   }
 
   addModalStyles() {

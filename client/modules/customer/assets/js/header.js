@@ -1,4 +1,3 @@
-// Header Component với Search functionality
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
 import { cartAPI } from "/modules/customer/core/api/cart.api.js";
 
@@ -9,12 +8,9 @@ class HeaderComponent {
 
   async loadHeader() {
     try {
-      const response = await fetch(
-        "/modules/customer/components/header/header.html",
-      );
+      const response = await fetch("/modules/customer/components/header/header.html");
       const headerHtml = await response.text();
 
-      // Xóa header cũ
       document.querySelector("header")?.remove();
       document.querySelector(".top-bar")?.remove();
 
@@ -31,20 +27,18 @@ class HeaderComponent {
   updateUserAccount() {
     const userAccountLink = document.getElementById("user-account-link");
     const userAccountText = document.getElementById("user-account-text");
+    if (!userAccountLink || !userAccountText) return;
 
     if (authAPI.isLoggedIn()) {
       const user = authAPI.getUser();
-      if (user && user.fullName) {
-        // Lấy tên đầu tiên từ fullName
-        const firstName = user.fullName.split(" ")[0];
-        userAccountText.textContent = firstName;
-        userAccountLink.href = "/account";
-      }
-    } else {
-      // Chưa đăng nhập
-      userAccountLink.href = "/login";
-      userAccountText.textContent = "Account";
+      const firstName = user?.fullName?.split(" ")?.[0];
+      userAccountText.textContent = firstName || "Account";
+      userAccountLink.href = "/account";
+      return;
     }
+
+    userAccountLink.href = "/login";
+    userAccountText.textContent = "Account";
   }
 
   async loadCartCount() {
@@ -58,15 +52,9 @@ class HeaderComponent {
 
     try {
       const cart = await cartAPI.getCart();
-
-      // Tính total items từ items array
-      const totalItems = cart.items
-        ? cart.items.reduce((sum, item) => sum + (item.quantity || 0), 0)
-        : 0;
-
+      const totalItems = cart.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
       cartCountEl.textContent = totalItems > 0 ? totalItems : "";
       cartCountEl.style.display = totalItems > 0 ? "inline-block" : "none";
-      console.log("Cart count updated:", totalItems);
     } catch (error) {
       console.error("Error loading cart count:", error);
       cartCountEl.style.display = "none";
@@ -77,62 +65,56 @@ class HeaderComponent {
     const searchInput = document.querySelector(".search-input");
     const searchForm = document.querySelector(".search-form");
 
-    if (searchInput) {
-      // Xử lý tìm kiếm realtime (optional)
-      searchInput.addEventListener("input", (e) => {
-        const query = e.target.value.trim();
-        if (query.length > 2) {
-          this.getSearchSuggestions(query);
-        }
-      });
-    }
+    searchInput?.addEventListener("input", (event) => {
+      const query = event.target.value.trim();
+      if (query.length > 2) {
+        this.getSearchSuggestions(query);
+      }
+    });
 
-    if (searchForm) {
-      searchForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const query = searchInput.value.trim();
-        if (query) {
-          window.location.href = `/search?q=${encodeURIComponent(query)}`;
-        }
-      });
-    }
+    searchForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = searchInput?.value?.trim();
+      if (query) {
+        window.location.href = `/search?q=${encodeURIComponent(query)}`;
+      }
+    });
   }
 
   getSearchSuggestions(query) {
-    // Call API để lấy gợi ý tìm kiếm
     console.log("Searching for:", query);
-    // Implement API call here
   }
 
   loadHeaderCSS() {
-    if (!document.querySelector('link[href*="header.css"]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "/modules/customer/assets/css/header.css";
-      document.head.appendChild(link);
-    }
+    if (document.querySelector('link[href*="header.css"]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/modules/customer/assets/css/header.css";
+    document.head.appendChild(link);
   }
 
   init() {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
-        this.loadHeader();
-        this.loadCartCount();
-      });
-    } else {
+    const load = () => {
       this.loadHeader();
       this.loadCartCount();
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", load);
+    } else {
+      load();
     }
 
-    window.addEventListener("cartUpdated", async () => {
-      await this.loadCartCount();
+    window.addEventListener("cartUpdated", () => this.loadCartCount());
+    window.addEventListener("login", () => {
+      this.updateUserAccount();
+      this.loadCartCount();
     });
-
     window.addEventListener("logout", () => {
+      this.updateUserAccount();
       this.loadCartCount();
     });
   }
 }
 
-// Khởi tạo
 new HeaderComponent();

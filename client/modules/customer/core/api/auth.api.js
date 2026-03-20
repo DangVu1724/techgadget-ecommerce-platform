@@ -1,33 +1,33 @@
 import { request } from "./base.api.js";
+import {
+  clearAuthSession,
+  getUser,
+  isLoggedIn,
+  saveAuthSession,
+} from "/shared/core/auth/session.js";
 
 export const authAPI = {
-  register: (data) =>
-    request("/auth/register", {
+  register(data) {
+    return request("/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
-    }),
+    });
+  },
 
-  login: (email, password) =>
-    request("/auth/login", {
+  async login(email, password) {
+    const session = await request("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
-    }),
+    });
 
-  logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
-    sessionStorage.removeItem("cart");
-
-    window.dispatchEvent(new Event("logout"));
+    saveAuthSession(session);
+    return session;
   },
 
-  getUser: () => {
-    const user = localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
+  logout() {
+    clearAuthSession();
   },
 
-  isLoggedIn: () => {
-    return !!localStorage.getItem("token");
-  },
+  getUser,
+  isLoggedIn,
 };

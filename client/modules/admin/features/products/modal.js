@@ -1,51 +1,27 @@
-// variantModal.js
 import { categoryApi } from "/modules/admin/core/api/category.api.js";
+import { showToast } from "/shared/ui/toast.js";
 
 let isSubmitting = false;
 
 const validationRules = {
   price: (value) => {
-    if (!value && value !== 0)
-      return { isValid: false, message: "Giá không được để trống" };
+    if (!value && value !== 0) return { isValid: false };
     const num = Number(value);
-    if (isNaN(num) || num <= 0)
-      return { isValid: false, message: "Giá phải là số dương" };
-    if (!Number.isInteger(num))
-      return { isValid: false, message: "Giá phải là số nguyên" };
+    if (Number.isNaN(num) || num <= 0 || !Number.isInteger(num)) return { isValid: false };
     return { isValid: true };
   },
-
   stock: (value) => {
-    if (!value && value !== 0)
-      return { isValid: false, message: "Số lượng không được để trống" };
+    if (!value && value !== 0) return { isValid: false };
     const num = Number(value);
-    if (isNaN(num) || num < 0)
-      return { isValid: false, message: "Số lượng phải là số không âm" };
-    if (!Number.isInteger(num))
-      return { isValid: false, message: "Số lượng phải là số nguyên" };
+    if (Number.isNaN(num) || num < 0 || !Number.isInteger(num)) return { isValid: false };
     return { isValid: true };
   },
-
-  attributeValue: (value) => {
-    if (!value || !value.trim())
-      return { isValid: false, message: "Giá trị không được để trống" };
-    if (value.length > 50)
-      return {
-        isValid: false,
-        message: "Giá trị không được vượt quá 50 ký tự",
-      };
-    return { isValid: true };
-  },
+  attributeValue: (value) => ({ isValid: Boolean(value?.trim()) && value.length <= 50 }),
 };
 
 function validateField(input, rule) {
   if (!input) return true;
   const result = rule(input.value);
-
-  const existingFeedback = input.nextElementSibling;
-  if (existingFeedback?.classList.contains("feedback-message"))
-    existingFeedback.remove();
-
   input.classList.remove("is-valid", "is-invalid");
   input.classList.add(result.isValid ? "is-valid" : "is-invalid");
   return result.isValid;
@@ -56,31 +32,19 @@ function setupValidation() {
   const stockInput = document.getElementById("variantStock");
 
   [priceInput, stockInput].forEach((input) => {
-    if (input) {
-      input.addEventListener("input", () =>
-        validateField(
-          input,
-          validationRules[input.id.replace("variant", "").toLowerCase()],
-        ),
-      );
-      input.addEventListener("blur", () =>
-        validateField(
-          input,
-          validationRules[input.id.replace("variant", "").toLowerCase()],
-        ),
-      );
-    }
+    if (!input) return;
+    input.addEventListener("input", () => validateField(input, validationRules[input.id.replace("variant", "").toLowerCase()]));
+    input.addEventListener("blur", () => validateField(input, validationRules[input.id.replace("variant", "").toLowerCase()]));
   });
 }
 
 function validateAllAttributes() {
   let isValid = true;
-  const inputs = document.querySelectorAll(".attribute-value");
-
-  inputs.forEach((input) => {
-    if (!validateField(input, validationRules.attributeValue)) isValid = false;
+  document.querySelectorAll(".attribute-value").forEach((input) => {
+    if (!validateField(input, validationRules.attributeValue)) {
+      isValid = false;
+    }
   });
-
   return isValid;
 }
 
@@ -91,60 +55,58 @@ export async function loadAttributes(categoryId) {
     if (!container) return;
 
     if (!attributes?.length) {
-      container.innerHTML =
-        '<p class="attribute-empty">Không có thuộc tính nào</p>';
+      container.innerHTML = '<p class="attribute-empty">No attributes available.</p>';
       return;
     }
 
-    let html = '<div class="attributes-container">';
-    attributes.forEach((attr) => {
-      const id = attr.attributeId || attr.id;
-      const name = attr.attributeName || attr.name || "Thuộc tính";
-      html += `
-        <div class="attribute-item">
-          <label>${name}</label>
-          <input type="text" 
-                 class="attribute-value" 
-                 data-attribute-id="${id}"
-                 data-attribute-name="${name}"
-                 placeholder="Nhập ${name.toLowerCase()}"
-                 oninput="window.validateAttributeInput(this)"
-                 onblur="window.validateAttributeInput(this)">
-        </div>
-      `;
-    });
-    html += "</div>";
+    container.innerHTML = `
+      <div class="attributes-container">
+        ${attributes.map((attr) => {
+          const id = attr.attributeId || attr.id;
+          const name = attr.attributeName || attr.name || "Attribute";
+          return `
+            <div class="attribute-item">
+              <label>${name}</label>
+              <input
+                type="text"
+                class="attribute-value"
+                data-attribute-id="${id}"
+                data-attribute-name="${name}"
+                placeholder="Enter ${name.toLowerCase()}"
+                oninput="window.validateAttributeInput(this)"
+                onblur="window.validateAttributeInput(this)"
+              >
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
 
-    container.innerHTML = html;
     setupValidation();
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Failed to load attributes:", error);
   }
 }
 
-window.validateAttributeInput = function (input) {
+window.validateAttributeInput = function validateAttributeInput(input) {
   validateField(input, validationRules.attributeValue);
 };
 
 export function collectAttributes() {
   const attributes = [];
-  const inputs = document.querySelectorAll(".attribute-value");
-
-  inputs.forEach((input) => {
+  document.querySelectorAll(".attribute-value").forEach((input) => {
     if (input.value.trim()) {
       attributes.push({
-        attributeId: parseInt(input.dataset.attributeId),
+        attributeId: parseInt(input.dataset.attributeId, 10),
         value: input.value.trim(),
       });
     }
   });
-
   return attributes;
 }
 
 export function resetAttributes() {
-  const inputs = ["variantName", "variantPrice", "variantStock"];
-  inputs.forEach((id) => {
+  ["variantName", "variantPrice", "variantStock"].forEach((id) => {
     const input = document.getElementById(id);
     if (input) {
       input.classList.remove("is-valid", "is-invalid");
@@ -152,8 +114,7 @@ export function resetAttributes() {
     }
   });
 
-  const attrInputs = document.querySelectorAll(".attribute-value");
-  attrInputs.forEach((input) => {
+  document.querySelectorAll(".attribute-value").forEach((input) => {
     input.classList.remove("is-valid", "is-invalid");
     input.value = "";
   });
@@ -162,16 +123,12 @@ export function resetAttributes() {
 export function validateVariantForm() {
   let isValid = true;
 
-  const priceInput = document.getElementById("variantPrice");
-  const stockInput = document.getElementById("variantStock");
-
-  if (!validateField(priceInput, validationRules.price)) isValid = false;
-  if (!validateField(stockInput, validationRules.stock)) isValid = false;
+  if (!validateField(document.getElementById("variantPrice"), validationRules.price)) isValid = false;
+  if (!validateField(document.getElementById("variantStock"), validationRules.stock)) isValid = false;
   if (!validateAllAttributes()) isValid = false;
 
-  const attrInputs = document.querySelectorAll(".attribute-value");
-  if (attrInputs.length === 0) {
-    alert("Không có thuộc tính nào để nhập");
+  if (!document.querySelectorAll(".attribute-value").length) {
+    showToast("No attributes are available for this variant.", "warning");
     isValid = false;
   }
 
@@ -180,12 +137,10 @@ export function validateVariantForm() {
 
 export function setSubmitting(state) {
   isSubmitting = state;
-  const submitBtn = document.querySelector(
-    '.btn-primary[onclick="saveVariant()"]',
-  );
+  const submitBtn = document.querySelector('.btn-primary[onclick="saveVariant()"]');
   if (submitBtn) {
     submitBtn.disabled = state;
-    submitBtn.innerHTML = state ? "Đang lưu..." : "Lưu Variant";
+    submitBtn.innerHTML = state ? "Saving..." : "Save Variant";
   }
 }
 

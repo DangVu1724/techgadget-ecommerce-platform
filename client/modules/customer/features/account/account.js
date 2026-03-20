@@ -1,85 +1,39 @@
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
+import { confirmModal } from "/shared/ui/modal.js";
+import { showToast } from "/shared/ui/toast.js";
 
-/**
- * Check login, nếu chưa đăng nhập thì redirect
- */
 const checkLogin = () => {
   if (!authAPI.isLoggedIn()) {
-    alert("Vui lòng đăng nhập trước!");
+    showToast("Please log in first.", "warning");
     window.location.href = "/login";
     return false;
   }
   return true;
 };
 
-/**
- * Render dashboard info
- */
 const renderDashboard = () => {
   const user = authAPI.getUser();
   const container = document.getElementById("dashboard-info");
+  if (!user || !container) return;
 
-  if (user) {
-    container.innerHTML = `
-      <div class="info-item">
-        <div class="info-label">Full Name</div>
-        <div class="info-value">${user.fullName}</div>
-      </div>
-      <div class="info-item">
-        <div class="info-label">Email</div>
-        <div class="info-value">${user.email}</div>
-      </div>
-      <div class="info-item">
-        <div class="info-label">Role</div>
-        <div class="info-value">${
-          user.role === "admin"
-            ? "Administrator"
-            : user.role === "user"
-              ? "Customer"
-              : user.role
-        }</div>
-      </div>
-    `;
-  }
+  container.innerHTML = `
+    <div class="info-item"><div class="info-label">Full Name</div><div class="info-value">${user.fullName}</div></div>
+    <div class="info-item"><div class="info-label">Email</div><div class="info-value">${user.email}</div></div>
+    <div class="info-item"><div class="info-label">Role</div><div class="info-value">${user.role}</div></div>
+  `;
 };
 
-/**
- * Render orders list
- */
 const renderOrders = () => {
   const container = document.getElementById("orders-list");
+  if (!container) return;
 
-  // Thay thế bằng API call để lấy đơn hàng từ backend
   const mockOrders = [
-    {
-      id: "ORD-001",
-      date: "2024-03-15",
-      total: 2400.0,
-      status: "Delivered",
-    },
-    {
-      id: "ORD-002",
-      date: "2024-03-10",
-      total: 1200.0,
-      status: "Processing",
-    },
-    {
-      id: "ORD-003",
-      date: "2024-03-05",
-      total: 3500.0,
-      status: "Shipped",
-    },
+    { id: "ORD-001", date: "2024-03-15", total: 2400.0, status: "Delivered" },
+    { id: "ORD-002", date: "2024-03-10", total: 1200.0, status: "Processing" },
+    { id: "ORD-003", date: "2024-03-05", total: 3500.0, status: "Shipped" },
   ];
 
-  if (mockOrders.length === 0) {
-    container.innerHTML =
-      '<div class="empty-message">No orders found. <a href="/shop">Start shopping</a></div>';
-    return;
-  }
-
-  const ordersHtml = mockOrders
-    .map(
-      (order) => `
+  container.innerHTML = mockOrders.map((order) => `
     <div class="order-item">
       <div class="order-info">
         <div class="order-id">${order.id}</div>
@@ -88,162 +42,109 @@ const renderOrders = () => {
       <div class="order-total">$${order.total.toFixed(2)}</div>
       <div class="order-status">${order.status}</div>
     </div>
-  `,
-    )
-    .join("");
-
-  container.innerHTML = ordersHtml;
+  `).join("");
 };
 
-/**
- * Load profile form
- */
 const loadProfileForm = () => {
   const user = authAPI.getUser();
-
-  if (user) {
-    document.getElementById("fullName").value = user.fullName || "";
-    document.getElementById("email").value = user.email || "";
-  }
+  if (!user) return;
+  document.getElementById("fullName").value = user.fullName || "";
+  document.getElementById("email").value = user.email || "";
 };
 
-/**
- * Initialize menu navigation
- */
 const initMenuNavigation = () => {
-  const menuLinks = document.querySelectorAll(".menu-link");
-
-  menuLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-
+  document.querySelectorAll(".menu-link").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
       const section = link.getAttribute("data-section");
       if (!section) return;
 
-      // Remove active class từ tất cả links
-      menuLinks.forEach((l) => l.classList.remove("active"));
-
-      // Add active class vào link hiện tại
+      document.querySelectorAll(".menu-link").forEach((item) => item.classList.remove("active"));
       link.classList.add("active");
 
-      // Hide tất cả sections
-      document.querySelectorAll(".content-section").forEach((s) => {
-        s.classList.remove("active");
-      });
-
-      // Show section được click
+      document.querySelectorAll(".content-section").forEach((item) => item.classList.remove("active"));
       const sectionEl = document.getElementById(section);
-      if (sectionEl) {
-        sectionEl.classList.add("active");
+      sectionEl?.classList.add("active");
 
-        // Load dữ liệu khi click vào section
-        if (section === "profile") {
-          loadProfileForm();
-        } else if (section === "orders") {
-          renderOrders();
-        }
-      }
+      if (section === "profile") loadProfileForm();
+      if (section === "orders") renderOrders();
     });
   });
 };
 
-/**
- * Logout handler
- */
 const initLogout = () => {
-  const logoutLink = document.getElementById("logout-link");
+  document.getElementById("logout-link")?.addEventListener("click", async (event) => {
+    event.preventDefault();
 
-  logoutLink.addEventListener("click", (e) => {
-    e.preventDefault();
+    const confirmed = await confirmModal("Do you want to log out of your account?", {
+      title: "Log out",
+      confirmText: "Log out",
+      cancelText: "Stay logged in",
+      variant: "danger",
+    });
 
-    if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-      authAPI.logout();
-      alert("Đã đăng xuất thành công!");
-      window.location.href = "/home";
-    }
+    if (!confirmed) return;
+
+    authAPI.logout();
+    showToast("Logged out successfully.", "success");
+    window.location.href = "/home";
   });
 };
 
-/**
- * Save profile handler
- */
 const initSaveProfile = () => {
-  const saveBtn = document.getElementById("save-profile");
+  document.getElementById("save-profile")?.addEventListener("click", (event) => {
+    event.preventDefault();
 
-  saveBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    const fullName = document.getElementById("fullName").value.trim();
-
+    const fullName = document.getElementById("fullName")?.value?.trim();
     if (!fullName) {
-      alert("Vui lòng nhập tên!");
+      showToast("Please enter your full name.", "warning");
       return;
     }
 
-    // Cập nhật user trong localStorage (tạm thời)
     const user = authAPI.getUser();
-    if (user) {
-      user.fullName = fullName;
-      localStorage.setItem("user", JSON.stringify(user));
-      alert("Cập nhật thông tin thành công!");
-      renderDashboard();
-    }
+    if (!user) return;
+
+    user.fullName = fullName;
+    localStorage.setItem("user", JSON.stringify(user));
+    showToast("Profile updated successfully.", "success");
+    renderDashboard();
   });
 };
 
-/**
- * Change password handler
- */
 const initChangePassword = () => {
-  const changePasswordBtn = document.getElementById("change-password");
+  document.getElementById("change-password")?.addEventListener("click", (event) => {
+    event.preventDefault();
 
-  changePasswordBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    const currentPassword = document.getElementById("currentPassword").value;
-    const newPassword = document.getElementById("newPassword").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    const currentPassword = document.getElementById("currentPassword")?.value;
+    const newPassword = document.getElementById("newPassword")?.value;
+    const confirmPassword = document.getElementById("confirmPassword")?.value;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("Vui lòng điền tất cả các trường!");
+      showToast("Please fill in all password fields.", "warning");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("Mật khẩu mới không khớp!");
+      showToast("New password and confirmation do not match.", "warning");
       return;
     }
 
     if (newPassword.length < 6) {
-      alert("Mật khẩu phải có ít nhất 6 ký tự!");
+      showToast("Password must be at least 6 characters.", "warning");
       return;
     }
 
-    // TODO: Gọi API để đổi mật khẩu
-    alert("Đổi mật khẩu thành công!");
-    document.getElementById("security-form").reset();
+    showToast("Password updated successfully.", "success");
+    document.getElementById("security-form")?.reset();
   });
 };
 
-/**
- * Initialize page
- */
 document.addEventListener("DOMContentLoaded", () => {
-  // Check login
   if (!checkLogin()) return;
 
-  // Render dashboard
   renderDashboard();
-
-  // Initialize menu navigation
   initMenuNavigation();
-
-  // Initialize logout
   initLogout();
-
-  // Initialize save profile
   initSaveProfile();
-
-  // Initialize change password
   initChangePassword();
 });
