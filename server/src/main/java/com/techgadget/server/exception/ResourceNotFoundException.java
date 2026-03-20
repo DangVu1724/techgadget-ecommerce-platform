@@ -1,11 +1,11 @@
 package com.techgadget.server.exception;
 
-public class ResourceNotFoundException extends ApiException{
-    public ResourceNotFoundException(ErrorCode errorCode, String... params) {
-        super(errorCode, params);
+public class ResourceNotFoundException extends NotFoundException {
+    public ResourceNotFoundException(String message) {
+        super(message);
     }
 
     public ResourceNotFoundException(String resourceName, Object resourceId) {
-        super(ErrorCode.NOT_FOUND, resourceName, String.valueOf(resourceId));
+        super(String.format("%s not found with id: %s", resourceName, resourceId));
     }
 }

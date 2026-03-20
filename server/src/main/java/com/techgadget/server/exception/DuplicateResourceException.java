@@ -1,11 +1,11 @@
 package com.techgadget.server.exception;
 
-public class DuplicateResourceException extends ApiException{
-    public DuplicateResourceException(ErrorCode errorCode, String... params) {
-        super(errorCode, params);
+public class DuplicateResourceException extends ConflictException {
+    public DuplicateResourceException(String message) {
+        super(message);
     }
 
     public DuplicateResourceException(String resourceName, String fieldName, Object value) {
-        super(ErrorCode.DUPLICATE_RESOURCE, resourceName, fieldName, String.valueOf(value));
+        super(String.format("%s already exists with %s: %s", resourceName, fieldName, value));
     }
 }

@@ -1,50 +1,31 @@
-// detail.js
 import { Sidebar } from "../../components/layouts/sidebar/sidebar.js";
 import { productApi } from "../../core/api/product.api.js";
 import { variantApi } from "../../core/api/variant.api.js";
-import {
-  formatCurrency,
-  formatDate,
-  showLoading,
-  renderAttributes,
-} from "./helpers.js";
-import {
-  loadAttributes,
-  collectAttributes,
-  resetAttributes,
-} from "/modules/admin/features/products/modal.js";
-import {
-  validateVariantForm,
-  setSubmitting,
-  getSubmitting,
-} from "/modules/admin/features/products/modal.js";
+import { formatCurrency, formatDate, showLoading, renderAttributes } from "./helpers.js";
+import { loadAttributes, collectAttributes, resetAttributes, validateVariantForm, getSubmitting } from "/modules/admin/features/products/modal.js";
 import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
+import { confirmModal } from "/shared/ui/modal.js";
+import { showToast } from "/shared/ui/toast.js";
 
-// Initialize sidebar
 new Sidebar();
 
-// Get product ID from URL
 const productId = window.location.pathname.split("/").pop();
-
-console.log("URL:", window.location.pathname);
-console.log("Product ID:", productId);
-
 let currentProduct = null;
 let currentVariant = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     checkAdmin();
-    if (productId) {
-      await loadProductDetails(productId);
-    } else {
-      alert("No product ID provided");
+    if (!productId) {
+      showToast("No product ID provided.", "warning");
       goBack();
+      return;
     }
 
+    await loadProductDetails(productId);
     setupModalEvents();
   } catch (error) {
-    console.error("Failed to load:", error);
+    console.error("Failed to load product detail page:", error);
   }
 });
 
@@ -52,17 +33,12 @@ function setupModalEvents() {
   const modal = document.getElementById("variantModal");
   if (!modal) return;
 
-  const closeBtn = modal.querySelector(".btn-close");
-  if (closeBtn) {
-    closeBtn.addEventListener("click", closeVariantModal);
-  }
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeVariantModal();
+  modal.querySelector(".btn-close")?.addEventListener("click", closeVariantModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeVariantModal();
   });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("show")) {
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("show")) {
       closeVariantModal();
     }
   });
@@ -73,67 +49,37 @@ async function loadProductDetails(id) {
     showLoading(true);
     const product = await productApi.getById(id);
     currentProduct = product;
-
     updateProductUI(product);
     loadVariants(product);
-
-    showLoading(false);
   } catch (error) {
     console.error("Error loading product:", error);
-    alert("Failed to load product details: " + error.message);
+    showToast("Failed to load product details.", "error");
+  } finally {
     showLoading(false);
   }
 }
 
 function updateProductUI(product) {
-  document.getElementById("productName").textContent =
-    product.name || "Unnamed Product";
+  document.getElementById("productName").textContent = product.name || "Unnamed Product";
   document.getElementById("productId").textContent = product.id || "-";
-  document.getElementById("brandName").textContent =
-    product.brand?.brandName || "-";
-  document.getElementById("categoryName").textContent =
-    product.category?.name || "-";
-
-  const descElement = document.getElementById("productDescription");
-  if (descElement) {
-    descElement.textContent =
-      product.description || "No description available.";
-  }
-
-  document.getElementById("minPrice").textContent = formatCurrency(
-    product.minPrice,
-  );
-  document.getElementById("maxPrice").textContent = product.maxPrice
-    ? formatCurrency(product.maxPrice)
-    : "-";
+  document.getElementById("brandName").textContent = product.brand?.brandName || "-";
+  document.getElementById("categoryName").textContent = product.category?.name || "-";
+  document.getElementById("productDescription").textContent = product.description || "No description available.";
+  document.getElementById("minPrice").textContent = formatCurrency(product.minPrice);
+  document.getElementById("maxPrice").textContent = product.maxPrice ? formatCurrency(product.maxPrice) : "-";
   document.getElementById("totalStock").textContent = product.totalStock || 0;
   document.getElementById("sold").textContent = product.sold || 0;
-  document.getElementById("createdAt").textContent = formatDate(
-    product.createdAt,
-  );
-  document.getElementById("updatedAt").textContent = formatDate(
-    product.updatedAt,
-  );
-
-  if (product.imageUrl) {
-    const mainImage = document.getElementById("mainImage");
-    mainImage.innerHTML = `<img src="${product.imageUrl}" alt="${product.name}">`;
-  }
+  document.getElementById("createdAt").textContent = formatDate(product.createdAt);
+  document.getElementById("updatedAt").textContent = formatDate(product.updatedAt);
 }
 
 function loadVariants(product) {
-  const variants = product.variants || [];
   const tbody = document.getElementById("variantsList");
   if (!tbody) return;
 
-  tbody.innerHTML = "";
-
-  variants.forEach((variant) => {
-    const row = document.createElement("tr");
-
+  tbody.innerHTML = (product.variants || []).map((variant) => {
     let stockClass = "high";
     let stockText = variant.stock;
-
     if (variant.stock === 0) {
       stockClass = "low";
       stockText = "Out of Stock";
@@ -142,172 +88,136 @@ function loadVariants(product) {
       stockText = `${variant.stock} (Low)`;
     }
 
-    row.innerHTML = `
-      <td><span class="variant-sku">${variant.id}</span></td>
-      <td>${variant.sku || "-"}</td>
-      <td><span class="variant-price">${formatCurrency(variant.price)}</span></td>
-      <td><span class="variant-stock ${stockClass}">${stockText}</span></td>
-      <td><span class="variant-attributes">${renderAttributes(variant.attributes)}</span></td>
-      <td class="variant-actions">
-        <button class="variant-btn edit" onclick="editVariant(${variant.id})">✏️</button>
-        <button class="variant-btn delete" onclick="deleteVariant(${variant.id})">🗑️</button>
-      </td>
+    return `
+      <tr>
+        <td><span class="variant-sku">${variant.id}</span></td>
+        <td>${variant.sku || "-"}</td>
+        <td><span class="variant-price">${formatCurrency(variant.price)}</span></td>
+        <td><span class="variant-stock ${stockClass}">${stockText}</span></td>
+        <td><span class="variant-attributes">${renderAttributes(variant.attributes)}</span></td>
+        <td class="variant-actions">
+          <button class="variant-btn edit" onclick="editVariant(${variant.id})">✏️</button>
+          <button class="variant-btn delete" onclick="deleteVariant(${variant.id})">🗑️</button>
+        </td>
+      </tr>
     `;
-    tbody.appendChild(row);
-  });
+  }).join("");
 }
 
-// Tab switching
-window.switchTab = function (tabName) {
-  document
-    .querySelectorAll(".tab-btn")
-    .forEach((btn) => btn.classList.remove("active"));
-  event.target.classList.add("active");
-
-  document
-    .querySelectorAll(".tab-pane")
-    .forEach((pane) => pane.classList.remove("active"));
-  document.getElementById(tabName + "Tab").classList.add("active");
-};
-
-// Navigation
 window.goBack = () => (window.location.href = "/admin/products");
-
-window.editProduct = () => {
-  if (currentProduct) {
-    window.location.href = `product-edit.html?id=${currentProduct.id}`;
-  }
-};
+const goBack = window.goBack;
 
 window.deleteProduct = async () => {
   if (!currentProduct) return;
-  if (confirm(`Are you sure you want to delete "${currentProduct.name}"?`)) {
-    try {
-      await productApi.delete(currentProduct.id);
-      alert("Product deleted successfully!");
-      goBack();
-    } catch (error) {
-      alert("Failed to delete product: " + error.message);
-    }
+
+  const confirmed = await confirmModal(`Delete "${currentProduct.name}"?`, {
+    title: "Delete product",
+    confirmText: "Delete",
+    cancelText: "Cancel",
+    variant: "danger",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    await productApi.delete(currentProduct.id);
+    showToast("Product deleted successfully.", "success");
+    goBack();
+  } catch (error) {
+    console.error("Failed to delete product:", error);
   }
 };
 
-// Variant functions
 window.addVariant = async () => {
   currentVariant = null;
-
-  const form = document.getElementById("variantForm");
-  if (form) form.reset();
-
-  const modalTitle = document.getElementById("variantModalLabel");
-  if (modalTitle) modalTitle.textContent = "Add Variant";
-
+  document.getElementById("variantForm")?.reset();
+  document.getElementById("variantModalLabel").textContent = "Add Variant";
   resetAttributes();
-
-  console.log("Current product category ID:", currentProduct?.category?.id);
 
   if (currentProduct?.category?.id) {
     await loadAttributes(currentProduct.category.id);
-    console.log(
-      "Attributes loaded for category ID:",
-      currentProduct.category.id,
-    );
   }
 
-  const modal = document.getElementById("variantModal");
-  if (modal) {
-    modal.classList.add("show");
-    document.body.style.overflow = "hidden";
-  }
+  document.getElementById("variantModal")?.classList.add("show");
+  document.body.style.overflow = "hidden";
 };
 
 window.editVariant = async (variantId) => {
   currentVariant = variantId;
-  const modalTitle = document.getElementById("variantModalLabel");
-  if (modalTitle) modalTitle.textContent = "Edit Variant";
-
+  document.getElementById("variantModalLabel").textContent = "Edit Variant";
   resetAttributes();
-  await loadAttributes();
-
-  const modal = document.getElementById("variantModal");
-  if (modal) {
-    modal.classList.add("show");
-    document.body.style.overflow = "hidden";
-  }
+  await loadAttributes(currentProduct?.category?.id);
+  document.getElementById("variantModal")?.classList.add("show");
+  document.body.style.overflow = "hidden";
 };
 
 window.closeVariantModal = () => {
-  const modal = document.getElementById("variantModal");
-  if (modal) {
-    modal.classList.remove("show");
-    document.body.style.overflow = "";
-  }
+  document.getElementById("variantModal")?.classList.remove("show");
+  document.body.style.overflow = "";
 };
+const closeVariantModal = window.closeVariantModal;
 
 window.saveVariant = async () => {
-  if (getSubmitting()) return;
-
-  // Validate form
-  if (!validateVariantForm()) {
-    return;
-  }
+  if (getSubmitting() || !validateVariantForm()) return;
 
   const variantData = {
     productId: currentProduct.id,
     price: parseFloat(document.getElementById("variantPrice").value),
-    stock: parseInt(document.getElementById("variantStock").value),
+    stock: parseInt(document.getElementById("variantStock").value, 10),
     description: document.getElementById("variantDescription").value,
     attributes: collectAttributes(),
-    productId: currentProduct.id,
   };
 
   try {
     if (currentVariant) {
       await variantApi.updateVariant(currentVariant, variantData);
-      alert("Variant updated successfully");
+      showToast("Variant updated successfully.", "success");
     } else {
       await variantApi.createVariant(variantData);
-      alert("Variant created successfully");
+      showToast("Variant created successfully.", "success");
     }
 
     closeVariantModal();
     await loadProductDetails(currentProduct.id);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to save variant: " + err.message);
+  } catch (error) {
+    console.error("Failed to save variant:", error);
   }
 };
 
 window.deleteVariant = async (variantId) => {
-  if (confirm("Are you sure you want to delete this variant?")) {
-    try {
-      await variantApi.deleteVariant(variantId);
-      alert("Variant deleted successfully!");
-      await loadProductDetails(currentProduct.id);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete variant: " + err.message);
-    }
+  const confirmed = await confirmModal("Delete this variant?", {
+    title: "Delete variant",
+    confirmText: "Delete",
+    cancelText: "Cancel",
+    variant: "danger",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    await variantApi.deleteVariant(variantId);
+    showToast("Variant deleted successfully.", "success");
+    await loadProductDetails(currentProduct.id);
+  } catch (error) {
+    console.error("Failed to delete variant:", error);
   }
 };
 
-// Image functions
 window.uploadImage = () => {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const mainImage = document.getElementById("mainImage");
-        if (mainImage) {
-          mainImage.innerHTML = `<img src="${e.target.result}" alt="Product">`;
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+  input.onchange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+      const mainImage = document.getElementById("mainImage");
+      if (mainImage) {
+        mainImage.innerHTML = `<img src="${loadEvent.target.result}" alt="Product">`;
+      }
+    };
+    reader.readAsDataURL(file);
   };
   input.click();
 };

@@ -1,67 +1,78 @@
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
+import { showToast } from "/shared/ui/toast.js";
 
-// ===== VALIDATION =====
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validatePassword = (password) => password.length >= 6;
 
-// ===== REGISTER =====
 const registerForm = document.getElementById("registerForm");
-
 if (registerForm) {
-  registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  registerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const email = document.getElementById("registerEmail").value;
-    const password = document.getElementById("registerPassword").value;
+    const firstName = document.getElementById("firstName")?.value?.trim();
+    const lastName = document.getElementById("lastName")?.value?.trim();
+    const email = document.getElementById("registerEmail")?.value?.trim();
+    const password = document.getElementById("registerPassword")?.value || "";
 
-    if (!validateEmail(email)) return alert("Email không hợp lệ");
-    if (!validatePassword(password)) return alert("Mật khẩu >= 6 ký tự");
+    if (!validateEmail(email)) {
+      showToast("Please enter a valid email address.", "warning");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      showToast("Password must be at least 6 characters.", "warning");
+      return;
+    }
 
     try {
       await authAPI.register({
-        fullName: `${firstName} ${lastName}`,
+        fullName: `${firstName} ${lastName}`.trim(),
         email,
         password,
       });
-      window.location.href = "/login";
-    } catch (err) {
-      alert(err.message);
+
+      showToast("Registration successful. Please log in.", "success");
+      window.setTimeout(() => {
+        window.location.href = "/login";
+      }, 500);
+    } catch (error) {
+      console.error("Registration failed:", error);
     }
   });
 }
 
-// ===== LOGIN =====
 const loginForm = document.getElementById("loginForm");
-
 if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+    const email = document.getElementById("loginEmail")?.value?.trim();
+    const password = document.getElementById("loginPassword")?.value || "";
 
-    if (!validateEmail(email)) return alert("Email không hợp lệ");
-    if (!validatePassword(password)) return alert("Mật khẩu >= 6 ký tự");
+    if (!validateEmail(email)) {
+      showToast("Please enter a valid email address.", "warning");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      showToast("Password must be at least 6 characters.", "warning");
+      return;
+    }
 
     try {
-      const data = await authAPI.login(email, password);
-
-      // 🔐 lưu token + user
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      await authAPI.login(email, password);
+      showToast("Login successful.", "success");
 
       const redirectUrl = localStorage.getItem("redirectAfterLogin");
-
       if (redirectUrl) {
         localStorage.removeItem("redirectAfterLogin");
         window.location.href = redirectUrl;
-      } else {
-        window.location.href = "/home";
+        return;
       }
-    } catch (err) {
-      alert(err.message);
+
+      window.location.href = "/home";
+    } catch (error) {
+      console.error("Customer login failed:", error);
     }
   });
 }
