@@ -1,6 +1,8 @@
 package com.techgadget.server.model.entity;
 
 import com.techgadget.server.model.enums.OrderStatus;
+import com.techgadget.server.model.enums.PaymentMethod;
+import com.techgadget.server.model.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,12 +21,20 @@ public class Order {
 
     private BigDecimal amount;
     private String shippingAddress;
-    private String orderAddress;
+    private String phoneNumber;
     private String orderEmail;
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    private String transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

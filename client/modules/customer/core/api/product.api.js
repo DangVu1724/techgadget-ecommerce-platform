@@ -1,31 +1,46 @@
-const BASE_URL = "https://techgadget-ecommerce-platform.onrender.com/api";
+const BASE_URL = "http://localhost:8080/api";
 
 export const productApi = {
-  // Lấy products có phân trang
-  getAll: async (params = {}) => {
+  // Lấy products với filter
+  filterProducts: async (params = {}) => {
+    const query = new URLSearchParams({
+      page: params.page ?? 0,
+      size: params.size ?? 20,
+      sortBy: params.sortBy ?? "id",
+      sortDirection: params.sortDirection ?? "asc",
+    });
+
+    if (params.brandId) query.append("brandId", params.brandId);
+    if (params.categoryId) query.append("categoryId", params.categoryId);
+    if (params.search) query.append("search", params.search);
+    if (params.minPrice !== null && params.minPrice !== undefined)
+      query.append("minPrice", params.minPrice);
+    if (params.maxPrice !== null && params.maxPrice !== undefined)
+      query.append("maxPrice", params.maxPrice);
+    if (params.ram) query.append("ram", params.ram);
+    if (params.storage) query.append("storage", params.storage);
+
+    const res = await fetch(`${BASE_URL}/products?${query.toString()}`);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
+    }
+
+    return res.json();
+  },
+
+  // Lấy chi tiết sản phẩm
+  getById: async (id) => {
     try {
-      const page = params.page || 0;
-      const size = params.size || 10;
-
-      let url = `${BASE_URL}/products?page=${page}&size=${size}`;
-
-      // Thêm search param nếu có
-      if (params.search) {
-        url += `&search=${encodeURIComponent(params.search)}`;
-      }
-
-      const res = await fetch(url);
+      const res = await fetch(`${BASE_URL}/products/${id}`);
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
 
-      const data = await res.json();
-
-      // API trả về dạng { content, totalPages, totalElements }
-      return data;
+      return await res.json();
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching product by id:", error);
       throw error;
     }
   },

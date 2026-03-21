@@ -15,6 +15,7 @@ import com.techgadget.server.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -26,14 +27,19 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
 
     @Override
-    public CartResponseDTO getCart(Long userId) {
-        Cart cart = cartRepository.findCartWithItems(userId).orElseThrow(() -> new RuntimeException("Cart not found"));
+    public CartResponseDTO getCart(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException(" User not found"));
+        Cart cart = cartRepository.findCartWithItems(user.getId())
+                .orElseGet(() -> createCart(user));
         return mapToDTO(cart) ;
     }
 
     @Override
-    public void addToCart(Long userId, CartItemRequestDTO request) {
-        Cart cart =  cartRepository.findCartWithItems(userId).orElseGet(()-> createCart(userId));
+    public void addToCart(String email, CartItemRequestDTO request) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findCartWithItems(user.getId())
+                .orElseGet(() -> createCart(user));
 
         ProductVariant variant = variantRepository.findById(request.getVariantId())
                 .orElseThrow(() -> new RuntimeException("Variant not found"));
@@ -44,9 +50,11 @@ public class CartServiceImpl implements CartService {
 
         if (item != null) {
             int newQuantity = item.getQuantity() + request.getQuantity();
-            if(newQuantity > variant.getStock()){
+
+            if (newQuantity > variant.getStock()) {
                 throw new RuntimeException("Quantity exceeded stock");
             }
+
             item.setQuantity(newQuantity);
             cartItemRepository.save(item);
         } else {
@@ -54,46 +62,59 @@ public class CartServiceImpl implements CartService {
             newItem.setCart(cart);
             newItem.setVariant(variant);
             newItem.setQuantity(request.getQuantity());
+
+            if (request.getQuantity() > variant.getStock()) {
+                throw new RuntimeException("Quantity exceeds stock");
+            }
+
             cartItemRepository.save(newItem);
         }
-
     }
 
     @Override
-    public void removeFromCart(Long cartItemId) {
-        cartItemRepository.deleteById(cartItemId);
+    public void removeFromCart(String email, Long cartItemId) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
+
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
+        if (!item.getCart().getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        cartItemRepository.delete(item);
     }
 
     @Override
-    public void updateQuantity(Long userId, CartItemRequestDTO request) {
-        Cart cart = cartRepository.findCartWithItems(userId).orElseThrow(() -> new RuntimeException("Cart not found"));
+    public void updateQuantity(String email, CartItemRequestDTO request) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findCartWithItems(user.getId())
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         ProductVariant variant = variantRepository.findById(request.getVariantId())
                 .orElseThrow(() -> new RuntimeException("Variant not found"));
-
 
         CartItem cartItem = cartItemRepository
                 .findByCartIdAndVariantId(cart.getId(), variant.getId())
                 .orElseThrow(() -> new RuntimeException("CartItem not found"));
 
-        if(request.getQuantity() > variant.getStock()) throw new RuntimeException("Quantity exceeds stock");
+        if (request.getQuantity() > variant.getStock()) {
+            throw new RuntimeException("Quantity exceeds stock");
+        }
 
-        if(request.getQuantity() == 0){
+        if (request.getQuantity() == 0) {
             cartItemRepository.delete(cartItem);
             return;
         }
 
         cartItem.setQuantity(request.getQuantity());
         cartItemRepository.save(cartItem);
-
     }
 
 
-
-    private Cart createCart(Long userId) {
-        User user= userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-
+    private Cart createCart(User user) {
         Cart cart = new Cart();
         cart.setUser(user);
         return cartRepository.save(cart);
@@ -118,6 +139,12 @@ public class CartServiceImpl implements CartService {
         }).toList();
 
         dto.setItems(items);
+
+        dto.setTotalPrice(
+                items.stream()
+                        .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
 
         return dto;
     }

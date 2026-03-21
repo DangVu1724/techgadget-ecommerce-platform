@@ -17,8 +17,64 @@
   <body>
     <section class="hero">
       <div class="container">
-        <div class="hero-banner">
-          <img src="/modules/customer/assets/images/banner1.png" alt="Banner" />
+        <div class="hero-slider">
+          <div class="slider-container">
+            <div class="slider-wrapper">
+              <!-- Slide 1 -->
+              <div class="slide active">
+                <img
+                  src="/modules/customer/assets/images/banner1.png"
+                  alt="Banner 1"
+                />
+                <div class="slide-content">
+                  <h2>Summer Sale 2026</h2>
+                  <p>Up to 50% off on selected items</p>
+                  <a href="#" class="btn-shop">Shop Now</a>
+                </div>
+              </div>
+              <!-- Slide 2 -->
+              <div class="slide">
+                <img
+                  src="/modules/customer/assets/images/OppoN6_DKNT_home.jpg"
+                  alt="Banner 2"
+                />
+                <div class="slide-content">
+                  <h2>New Arrivals</h2>
+                  <p>Latest tech gadgets just landed</p>
+                  <a href="#" class="btn-shop">Discover</a>
+                </div>
+              </div>
+              <!-- Slide 3 -->
+              <div class="slide">
+                <img
+                  src="/modules/customer/assets/images/mbam5homepae.jpg"
+                  alt="Banner 3"
+                />
+              </div>
+              <div class="slide">
+                <img
+                  src="/modules/customer/assets/images/x8d-home.jpg"
+                  alt="Banner 3"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Arrows -->
+          <button class="slider-arrow prev" aria-label="Previous Slide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="slider-arrow next" aria-label="Next Slide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+
+          <!-- Dots Navigation -->
+          <div class="slider-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
+          </div>
         </div>
       </div>
     </section>
@@ -66,10 +122,61 @@
       <div class="brands-bar" id="brandList"></div>
     </section>
 
+    <section class="section-padding container flash-sale">
+      <div class="flash-header">
+        <h3>⚡ FLASH SALE</h3>
+
+        <div class="countdown">
+          <span id="h">02</span> : <span id="m">14</span> :
+          <span id="s">55</span>
+        </div>
+      </div>
+
+      <div class="grid-5" id="flashSaleProducts"></div>
+    </section>
+
     <section class="section-padding container">
       <h3 class="section-header">BEST SELLING ITEMS</h3>
 
       <div class="grid-5" id="bestSellingProductList"></div>
+    </section>
+
+    <section class="promo-banner">
+      <div class="promo-container container">
+        <div class="promo-content">
+          <div class="promo-text">
+            <span class="promo-tag">
+              <i class="fas fa-star"></i>
+              NEW RELEASE
+            </span>
+            <h2>MacBook M3 Series</h2>
+            <p>
+              Supercharged performance. Ultra-light design. Built for creators.
+            </p>
+          </div>
+          <div class="promo-actions">
+            <a
+              href="/modules/customer/features/product_detail/product_detail.html?id=4"
+              class="btn-primary"
+            >
+              <span>Shop Now</span>
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <a
+              href="/modules/customer/features/product_detail/product_detail.html?id=4"
+              class="btn-secondary"
+            >
+              Learn More
+            </a>
+          </div>
+        </div>
+        <div class="promo-image">
+          <img
+            src="/modules/customer/assets/images/Banner-MacBookAir-M3.jpg"
+            alt="MacBook M3 Promo"
+          />
+        </div>
+      </div>
     </section>
 
     <section class="section-padding container">
@@ -95,6 +202,18 @@
           <p>"Best tech website I've ever used. 5 stars."</p>
           <div class="stars">★★★★★</div>
           <h6>Kevin Bryan</h6>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter">
+      <div class="container newsletter-box">
+        <h3>Stay Updated</h3>
+        <p>Get the latest tech deals and product launches</p>
+
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your email" />
+          <button>Subscribe</button>
         </div>
       </div>
     </section>

@@ -20,7 +20,7 @@ public class VariantAttributeValue {
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String value;
 
 }

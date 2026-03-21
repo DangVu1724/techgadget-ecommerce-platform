@@ -4,16 +4,6 @@ import { categoryApi } from "/modules/admin/core/api/category.api.js";
 let isSubmitting = false;
 
 const validationRules = {
-  name: (value) => {
-    if (!value || !value.trim())
-      return { isValid: false, message: "Tên không được để trống" };
-    if (value.length < 3)
-      return { isValid: false, message: "Tên phải có ít nhất 3 ký tự" };
-    if (value.length > 50)
-      return { isValid: false, message: "Tên không được vượt quá 50 ký tự" };
-    return { isValid: true };
-  },
-
   price: (value) => {
     if (!value && value !== 0)
       return { isValid: false, message: "Giá không được để trống" };
@@ -62,11 +52,10 @@ function validateField(input, rule) {
 }
 
 function setupValidation() {
-  const nameInput = document.getElementById("variantName");
   const priceInput = document.getElementById("variantPrice");
   const stockInput = document.getElementById("variantStock");
 
-  [nameInput, priceInput, stockInput].forEach((input) => {
+  [priceInput, stockInput].forEach((input) => {
     if (input) {
       input.addEventListener("input", () =>
         validateField(
@@ -173,11 +162,9 @@ export function resetAttributes() {
 export function validateVariantForm() {
   let isValid = true;
 
-  const nameInput = document.getElementById("variantName");
   const priceInput = document.getElementById("variantPrice");
   const stockInput = document.getElementById("variantStock");
 
-  if (!validateField(nameInput, validationRules.name)) isValid = false;
   if (!validateField(priceInput, validationRules.price)) isValid = false;
   if (!validateField(stockInput, validationRules.stock)) isValid = false;
   if (!validateAllAttributes()) isValid = false;

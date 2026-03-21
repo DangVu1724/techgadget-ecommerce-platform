@@ -14,9 +14,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/variants")
 @RequiredArgsConstructor
+@CrossOrigin
 public class VariantController {
 
     private final VariantService variantService;
+
+    @GetMapping("/{variantId}")
+    public ResponseEntity<VariantResponse> getCurrentVariant(@PathVariable Long variantId) {
+        VariantResponse response = variantService.getCurrentVariant(variantId);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public VariantResponse createVariant(

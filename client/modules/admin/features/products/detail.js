@@ -1,6 +1,5 @@
 // detail.js
 import { Sidebar } from "../../components/layouts/sidebar/sidebar.js";
-import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 import { productApi } from "../../core/api/product.api.js";
 import { variantApi } from "../../core/api/variant.api.js";
 import {
@@ -33,7 +32,6 @@ let currentVariant = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    requireAdmin();
     if (productId) {
       await loadProductDetails(productId);
     } else {
@@ -143,7 +141,7 @@ function loadVariants(product) {
 
     row.innerHTML = `
       <td><span class="variant-sku">${variant.id}</span></td>
-      <td>${variant.name || "-"}</td>
+      <td>${variant.sku || "-"}</td>
       <td><span class="variant-price">${formatCurrency(variant.price)}</span></td>
       <td><span class="variant-stock ${stockClass}">${stockText}</span></td>
       <td><span class="variant-attributes">${renderAttributes(variant.attributes)}</span></td>
@@ -250,7 +248,6 @@ window.saveVariant = async () => {
 
   const variantData = {
     productId: currentProduct.id,
-    name: document.getElementById("variantName").value,
     price: parseFloat(document.getElementById("variantPrice").value),
     stock: parseInt(document.getElementById("variantStock").value),
     description: document.getElementById("variantDescription").value,

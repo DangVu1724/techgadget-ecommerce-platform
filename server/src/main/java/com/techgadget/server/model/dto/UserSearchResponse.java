@@ -15,8 +15,8 @@ public class UserSearchResponse {
     private Long id;
     private String fullName;
     private String email;
-    private String phone;
+    //private String phone;
     private Role role;
-    private UserStatus status;
+    //private UserStatus status;
 
 }

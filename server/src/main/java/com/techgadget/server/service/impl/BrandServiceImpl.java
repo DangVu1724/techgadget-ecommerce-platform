@@ -27,6 +27,17 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public List<BrandResponse> getAllBrandsByCategoryId(Long id) {
+        return brandRepository.getBrandsByCategory(id).stream().map(brand -> {
+            BrandResponse dto = new BrandResponse();
+            dto.setBrandId(brand.getBrandId());
+            dto.setBrandName(brand.getBrandName());
+            return dto;
+        }).toList();
+    }
+
+
+    @Override
     public BrandResponse createBrand(BrandRequest request) {
 
         Brand brand = new Brand();

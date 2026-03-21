@@ -1,7 +1,6 @@
 import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { Table } from "/modules/admin/components/data/table/Table.js";
 import { Modal } from "/modules/admin/components/data/table/Modal.js";
-import { requireAdmin } from "/modules/core/auth/auth.guard.js";
 import { categoryApi } from "/modules/admin/core/api/category.api.js";
 
 // Initialize sidebar
@@ -10,7 +9,6 @@ new Sidebar();
 // Check authentication
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    requireAdmin();
 
     // Initialize table
     initTable();

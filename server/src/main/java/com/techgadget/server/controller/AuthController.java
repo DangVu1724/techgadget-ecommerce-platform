@@ -1,31 +1,46 @@
 package com.techgadget.server.controller;
-
-import com.techgadget.server.model.entity.User;
+import com.techgadget.server.Util.JwtUtil;
+import com.techgadget.server.model.dto.LoginRequest;
+import com.techgadget.server.model.dto.RegisterRequest;
 import com.techgadget.server.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.techgadget.server.model.dto.LoginRequest;
-import com.techgadget.server.model.dto.RegisterRequest;
+
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
+@CrossOrigin
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
 
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        this.authService.register(request);
-        return ResponseEntity.ok("Register successfully") ;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request){
-       this.authService.login(request);
-        return "login successfully";
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        var user = authService.login(request);
+
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "user", Map.of(
+                        "id", user.getId(),
+                        "email", user.getEmail(),
+                        "fullName", user.getFullName(),
+                        "role", user.getRole()
+                )));
+
     }
 }
