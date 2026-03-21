@@ -23,6 +23,7 @@ import { showToast } from "/shared/ui/toast.js";
 let currentProduct = null;
 let variantGroups = null;
 let selectedVariant = null;
+const BUY_NOW_KEY = "buyNowCheckoutItem";
 
 const loadProductFromDb = async () => {
   try {
@@ -192,13 +193,46 @@ const setupOrderNow = () => {
 
   orderNowBtn.addEventListener("click", async () => {
     if (!authAPI.isLoggedIn()) {
+      localStorage.setItem("redirectAfterLogin", window.location.href);
       await showLoginModal(() => {
         window.location.href = "/login";
       });
       return;
     }
 
-    showToast("Buy now flow will be available soon.", "info");
+    if (!selectedVariant) {
+      showToast("Please select a variant first.", "warning");
+      return;
+    }
+
+    const quantity = parseInt(document.getElementById("quantity")?.value || "1", 10);
+    if (quantity < 1) {
+      showToast("Invalid quantity.", "warning");
+      return;
+    }
+
+    const user = authAPI.getUser();
+    sessionStorage.setItem(
+      BUY_NOW_KEY,
+      JSON.stringify({
+        productId: currentProduct?.id,
+        productName: currentProduct?.name || "Product",
+        variantId: selectedVariant.id,
+        variantName: selectedVariant.name || "",
+        quantity,
+        price: selectedVariant.price,
+        image:
+          currentProduct?.images?.[0] ||
+          currentProduct?.image ||
+          "/modules/customer/assets/images/macbook.png",
+        email: user?.email || "",
+        phone: user?.phone || "",
+        address: user?.address || "",
+        fullName: user?.fullName || "",
+      }),
+    );
+
+    window.location.href = "/checkout?mode=buy-now";
   });
 };
 

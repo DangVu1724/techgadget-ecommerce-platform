@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Cancelled | TechGadget</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/customer/features/checkout/payment-result.css"
+    />
+  </head>
+  <body data-payment-page="cancel">
+    <main class="payment-result-page">
+      <section class="payment-result-card">
+        <div id="result-badge" class="payment-result-badge pending">!</div>
+        <h1 id="result-title" class="payment-result-title">Payment cancelled</h1>
+        <p id="result-message" class="payment-result-message">
+          Your PayOS payment was cancelled or has not completed yet.
+        </p>
+        <div class="payment-result-meta">
+          <p><strong>Transaction:</strong> <span id="transaction-id">-</span></p>
+          <p><strong>Status:</strong> <span id="payment-status">CANCELLED</span></p>
+          <p><strong>Order ID:</strong> <span id="order-id">-</span></p>
+        </div>
+        <div class="payment-result-actions">
+          <a class="payment-result-btn primary" href="/checkout">Try Again</a>
+          <a class="payment-result-btn secondary" href="/cart">Back to Cart</a>
+        </div>
+      </section>
+    </main>
+    <script
+      type="module"
+      src="/modules/customer/features/checkout/js/payment-result.js"
+    ></script>
+  </body>
+</html>

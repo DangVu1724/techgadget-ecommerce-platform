@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Success | TechGadget</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/customer/features/checkout/payment-result.css"
+    />
+  </head>
+  <body>
+    <main class="payment-result-page">
+      <section class="payment-result-card">
+        <div id="result-badge" class="payment-result-badge pending">...</div>
+        <h1 id="result-title" class="payment-result-title">Checking payment</h1>
+        <p id="result-message" class="payment-result-message">
+          We are verifying your PayOS payment and creating your order.
+        </p>
+        <div class="payment-result-meta">
+          <p><strong>Transaction:</strong> <span id="transaction-id">-</span></p>
+          <p><strong>Status:</strong> <span id="payment-status">PENDING</span></p>
+          <p><strong>Order ID:</strong> <span id="order-id">-</span></p>
+        </div>
+        <div class="payment-result-actions">
+          <a class="payment-result-btn primary" href="/home">Back to Home</a>
+          <a class="payment-result-btn secondary" href="/checkout">Back to Checkout</a>
+        </div>
+      </section>
+    </main>
+    <script
+      type="module"
+      src="/modules/customer/features/checkout/js/payment-result.js"
+    ></script>
+  </body>
+</html>

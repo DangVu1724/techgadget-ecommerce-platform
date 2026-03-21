@@ -6,8 +6,17 @@ import { showLoginModal } from "/modules/customer/components/login-modal/login-m
 import { showToast } from "/shared/ui/toast.js";
 
 let cartData = null;
+const PENDING_PAYOS_KEY = "pendingPayOSTransactionId";
+const BUY_NOW_KEY = "buyNowCheckoutItem";
+const checkoutMode =
+  new URLSearchParams(window.location.search).get("mode") === "buy-now" ? "buy-now" : "cart";
 
 const loadCartData = async () => {
+  if (checkoutMode === "buy-now") {
+    loadBuyNowData();
+    return;
+  }
+
   if (!authAPI.isLoggedIn()) {
     await showLoginModal(() => {
       window.location.href = "/login";
@@ -42,6 +51,40 @@ const loadCartData = async () => {
   }
 };
 
+const loadBuyNowData = () => {
+  const rawItem = sessionStorage.getItem(BUY_NOW_KEY);
+  if (!rawItem) {
+    showToast("No Buy Now item found.", "warning");
+    window.location.href = "/home";
+    return;
+  }
+
+  try {
+    const item = JSON.parse(rawItem);
+    cartData = {
+      mode: "buy-now",
+      items: [
+        {
+          variantId: item.variantId,
+          quantity: item.quantity,
+          price: item.price,
+          productName: item.productName,
+          variantName: item.variantName,
+          image: item.image,
+        },
+      ],
+    };
+
+    renderOrderSummary();
+    prefillUserInfo(item);
+  } catch (error) {
+    console.error("Failed to load Buy Now checkout:", error);
+    showToast("Unable to load Buy Now checkout.", "error");
+    sessionStorage.removeItem(BUY_NOW_KEY);
+    window.location.href = "/home";
+  }
+};
+
 const renderOrderSummary = () => {
   const container = document.getElementById("order-items-container");
 
@@ -58,7 +101,7 @@ const renderOrderSummary = () => {
   container.innerHTML = cartData.items
     .map((item) => `
       <div class="summary-item">
-        <span class="item-name">${item.productName}</span>
+        <span class="item-name">${item.productName}${item.variantName ? ` - ${item.variantName}` : ""}</span>
         <span class="item-qty">x${item.quantity}</span>
         <span class="item-price">$${(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
       </div>
@@ -82,8 +125,8 @@ const updateSummaryTotals = () => {
   document.getElementById("summary-total").textContent = `$${total.toFixed(2)}`;
 };
 
-const prefillUserInfo = () => {
-  const user = authAPI.getUser();
+const prefillUserInfo = (overrideUser = null) => {
+  const user = overrideUser || authAPI.getUser();
   if (!user) {
     return;
   }
@@ -134,8 +177,12 @@ const submitCheckout = async (orderRequest) => {
       submitBtn.textContent = "Processing...";
     }
 
-    const result = await checkoutAPI.checkoutFromCart(orderRequest);
+    const result =
+      checkoutMode === "buy-now"
+        ? await checkoutAPI.checkoutBuyNow(orderRequest)
+        : await checkoutAPI.checkoutFromCart(orderRequest);
     sessionStorage.removeItem("cart");
+    sessionStorage.removeItem(BUY_NOW_KEY);
     window.dispatchEvent(new Event("cartUpdated", { bubbles: true }));
 
     showToast("Order placed successfully.", "success");
@@ -151,11 +198,33 @@ const submitCheckout = async (orderRequest) => {
 };
 
 const handlePayOSPayment = async (orderRequest) => {
+  const submitBtn = document.querySelector(".btn-checkout-submit");
+  const originalText = submitBtn?.textContent || "PLACE ORDER";
+
   try {
-    console.log("PayOS Payment:", orderRequest);
-    showToast("PayOS integration will be available soon.", "info");
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Redirecting...";
+    }
+
+    const payment =
+      checkoutMode === "buy-now"
+        ? await checkoutAPI.checkoutBuyNow(orderRequest)
+        : await checkoutAPI.checkoutFromCart(orderRequest);
+
+    if (!payment?.paymentUrl || !payment?.transactionId) {
+      throw new Error("Unable to initialize PayOS payment.");
+    }
+
+    localStorage.setItem(PENDING_PAYOS_KEY, payment.transactionId);
+    window.location.href = payment.paymentUrl;
   } catch (error) {
     console.error("PayOS failed:", error);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
   }
 };
 
