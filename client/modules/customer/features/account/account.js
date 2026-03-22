@@ -1,3 +1,4 @@
+
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
 
 /**
@@ -246,4 +247,150 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize change password
   initChangePassword();
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Quản lý chuyển Tab chính
+    const menuItems = document.querySelectorAll('.sub-menu li, .menu-item[data-tab]');
+    const tabs = document.querySelectorAll('.tab-content');
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-tab');
+            if(!targetId) return;
+
+            // Xóa active cũ
+            document.querySelectorAll('.menu-item, .sub-menu li').forEach(el => el.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
+
+            // Kích hoạt tab mới
+            this.classList.add('active');
+            if(this.closest('.menu-item')) this.closest('.menu-item').classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+            
+            // Nếu vào tab đơn mua, load mặc định "Tất cả"
+            if(targetId === 'tab-donmua') renderOrders('all');
+        });
+    });
+
+    // 2. Dữ liệu và Xử lý Đơn mua
+    const orderListContent = document.getElementById('order-list-content');
+
+// 1. Cấu trúc dữ liệu chi tiết hơn để đổ vào giao diện
+const orders = {
+    all: [
+        { 
+            shop: 'Sidotech Official', 
+            isMall: true,
+            status: 'HOÀN THÀNH', 
+            price: '106.400đ', 
+            name: 'Chuột máy tính có dây SIDOTECH B2 gaming silent tắt âm 6 nút bấm 8800 DPI có app laptop pc chơi game làm việc',
+            variant: 'Phân loại hàng: Chuột B2 - Đen',
+            quantity: 1,
+            img: 'https://via.placeholder.com/80' // Bạn có thể thay bằng link ảnh thật từ hình
+        },
+        { 
+            shop: 'Dược Phẩm Hoa Linh Miền Bắc', 
+            isMall: true,
+            status: 'HOÀN THÀNH', 
+            price: '95.000đ', 
+            name: 'Kem đánh răng dược liệu Ngọc Châu chuyên gia 170g',
+            variant: 'Phân loại hàng: Tuýp 170g',
+            quantity: 2,
+            img: 'https://via.placeholder.com/80' // Bạn có thể thay bằng link ảnh thật từ hình
+        }
+    ],
+    completed: [
+        { 
+            shop: 'Sidotech Official', 
+            isMall: true,
+            status: 'HOÀN THÀNH', 
+            price: '106.400đ', 
+            name: 'Chuột Gaming Sidotech B2',
+            variant: 'Phân loại hàng: Chuột B2 - Đen',
+            quantity: 1,
+            img: 'https://via.placeholder.com/80'
+        }
+    ],
+    // Các tab khác nếu chưa có dữ liệu sẽ hiện thông báo "Chưa có đơn hàng"
+    pending: [],
+    shipping: [],
+    delivering: [],
+    cancelled: [],
+    refund: []
+};
+
+// 2. Hàm render đơn hàng chuẩn Shopee Dark Mode
+function renderOrders(type) {
+    const data = orders[type] || [];
+    
+    if (data.length === 0) {
+        orderListContent.innerHTML = `
+            <div style="text-align:center; padding:100px 0; background:#1a1a1a; margin-top:10px;">
+                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393a712b96488590b8f781f.png" style="width:100px; opacity:0.5">
+                <p style="color:#666; margin-top:20px;">Chưa có đơn hàng.</p>
+            </div>`;
+        return;
+    }
+
+    orderListContent.innerHTML = data.map(order => `
+        <div class="order-card" style="background:#1a1a1a; margin-top:12px; border-radius:3px; border: 1px solid #333;">
+            <div class="order-header" style="display:flex; justify-content:space-between; padding:15px 20px; border-bottom:1px solid #262626; align-items:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    ${order.isMall ? '<span style="background:#d0011b; color:#fff; padding:1px 3px; border-radius:2px; font-size:10px; font-weight:bold;">Mall</span>' : ''}
+                    <strong style="color:#fff; font-size:14px;">${order.shop}</strong>
+                    <button style="background:#ee4d2d; color:#fff; border:none; padding:3px 8px; border-radius:2px; font-size:12px; cursor:pointer;"><i class="fas fa-comment-alt"></i> Chat</button>
+                    <button style="background:transparent; color:#ccc; border:1px solid #444; padding:3px 8px; border-radius:2px; font-size:12px; cursor:pointer;"><i class="fas fa-store"></i> Xem Shop</button>
+                </div>
+                <div style="color:#ee4d2d; font-size:14px; text-transform:uppercase;">
+                    <i class="fas fa-truck" style="color:#00bfa5; margin-right:5px; font-size:12px;"></i>
+                    <span style="color:#00bfa5; text-transform:none; font-size:12px; margin-right:10px; border-right:1px solid #444; padding-right:10px;">Giao hàng thành công</span>
+                    ${order.status}
+                </div>
+            </div>
+
+            <div class="order-body" style="display:flex; padding:20px; gap:12px; cursor:pointer;">
+                <img src="${order.img}" style="width:80px; height:80px; border:1px solid #333; object-fit:cover;">
+                <div style="flex:1">
+                    <h4 style="color:#efefef; font-weight:400; font-size:16px; margin-bottom:5px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${order.name}</h4>
+                    <p style="color:#888; font-size:14px; margin-bottom:5px;">${order.variant}</p>
+                    <p style="color:#fff; font-size:14px;">x${order.quantity}</p>
+                </div>
+                <div style="text-align:right;">
+                    <span style="color:#888; text-decoration:line-through; font-size:14px; margin-right:8px;">199.000đ</span>
+                    <span style="color:#ee4d2d; font-size:16px;">${order.price}</span>
+                </div>
+            </div>
+
+            <div class="order-footer" style="background:#1e1e1e; padding:20px; border-top:1px dashed #333;">
+                <div style="text-align:right; margin-bottom:15px;">
+                    <span style="color:#fff; font-size:14px;">
+                        <i class="fas fa-shield-alt" style="color:#ee4d2d; margin-right:5px;"></i>
+                        Thành tiền: 
+                    </span>
+                    <span style="font-size:24px; color:#ee4d2d; margin-left:10px;">${order.price}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="color:#888; font-size:12px;">Đánh giá sản phẩm trước 10-04-2026. Đánh giá ngay để nhận 200 Xu.</div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-primary" style="background:#ee4d2d; color:#fff; border:none; padding:10px 30px; border-radius:2px; font-weight:500;">Mua Lại</button>
+                        <button style="background:transparent; color:#ccc; border:1px solid #444; padding:10px 20px; border-radius:2px;">Liên Hệ Người Bán</button>
+                        <button style="background:transparent; color:#ccc; border:1px solid #444; padding:10px 20px; border-radius:2px;">Thiết Lập Khác</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 3. Sự kiện chuyển Tab
+document.querySelectorAll('.ot-item').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelectorAll('.ot-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        renderOrders(this.dataset.order);
+    });
+});
+
+// Load mặc định tab "Tất cả"
+renderOrders('all');
 });
