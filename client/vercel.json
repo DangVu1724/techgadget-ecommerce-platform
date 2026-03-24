@@ -36,6 +36,14 @@
       "source": "/products/:id",
       "destination": "/modules/customer/features/product_detail/product_detail.html"
     },
+    {
+      "source": "/shop",
+      "destination": "/modules/customer/features/shop/shop.html"
+    },
+    {
+      "source": "/search",
+      "destination": "/modules/customer/features/search/search.html"
+    },
 
     {
       "source": "/admin",

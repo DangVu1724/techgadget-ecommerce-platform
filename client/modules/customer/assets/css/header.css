@@ -140,6 +140,48 @@ header {
     padding: 10px 0;
     display: none;
     z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-suggestions.active {
+    display: block;
+}
+
+.suggestion-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    color: var(--text-dark);
+    font-size: 14px;
+    border-left: 3px solid transparent;
+}
+
+.suggestion-item:hover {
+    background: var(--orange-light);
+    border-left-color: var(--orange);
+}
+
+.suggestion-item i {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.suggestion-item .price {
+    margin-left: auto;
+    color: var(--orange);
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.no-suggestions {
+    padding: 15px 20px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 13px;
 }
 
 .search-container:focus-within .search-suggestions {

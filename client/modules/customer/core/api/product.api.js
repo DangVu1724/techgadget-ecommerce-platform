@@ -1,20 +1,47 @@
 import { request } from "./base.api.js";
 
 export const productApi = {
-  filterProducts(params = {}) {
+  filterProducts(keywordOrParams = "", params = {}) {
+    const isKeywordOnlyObject =
+      typeof keywordOrParams === "object" &&
+      keywordOrParams !== null &&
+      !Array.isArray(keywordOrParams);
+
+    const keyword = isKeywordOnlyObject ? "" : String(keywordOrParams || "");
+    const finalParams = isKeywordOnlyObject ? keywordOrParams : params;
+
     const query = new URLSearchParams({
+      page: finalParams.page ?? 0,
+      size: finalParams.size ?? 20,
+    });
+
+    if (keyword) query.append("name", keyword);
+
+    if (finalParams.brandId) query.append("brandId", finalParams.brandId);
+    if (finalParams.categoryId)
+      query.append("categoryId", finalParams.categoryId);
+    if (finalParams.minPrice != null)
+      query.append("minPrice", finalParams.minPrice);
+    if (finalParams.maxPrice != null)
+      query.append("maxPrice", finalParams.maxPrice);
+    if (finalParams.ram) query.append("ram", finalParams.ram);
+    if (finalParams.storage) query.append("storage", finalParams.storage);
+
+    return request(`/products?${query.toString()}`);
+  },
+
+  search(keyword, params = {}) {
+    const query = new URLSearchParams({
+      name: String(keyword || ""),
       page: params.page ?? 0,
       size: params.size ?? 20,
     });
 
-    if (params.brandId) query.append("brandId", params.brandId);
-    if (params.categoryId) query.append("categoryId", params.categoryId);
-    if (params.minPrice != null) query.append("minPrice", params.minPrice);
-    if (params.maxPrice != null) query.append("maxPrice", params.maxPrice);
-    if (params.ram) query.append("ram", params.ram);
-    if (params.storage) query.append("storage", params.storage);
+    return request(`/products/search?${query.toString()}`);
+  },
 
-    return request(`/products?${query.toString()}`);
+  searchSuggestions(keyword, limit = 5) {
+    return this.search(keyword, { page: 0, size: limit });
   },
 
   getById(id) {

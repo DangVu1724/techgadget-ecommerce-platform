@@ -19,6 +19,9 @@ class HeaderComponent {
       this.updateUserAccount();
       this.loadHeaderCSS();
       await this.loadCartCount();
+      
+      // Trigger event to notify header.js script that DOM is ready
+      window.dispatchEvent(new Event("header-loaded"));
     } catch (error) {
       console.error("Error loading header:", error);
     }
@@ -62,27 +65,11 @@ class HeaderComponent {
   }
 
   initSearch() {
-    const searchInput = document.querySelector(".search-input");
-    const searchForm = document.querySelector(".search-form");
-
-    searchInput?.addEventListener("input", (event) => {
-      const query = event.target.value.trim();
-      if (query.length > 2) {
-        this.getSearchSuggestions(query);
-      }
-    });
-
-    searchForm?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const query = searchInput?.value?.trim();
-      if (query) {
-        window.location.href = `/search?q=${encodeURIComponent(query)}`;
-      }
-    });
-  }
-
-  getSearchSuggestions(query) {
-    console.log("Searching for:", query);
+    // Load header search functionality
+    const script = document.createElement("script");
+    script.type = "module";
+    script.src = "/modules/customer/components/header/header.js";
+    document.body.appendChild(script);
   }
 
   loadHeaderCSS() {
