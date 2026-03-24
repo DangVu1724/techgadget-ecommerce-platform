@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
     Page<OrderResponse> getAllOrders(Pageable pageable);
+    Page<OrderResponse> getMyOrders(Pageable pageable);
 
     Page<OrderResponse> getOrdersByStatus(OrderStatus status, Pageable pageable);
 

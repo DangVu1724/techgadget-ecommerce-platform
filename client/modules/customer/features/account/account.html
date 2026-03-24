@@ -9,7 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-
+    <link
+      rel="stylesheet"
+      href="/modules/customer/features/account/account.css">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -260,170 +262,264 @@
     </style>
   </head>
   <body>
-    <div class="account-page">
-      <div class="account-header">
-        <h1>My Account</h1>
-        <p>Manage your profile and orders</p>
-      </div>
-
-      <div class="container">
-        <div class="account-wrapper">
-          <!-- Sidebar -->
-          <div class="account-sidebar">
-            <h3>Menu</h3>
-            <ul class="sidebar-menu">
-              <li>
-                <a href="#" class="menu-link active" data-section="dashboard"
-                  >Dashboard</a
-                >
-              </li>
-              <li>
-                <a href="#" class="menu-link" data-section="orders"
-                  >My Orders</a
-                >
-              </li>
-              <li>
-                <a href="#" class="menu-link" data-section="profile"
-                  >Profile Settings</a
-                >
-              </li>
-              <li>
-                <a href="#" class="menu-link" data-section="security"
-                  >Security</a
-                >
-              </li>
-              <li><a href="#" id="logout-link" class="menu-link">Logout</a></li>
-            </ul>
-          </div>
-
-          <!-- Content Area -->
-          <div class="account-content">
-            <!-- Dashboard Section -->
-            <div class="content-section active" id="dashboard">
-              <h2 class="section-title">Welcome Back!</h2>
-              <div class="user-info" id="dashboard-info">
-                <!-- Will be populated by JS -->
-              </div>
-              <div class="button-group">
-                <a href="/shop" class="btn btn-primary">Continue Shopping</a>
-                <a href="/cart" class="btn btn-secondary">View Cart</a>
-              </div>
-            </div>
-
-            <!-- Orders Section -->
-            <div class="content-section" id="orders">
-              <h2 class="section-title">My Orders</h2>
-              <div id="orders-list">
-                <!-- Will be populated by JS -->
-              </div>
-            </div>
-
-            <!-- Profile Section -->
-            <div class="content-section" id="profile">
-              <h2 class="section-title">Profile Settings</h2>
-              <form id="profile-form" class="user-info">
-                <div class="info-item">
-                  <label class="info-label">Full Name</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    class="info-value"
-                    style="
-                      width: 100%;
-                      padding: 8px;
-                      border: 1px solid #ddd;
-                      border-radius: 4px;
-                    "
-                  />
+   <div class="container section-padding">
+        <div class="profile-layout">
+            <aside class="profile-sidebar">
+                <div class="user-brief">
+                    <img src="https://via.placeholder.com/50" alt="avatar" class="avatar-sm">
+                    <div class="user-brief-info">
+                        <span class="username">huylquang</span>
+                        <a href="#" class="text-muted"><i class="fas fa-pen"></i> Sửa Hồ Sơ</a>
+                    </div>
                 </div>
-                <div class="info-item">
-                  <label class="info-label">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    class="info-value"
-                    style="
-                      width: 100%;
-                      padding: 8px;
-                      border: 1px solid #ddd;
-                      border-radius: 4px;
-                    "
-                    readonly
-                  />
-                </div>
-              </form>
-              <div class="button-group mt-30">
-                <button id="save-profile" class="btn btn-primary">
-                  Save Changes
-                </button>
-              </div>
-            </div>
+                
+                <nav class="profile-menu" style="margin-left: 20px;">
+                    <div class="menu-item active">
+                        <i class="far fa-user"></i> <span class="v-label">Tài Khoản Của Tôi</span>
+                        <ul class="sub-menu">
+                            <li class="active" data-tab="tab-hoso">Hồ Sơ</li>
+                            <li data-tab="tab-nganhang">Ngân Hàng</li>
+                            <li data-tab="tab-diachi">Địa Chỉ</li>
+                            <li data-tab="tab-doimatkhau">Đổi Mật Khẩu</li>
+                        </ul>
+                    </div>
+                    <div class="menu-item" data-tab="tab-donmua">
+                        <i class="fas fa-file-alt"></i> <span class="v-label">Đơn Mua</span>
+                    </div>
+                    <div class="menu-item" data-tab="tab-voucher">
+                        <i class="fas fa-ticket-alt"></i> <span class="v-label">Kho Voucher</span>
+                    </div>
+                    <div class="menu-item" data-tab="tab-shopeexu">
+                        <i class="fas fa-coins"></i> <span class="v-label">Xu</span>
+                    </div>
+                </nav>
+            </aside>
 
-            <!-- Security Section -->
-            <div class="content-section" id="security">
-              <h2 class="section-title">Change Password</h2>
-              <form id="security-form" style="max-width: 400px">
-                <div
-                  class="info-item"
-                  style="display: block; margin-bottom: 15px"
-                >
-                  <label class="info-label">Current Password</label>
-                  <input
-                    type="password"
-                    id="currentPassword"
-                    style="
-                      width: 100%;
-                      padding: 8px;
-                      border: 1px solid #ddd;
-                      border-radius: 4px;
-                      margin-top: 5px;
-                    "
-                  />
+            <main class="profile-main">
+                <div id="tab-hoso" class="tab-content active">
+                    <div class="profile-header">
+                        <h2 class="section-title-slanted">Hồ Sơ Của Tôi</h2>
+                        <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+                    </div>
+                    <div class="profile-content">
+                        <form class="profile-form">
+                            <div class="form-group">
+                                <label class="v-label">Tên đăng nhập</label>
+                                <div class="input-static">huylquang</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="v-label">Tên</label>
+                                <input type="text" value="Lê Quang Huy" class="custom-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="v-label">Email</label>
+                                <div class="input-static">hu************@gmail.com <a href="#" class="text-accent">Thay Đổi</a></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="v-label">Số điện thoại</label>
+                                <div class="input-static">*********71 <a href="#" class="text-accent">Thay Đổi</a></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="v-label">Giới tính</label>
+                                <div class="v-options">
+                                    <label><input type="radio" name="gender" checked> Nam</label>
+                                    <label><input type="radio" name="gender"> Nữ</label>
+                                    <label><input type="radio" name="gender"> Khác</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="v-label">Ngày sinh</label>
+                                <div class="date-selects">
+                                    <select class="custom-input"><option>01</option><option selected>22</option></select>
+                                    <select class="custom-input"><option>Tháng 01</option><option selected>Tháng 03</option></select>
+                                    <select class="custom-input"><option>1998</option><option selected>2000</option></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label></label>
+                                <button type="submit" class="btn-primary">Lưu Thay Đổi</button>
+                            </div>
+                        </form>
+                        <div class="profile-avatar-upload">
+                            <div class="avatar-preview"><i class="fas fa-user"></i></div>
+                            <button class="v-btn">Chọn Ảnh</button>
+                            <p>Dung lượng tối đa 1MB. Định dạng: .JPG, .PNG</p>
+                        </div>
+                    </div>
                 </div>
-                <div
-                  class="info-item"
-                  style="display: block; margin-bottom: 15px"
-                >
-                  <label class="info-label">New Password</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    style="
-                      width: 100%;
-                      padding: 8px;
-                      border: 1px solid #ddd;
-                      border-radius: 4px;
-                      margin-top: 5px;
-                    "
-                  />
+                <div id="tab-nganhang" class="tab-content">
+                    <div class="profile-header flex-between">
+                        <h2 class="section-title-slanted">Thẻ Tín Dụng/Ghi Nợ</h2>
+                        <button class="btn-primary">+ Thêm Thẻ Mới</button>
+                    </div>
+                    <div class="empty-state">
+                        <i class="fas fa-credit-card" style="font-size: 50px; margin-bottom: 20px;"></i>
+                        <p>Bạn chưa liên kết thẻ nào.</p>
+                    </div>
                 </div>
-                <div
-                  class="info-item"
-                  style="display: block; margin-bottom: 15px"
-                >
-                  <label class="info-label">Confirm Password</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    style="
-                      width: 100%;
-                      padding: 8px;
-                      border: 1px solid #ddd;
-                      border-radius: 4px;
-                      margin-top: 5px;
-                    "
-                  />
+
+                <div id="tab-diachi" class="tab-content">
+                    <div class="profile-header flex-between">
+                        <h2 class="section-title-slanted">Địa Chỉ Của Tôi</h2>
+                        <button class="btn-primary">+ Thêm Địa Chỉ Mới</button>
+                    </div>
+                    <div class="address-item">
+                        <div class="address-info">
+                            <div class="flex-between">
+                                <strong>Lê Quang Huy | (+84) 377 771 771</strong>
+                                <a href="#" class="text-accent">Cập nhật</a>
+                            </div>
+                            <p class="text-muted">Yên Nghĩa, Phường Yên Nghĩa, Quận Hà Đông, Hà Nội</p>
+                            <span class="badge-outline">Mặc định</span>
+                        </div>
+                    </div>
                 </div>
-              </form>
-              <div class="button-group mt-30">
-                <button id="change-password" class="btn btn-primary">
-                  Change Password
-                </button>
+
+                <div id="tab-donmua" class="tab-content">
+                    <div class="order-tabs-container">
+                        <div class="ot-item active" data-order="all">Tất cả</div>
+                        <div class="ot-item" data-order="pending">Chờ thanh toán</div>
+                        <div class="ot-item" data-order="shipping">Vận chuyển</div>
+                        <div class="ot-item" data-order="delivering">Chờ giao hàng</div>
+                        <div class="ot-item" data-order="completed">Hoàn thành</div>
+                        <div class="ot-item" data-order="cancelled">Đã hủy</div>
+                        <div class="ot-item" data-order="refund">Trả hàng/Hoàn tiền</div>
+                    </div>
+                    <div class="order-search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm">
+                    </div>
+                    <div id="order-list-content">
+                        </div>
+                </div>
+                <div  class ="tab-content" id="tab-voucher">
+                  <div class="voucher-card">
+                      <div class="v-left">
+                          <div class="v-icon-circle"><i class="fas fa-bolt"></i></div>
+                          <span class="v-type">Giảm 15%</span>
+                      </div>
+                      <div class="v-right">
+                          <div class="v-info">
+                              <span class="v-tag">Độc quyền</span>
+                              <strong class="v-title">Mã Giảm Giá TechGadget Toàn Sàn</strong>
+                              <p class="text-muted">Đơn tối thiểu ₫500k - Tối đa ₫100k</p>
+                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 31.03.2026</div>
+                          </div>
+                          <button class="v-btn-action">Sử Dụng</button>
+                      </div>
+                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
+                  </div>
+
+                  <div class="voucher-card v-freeship">
+                      <div class="v-left">
+                          <div class="v-icon-circle"><i class="fas fa-truck"></i></div>
+                          <span class="v-type">Freeship</span>
+                      </div>
+                      <div class="v-right">
+                          <div class="v-info">
+                              <span class="v-tag">Vận chuyển</span>
+                              <strong class="v-title">Miễn Phí Vận Chuyển Toàn Quốc</strong>
+                              <p class="text-muted">Đơn tối thiểu ₫0 - Tối đa ₫25k</p>
+                              <div class="v-expiry">Sắp hết hạn: Còn 2 ngày</div>
+                          </div>
+                          <button class="v-btn-action">Sử Dụng</button>
+                      </div>
+                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
+                  </div>
+
+                  <div class="voucher-card">
+                      <div class="v-left">
+                          <div class="v-icon-circle"><i class="fas fa-gamepad"></i></div>
+                          <span class="v-type">Giảm ₫50k</span>
+                      </div>
+                      <div class="v-right">
+                          <div class="v-info">
+                              <span class="v-tag">Gaming</span>
+                              <strong class="v-title">Voucher Phụ Kiện Gaming Sidotech</strong>
+                              <p class="text-muted">Đơn tối thiểu ₫250k</p>
+                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 15.04.2026</div>
+                          </div>
+                          <button class="v-btn-action">Sử Dụng</button>
+                      </div>
+                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
+                  </div>
+
+                  <div class="voucher-card v-hoanxu">
+                      <div class="v-left">
+                          <div class="v-icon-circle"><i class="fas fa-coins"></i></div>
+                          <span class="v-type">Hoàn 10%</span>
+                      </div>
+                      <div class="v-right">
+                          <div class="v-info">
+                              <span class="v-tag">Hoàn xu</span>
+                              <strong class="v-title">Hoàn Xu Đơn Hàng Điện Tử</strong>
+                              <p class="text-muted">Hoàn tối đa 50k xu</p>
+                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 05.04.2026</div>
+                          </div>
+                          <button class="v-btn-action">Sử Dụng</button>
+                      </div>
+                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
+                  </div>
+
+                  <div class="voucher-card">
+                      <div class="v-left">
+                          <div class="v-icon-circle"><i class="fab fa-apple"></i></div>
+                          <span class="v-type">Giảm ₫200k</span>
+                      </div>
+                      <div class="v-right">
+                          <div class="v-info">
+                              <span class="v-tag">High-tech</span>
+                              <strong class="v-title">Ưu đãi bộ sưu tập Apple</strong>
+                              <p class="text-muted">Đơn tối thiểu ₫5.000k</p>
+                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 20.04.2026</div>
+                          </div>
+                          <button class="v-btn-action">Sử Dụng</button>
+                      </div>
+                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
+                  </div>
+
+                  <div class="voucher-card">
+                      <div class="v-left">
+                          <div class="v-icon-circle"><i class="fas fa-user-plus"></i></div>
+                          <span class="v-type">Giảm ₫30k</span>
+                      </div>
+                      <div class="v-right">
+                          <div class="v-info">
+                              <span class="v-tag">Newbie</span>
+                              <strong class="v-title">Quà Tặng Thành Viên Mới</strong>
+                              <p class="text-muted">Đơn tối thiểu ₫0</p>
+                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: Vô thời hạn</div>
+                          </div>
+                          <button class="v-btn-action">Sử Dụng</button>
+                      </div>
+                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
+                  </div>
               </div>
-            </div>
-          </div>
+
+                <div id="tab-shopeexu" class="tab-content">
+                    <div class="xu-header-card">
+                        <div class="xu-balance">
+                            <img src="https://cf.shopee.vn/file/7bbf98836474df6c89ca9a6a8219194e" alt="xu">
+                            <div>
+                                <h3>200</h3>
+                                <p>Xu đang có</p>
+                            </div>
+                        </div>
+                        <button class="v-btn">Nhận thêm Xu</button>
+                    </div>
+                    <div class="xu-history">
+                        <h4 class="v-label">Lịch sử Xu</h4>
+                        <div class="xu-item">
+                            <div class="xu-info">
+                                <strong>Hoàn xu đơn hàng #240322</strong>
+                                <p class="text-muted">22-03-2026 10:00</p>
+                            </div>
+                            <span class="text-accent">+100 Xu</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-      </div>
     </div>
 
     <script

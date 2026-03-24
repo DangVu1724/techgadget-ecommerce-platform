@@ -53,6 +53,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<OrderResponse> getMyOrders(Pageable pageable) {
+        User user = getCurrentUser();
+        return orderRepository.findByUserIdOrderByOrderDateDesc(user.getId(), pageable).map(this::mapToResponse);
+    }
+
+    @Override
     public Page<OrderResponse> getOrdersByStatus(OrderStatus status, Pageable pageable) {
         return orderRepository.findByOrderStatus(status, pageable).map(this::mapToResponse);
     }

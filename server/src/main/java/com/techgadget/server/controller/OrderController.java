@@ -31,6 +31,11 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success("Orders retrieved successfully.", orderService.getAllOrders(pageable)));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<Page<OrderResponse>>> getMyOrders(Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.success("Orders retrieved successfully.", orderService.getMyOrders(pageable)));
+    }
+
     @GetMapping("/status")
     public ResponseEntity<ApiResponse<Page<OrderResponse>>> getByStatus(
             @RequestParam OrderStatus status,

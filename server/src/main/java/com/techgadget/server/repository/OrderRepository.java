@@ -15,6 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findAll(Pageable pageable);
 
     Page<Order> findByOrderStatus(OrderStatus status, Pageable pageable);
+    Page<Order> findByUserIdOrderByOrderDateDesc(Long userId, Pageable pageable);
 
     @Query("SELECT o FROM Order o JOIN FETCH o.orderDetails WHERE o.id = :id")
     Optional<Order> findById(Long id);
