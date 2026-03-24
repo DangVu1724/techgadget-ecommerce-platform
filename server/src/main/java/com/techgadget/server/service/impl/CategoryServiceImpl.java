@@ -40,6 +40,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryResponse> searchCategoriesByName(String name) {
+        return categoryRepository.findByNameContainingIgnoreCase(name).stream().map(category -> {
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+            return response;
+        }).toList();
+    }
+
+    @Override
     public Set<Attribute> getAttributesByCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId));

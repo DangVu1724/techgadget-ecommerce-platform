@@ -3,11 +3,14 @@ import { normalizeCollection } from "/shared/core/api/collection.js";
 
 export const productApi = {
   async getAll(params = {}) {
-    const query = new URLSearchParams({
-      page: params.page ?? 0,
-      size: params.size ?? 10,
-    });
+    const { page = 0, size = 10, search = "" } = params;
 
+    if (search && search.trim()) {
+      const query = new URLSearchParams({ page, size });
+      return normalizeCollection(await request(`/products/search?name=${encodeURIComponent(search)}&${query.toString()}`));
+    }
+
+    const query = new URLSearchParams({ page, size });
     return normalizeCollection(await request(`/products?${query.toString()}`));
   },
 

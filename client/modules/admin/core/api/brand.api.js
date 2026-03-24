@@ -2,8 +2,23 @@ import { request } from "./base.api.js";
 import { normalizeCollection } from "/shared/core/api/collection.js";
 
 export const brandApi = {
-  async getAll() {
-    return normalizeCollection(await request("/brands"));
+  async getAll(options = {}) {
+    const { search = "" } = options;
+    
+    try {
+      let response;
+      
+      if (search && search.trim()) {
+        response = await request(`/brands/search?name=${encodeURIComponent(search)}`);
+      } else {
+        response = await request("/brands");
+      }
+      
+      return normalizeCollection(response);
+    } catch (error) {
+      console.error("Error in brandApi.getAll:", error);
+      throw error;
+    }
   },
 
   getById(id) {

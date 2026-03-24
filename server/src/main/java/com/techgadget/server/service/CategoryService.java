@@ -13,6 +13,8 @@ public interface CategoryService {
 
     List<CategoryResponse> getCategoriesByBrand(Long brandId);
 
+    List<CategoryResponse> searchCategoriesByName(String name);
+
     Set<Attribute> getAttributesByCategory(Long categoryId);
 
     CategoryResponse createCategory(CategoryRequest request);

@@ -12,6 +12,8 @@ public interface BrandService {
 
     List<BrandResponse> getAllBrandsByCategoryId(Long id);
 
+    List<BrandResponse> searchByName(String name);
+
     BrandResponse createBrand(BrandRequest request);
 
     BrandResponse updateBrand(Long brandId, BrandRequest request);

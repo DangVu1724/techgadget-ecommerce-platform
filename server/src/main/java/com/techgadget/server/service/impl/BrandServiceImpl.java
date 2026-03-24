@@ -32,6 +32,14 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public List<BrandResponse> searchByName(String name) {
+        return brandRepository.findByBrandNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
     public BrandResponse createBrand(BrandRequest request) {
         Brand brand = new Brand();
         brand.setBrandName(request.getBrandName());

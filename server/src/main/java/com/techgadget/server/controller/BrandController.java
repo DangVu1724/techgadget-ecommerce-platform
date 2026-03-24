@@ -7,15 +7,7 @@ import com.techgadget.server.service.BrandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +21,12 @@ public class BrandController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<BrandResponse>>> getAllBrands() {
         return ResponseEntity.ok(ApiResponse.success("Brands retrieved successfully.", brandService.getAllBrands()));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<BrandResponse>>> searchByName(@RequestParam("name") String name) {
+        List<BrandResponse> results = brandService.searchByName(name);
+        return ResponseEntity.ok(ApiResponse.success("Brands retrieved successfully.", results));
     }
 
     @GetMapping("/category/{categoryId}")

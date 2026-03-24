@@ -19,6 +19,8 @@ public interface ProductService {
                                                  String ram,
                                                  String storage);
 
+     Page<ProductSummaryResponse> searchProductsByName(String name, Pageable pageable);
+
      ProductResponse createProduct(ProductCreateRequest request);
 
      ProductResponse updateProduct(Long id, ProductUpdateRequest request);

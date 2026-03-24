@@ -80,6 +80,14 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("Top selling products retrieved successfully.", productService.getTopSellingProducts(limit)));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<ProductSummaryResponse>>> searchByName(
+            @RequestParam String name,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(ApiResponse.success("Products retrieved successfully.", productService.searchProductsByName(name, pageable)));
+    }
+
     @GetMapping("/newest")
     public ResponseEntity<ApiResponse<List<TopProductResponse>>> getNewest(@RequestParam(defaultValue = "5") int limit) {
         return ResponseEntity.ok(ApiResponse.success("Newest products retrieved successfully.", productService.getNewestProducts(limit)));

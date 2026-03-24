@@ -1,5 +1,4 @@
 package com.techgadget.server.controller;
-
 import com.techgadget.server.Util.JwtUtil;
 import com.techgadget.server.model.dto.ApiResponse;
 import com.techgadget.server.model.dto.LoginRequest;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.Map;
 
 @RestController
@@ -23,6 +23,7 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
 
     @Autowired
     private JwtUtil jwtUtil;

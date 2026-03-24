@@ -56,18 +56,9 @@ class OrderManager {
   }
 
   handleSearch(event) {
-    const searchTerm = event.target.value.toLowerCase();
-    if (searchTerm === "") {
-      this.renderOrders(this.ordersData);
-    } else {
-      const filtered = this.ordersData.filter(
-        (order) =>
-          order.id.toString().includes(searchTerm) ||
-          (order.customerName &&
-            order.customerName.toLowerCase().includes(searchTerm)),
-      );
-      this.renderOrders(filtered);
-    }
+    // Search functionality removed
+    this.currentPage = 0;
+    this.loadOrders(0, this.currentStatus);
   }
 
   handleOutsideClick(event) {
