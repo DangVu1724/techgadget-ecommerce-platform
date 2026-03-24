@@ -23,12 +23,9 @@
   </head>
   <body>
     <div class="app">
-      <!-- Sidebar Container -->
       <div id="sidebar-container"></div>
 
-      <!-- Main Content -->
       <main class="main-content">
-        <!-- Top Header -->
         <header class="top-header">
           <div class="header-left">
             <div class="page-title">
@@ -42,11 +39,8 @@
           </div>
         </header>
 
-        <!-- Dashboard Content -->
         <div class="dashboard">
-          <!-- Stats Cards -->
           <div class="stats-grid" id="statsContainer">
-            <!-- Stats will be loaded here -->
             <div class="stat-card">
               <div class="stat-info">
                 <h3>Loading...</h3>
@@ -54,57 +48,81 @@
             </div>
           </div>
 
-          <!-- Charts Row -->
           <div class="charts-row">
-            <!-- Sales Chart -->
             <div class="chart-card">
               <div class="chart-header">
-                <h3>Sales Overview</h3>
+                <div>
+                  <h3>Sales Overview</h3>
+                  <p class="section-subtitle">Revenue from paid orders</p>
+                </div>
                 <div class="chart-actions">
-                  <button class="chart-btn active">Week</button>
-                  <button class="chart-btn">Month</button>
-                  <button class="chart-btn">Year</button>
+                  <button class="chart-btn active" data-period="week">Week</button>
+                  <button class="chart-btn" data-period="month">Month</button>
                 </div>
               </div>
+              <div class="chart-summary" id="salesChartSummary"></div>
               <div class="chart-placeholder" id="salesChart">
-                <!-- Chart will be rendered here -->
+                <div class="no-data">Loading chart...</div>
               </div>
             </div>
 
-            <!-- Top Products -->
             <div class="chart-card">
               <div class="chart-header">
-                <h3>Top Products</h3>
+                <div>
+                  <h3>Order Status</h3>
+                  <p class="section-subtitle">Current order mix</p>
+                </div>
+              </div>
+              <div class="status-list" id="orderStatusList">
+                <div class="no-data">Loading status...</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="insights-row">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3>Top Products</h3>
+                  <p class="section-subtitle">Based on delivered orders</p>
+                </div>
               </div>
               <div class="top-products-list" id="topProductsList">
-                <!-- Top products will be loaded here -->
+                <div class="no-data">Loading products...</div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3>Newest Products</h3>
+                  <p class="section-subtitle">Latest catalog entries</p>
+                </div>
+              </div>
+              <div class="top-products-list" id="newestProductsList">
                 <div class="no-data">Loading products...</div>
               </div>
             </div>
           </div>
 
-          <!-- Recent Orders -->
           <div class="recent-orders">
             <div class="section-header">
               <h3>Recent Orders</h3>
-              <a
-                href="/modules/admin/features/orders/orders.html"
-                class="view-all"
-                >View All →</a
-              >
+              <a href="/admin/order" class="view-all">View All</a>
             </div>
             <table class="orders-table">
               <thead>
                 <tr>
-                  <th>Order ID</th>
+                  <th>Order</th>
                   <th>Amount</th>
                   <th>Status</th>
+                  <th>Payment</th>
                   <th>Date</th>
                 </tr>
               </thead>
               <tbody id="ordersTableBody">
                 <tr>
-                  <td colspan="6" class="no-data">Loading orders...</td>
+                  <td colspan="5" class="no-data">Loading orders...</td>
                 </tr>
               </tbody>
             </table>
@@ -117,10 +135,8 @@
       import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
       import { initDashboard } from "/modules/admin/features/dashboard/dashboard.js";
 
-      // Initialize sidebar
       new Sidebar();
-
-      // Dashboard will auto-initialize from the module
+      initDashboard();
     </script>
   </body>
 </html>

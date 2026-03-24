@@ -2,22 +2,120 @@ import { categoryApi } from "/modules/admin/core/api/category.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
 let isSubmitting = false;
+const STORAGE_OPTIONS = ["64GB", "128GB", "256GB", "512GB", "1TB"];
+const RAM_OPTIONS = [
+  "4GB",
+  "6GB",
+  "8GB",
+  "12GB",
+  "16GB",
+  "24GB",
+  "32GB",
+  "64GB",
+];
 
 const validationRules = {
   price: (value) => {
     if (!value && value !== 0) return { isValid: false };
     const num = Number(value);
-    if (Number.isNaN(num) || num <= 0 || !Number.isInteger(num)) return { isValid: false };
+    if (Number.isNaN(num) || num <= 0 || !Number.isInteger(num))
+      return { isValid: false };
     return { isValid: true };
   },
   stock: (value) => {
     if (!value && value !== 0) return { isValid: false };
     const num = Number(value);
-    if (Number.isNaN(num) || num < 0 || !Number.isInteger(num)) return { isValid: false };
+    if (Number.isNaN(num) || num < 0 || !Number.isInteger(num))
+      return { isValid: false };
     return { isValid: true };
   },
-  attributeValue: (value) => ({ isValid: Boolean(value?.trim()) && value.length <= 50 }),
+  attributeValue: (value) => ({
+    isValid: Boolean(value?.trim()) && value.trim().length <= 50,
+  }),
 };
+
+function normalizeAttributeName(name = "") {
+  return name.trim().toLowerCase();
+}
+
+function getPresetOptions(attributeName) {
+  const normalizedName = normalizeAttributeName(attributeName);
+  if (normalizedName === "storage") {
+    return STORAGE_OPTIONS;
+  }
+  if (normalizedName === "ram") {
+    return RAM_OPTIONS;
+  }
+  return null;
+}
+
+function normalizePresetValue(attributeName, value = "") {
+  const normalizedName = normalizeAttributeName(attributeName);
+  const compactValue = String(value || "")
+    .replace(/\s+/g, "")
+    .toUpperCase();
+
+  if (normalizedName === "storage") {
+    if (compactValue === "1024GB") {
+      return "1TB";
+    }
+    return (
+      STORAGE_OPTIONS.find((option) => option.toUpperCase() === compactValue) ||
+      String(value || "").trim()
+    );
+  }
+
+  if (normalizedName === "ram") {
+    return (
+      RAM_OPTIONS.find((option) => option.toUpperCase() === compactValue) ||
+      String(value || "").trim()
+    );
+  }
+
+  return String(value || "").trim();
+}
+
+function renderAttributeControl(attribute, selectedValue = "") {
+  const id = attribute.attributeId || attribute.id;
+  const name = attribute.attributeName || attribute.name || "Attribute";
+  const presetOptions = getPresetOptions(name);
+  const safeSelectedValue = normalizePresetValue(name, selectedValue);
+
+  if (presetOptions) {
+    return `
+      <select
+        class="attribute-value form-control"
+        data-attribute-id="${id}"
+        data-attribute-name="${name}"
+        oninput="window.validateAttributeInput(this)"
+        onchange="window.validateAttributeInput(this)"
+        onblur="window.validateAttributeInput(this)"
+      >
+        <option value="">Select ${name.toLowerCase()}</option>
+        ${presetOptions
+          .map(
+            (option) => `
+          <option value="${option}" ${option === safeSelectedValue ? "selected" : ""}>${option}</option>
+        `,
+          )
+          .join("")}
+      </select>
+    `;
+  }
+
+  return `
+    <input
+      type="text"
+      class="attribute-value form-control"
+      data-attribute-id="${id}"
+      data-attribute-name="${name}"
+      placeholder="Enter ${name.toLowerCase()}"
+      value="${safeSelectedValue}"
+      oninput="window.validateAttributeInput(this)"
+      onblur="window.validateAttributeInput(this)"
+    >
+  `;
+}
 
 function validateField(input, rule) {
   if (!input) return true;
@@ -30,12 +128,29 @@ function validateField(input, rule) {
 function setupValidation() {
   const priceInput = document.getElementById("variantPrice");
   const stockInput = document.getElementById("variantStock");
+  const descriptionInput = document.getElementById("variantDescription");
 
   [priceInput, stockInput].forEach((input) => {
     if (!input) return;
-    input.addEventListener("input", () => validateField(input, validationRules[input.id.replace("variant", "").toLowerCase()]));
-    input.addEventListener("blur", () => validateField(input, validationRules[input.id.replace("variant", "").toLowerCase()]));
+    input.addEventListener("input", () =>
+      validateField(
+        input,
+        validationRules[input.id.replace("variant", "").toLowerCase()],
+      ),
+    );
+    input.addEventListener("blur", () =>
+      validateField(
+        input,
+        validationRules[input.id.replace("variant", "").toLowerCase()],
+      ),
+    );
   });
+
+  if (descriptionInput) {
+    descriptionInput.addEventListener("input", () => {
+      descriptionInput.classList.remove("is-valid", "is-invalid");
+    });
+  }
 }
 
 function validateAllAttributes() {
@@ -48,37 +163,38 @@ function validateAllAttributes() {
   return isValid;
 }
 
-export async function loadAttributes(categoryId) {
+export async function loadAttributes(categoryId, selectedAttributes = []) {
   try {
     const attributes = await categoryApi.getById(categoryId);
     const container = document.getElementById("variantAttributes");
     if (!container) return;
+    const selectedMap = new Map(
+      selectedAttributes.map((attribute) => [
+        String(attribute.attributeId),
+        attribute.value || "",
+      ]),
+    );
 
     if (!attributes?.length) {
-      container.innerHTML = '<p class="attribute-empty">No attributes available.</p>';
+      container.innerHTML =
+        '<p class="attribute-empty">No attributes available.</p>';
       return;
     }
 
     container.innerHTML = `
       <div class="attributes-container">
-        ${attributes.map((attr) => {
-          const id = attr.attributeId || attr.id;
-          const name = attr.attributeName || attr.name || "Attribute";
-          return `
+        ${attributes
+          .map((attr) => {
+            const id = attr.attributeId || attr.id;
+            const name = attr.attributeName || attr.name || "Attribute";
+            return `
             <div class="attribute-item">
               <label>${name}</label>
-              <input
-                type="text"
-                class="attribute-value"
-                data-attribute-id="${id}"
-                data-attribute-name="${name}"
-                placeholder="Enter ${name.toLowerCase()}"
-                oninput="window.validateAttributeInput(this)"
-                onblur="window.validateAttributeInput(this)"
-              >
+              ${renderAttributeControl(attr, selectedMap.get(String(id)) || "")}
             </div>
           `;
-        }).join("")}
+          })
+          .join("")}
       </div>
     `;
 
@@ -106,7 +222,7 @@ export function collectAttributes() {
 }
 
 export function resetAttributes() {
-  ["variantName", "variantPrice", "variantStock"].forEach((id) => {
+  ["variantPrice", "variantStock", "variantDescription"].forEach((id) => {
     const input = document.getElementById(id);
     if (input) {
       input.classList.remove("is-valid", "is-invalid");
@@ -123,8 +239,20 @@ export function resetAttributes() {
 export function validateVariantForm() {
   let isValid = true;
 
-  if (!validateField(document.getElementById("variantPrice"), validationRules.price)) isValid = false;
-  if (!validateField(document.getElementById("variantStock"), validationRules.stock)) isValid = false;
+  if (
+    !validateField(
+      document.getElementById("variantPrice"),
+      validationRules.price,
+    )
+  )
+    isValid = false;
+  if (
+    !validateField(
+      document.getElementById("variantStock"),
+      validationRules.stock,
+    )
+  )
+    isValid = false;
   if (!validateAllAttributes()) isValid = false;
 
   if (!document.querySelectorAll(".attribute-value").length) {
@@ -137,7 +265,9 @@ export function validateVariantForm() {
 
 export function setSubmitting(state) {
   isSubmitting = state;
-  const submitBtn = document.querySelector('.btn-primary[onclick="saveVariant()"]');
+  const submitBtn = document.querySelector(
+    '.btn-primary[onclick="saveVariant()"]',
+  );
   if (submitBtn) {
     submitBtn.disabled = state;
     submitBtn.innerHTML = state ? "Saving..." : "Save Variant";

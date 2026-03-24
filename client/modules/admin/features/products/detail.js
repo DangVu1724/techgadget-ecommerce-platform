@@ -1,8 +1,20 @@
 import { Sidebar } from "../../components/layouts/sidebar/sidebar.js";
 import { productApi } from "../../core/api/product.api.js";
 import { variantApi } from "../../core/api/variant.api.js";
-import { formatCurrency, formatDate, showLoading, renderAttributes } from "./helpers.js";
-import { loadAttributes, collectAttributes, resetAttributes, validateVariantForm, getSubmitting } from "/modules/admin/features/products/modal.js";
+import {
+  formatCurrency,
+  formatDate,
+  showLoading,
+  renderAttributes,
+} from "./helpers.js";
+import {
+  loadAttributes,
+  collectAttributes,
+  resetAttributes,
+  validateVariantForm,
+  getSubmitting,
+  setSubmitting,
+} from "/modules/admin/features/products/modal.js";
 import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
 import { confirmModal } from "/shared/ui/modal.js";
 import { showToast } from "/shared/ui/toast.js";
@@ -33,9 +45,8 @@ function setupModalEvents() {
   const modal = document.getElementById("variantModal");
   if (!modal) return;
 
-  modal.querySelector(".btn-close")?.addEventListener("click", closeVariantModal);
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) closeVariantModal();
+  modal.querySelectorAll(".btn-close, .btn-secondary").forEach((btn) => {
+    btn.addEventListener("click", closeVariantModal);
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && modal.classList.contains("show")) {
@@ -60,35 +71,48 @@ async function loadProductDetails(id) {
 }
 
 function updateProductUI(product) {
-  document.getElementById("productName").textContent = product.name || "Unnamed Product";
+  document.getElementById("productName").textContent =
+    product.name || "Unnamed Product";
   document.getElementById("productId").textContent = product.id || "-";
-  document.getElementById("brandName").textContent = product.brand?.brandName || "-";
-  document.getElementById("categoryName").textContent = product.category?.name || "-";
-  document.getElementById("productDescription").textContent = product.description || "No description available.";
-  document.getElementById("minPrice").textContent = formatCurrency(product.minPrice);
-  document.getElementById("maxPrice").textContent = product.maxPrice ? formatCurrency(product.maxPrice) : "-";
+  document.getElementById("brandName").textContent =
+    product.brand?.brandName || "-";
+  document.getElementById("categoryName").textContent =
+    product.category?.name || "-";
+  document.getElementById("productDescription").textContent =
+    product.description || "No description available.";
+  document.getElementById("minPrice").textContent = formatCurrency(
+    product.minPrice,
+  );
+  document.getElementById("maxPrice").textContent = product.maxPrice
+    ? formatCurrency(product.maxPrice)
+    : "-";
   document.getElementById("totalStock").textContent = product.totalStock || 0;
   document.getElementById("sold").textContent = product.sold || 0;
-  document.getElementById("createdAt").textContent = formatDate(product.createdAt);
-  document.getElementById("updatedAt").textContent = formatDate(product.updatedAt);
+  document.getElementById("createdAt").textContent = formatDate(
+    product.createdAt,
+  );
+  document.getElementById("updatedAt").textContent = formatDate(
+    product.updatedAt,
+  );
 }
 
 function loadVariants(product) {
   const tbody = document.getElementById("variantsList");
   if (!tbody) return;
 
-  tbody.innerHTML = (product.variants || []).map((variant) => {
-    let stockClass = "high";
-    let stockText = variant.stock;
-    if (variant.stock === 0) {
-      stockClass = "low";
-      stockText = "Out of Stock";
-    } else if (variant.stock < 10) {
-      stockClass = "low";
-      stockText = `${variant.stock} (Low)`;
-    }
+  tbody.innerHTML = (product.variants || [])
+    .map((variant) => {
+      let stockClass = "high";
+      let stockText = variant.stock;
+      if (variant.stock === 0) {
+        stockClass = "low";
+        stockText = "Out of Stock";
+      } else if (variant.stock < 10) {
+        stockClass = "low";
+        stockText = `${variant.stock} (Low)`;
+      }
 
-    return `
+      return `
       <tr>
         <td><span class="variant-sku">${variant.id}</span></td>
         <td>${variant.sku || "-"}</td>
@@ -101,7 +125,60 @@ function loadVariants(product) {
         </td>
       </tr>
     `;
-  }).join("");
+    })
+    .join("");
+}
+
+function normalizeAttributes(attributes = []) {
+  return [...attributes]
+    .map((attribute) => ({
+      attributeId: Number(attribute.attributeId),
+      value: String(attribute.value || "").trim(),
+    }))
+    .sort((left, right) => left.attributeId - right.attributeId);
+}
+
+function getVariantFormData() {
+  return {
+    productId: currentProduct.id,
+    price: parseFloat(document.getElementById("variantPrice").value),
+    stock: parseInt(document.getElementById("variantStock").value, 10),
+    description: document.getElementById("variantDescription").value.trim(),
+    attributes: collectAttributes(),
+  };
+}
+
+function populateVariantForm(variant) {
+  document.getElementById("variantPrice").value = variant.price ?? "";
+  document.getElementById("variantStock").value = variant.stock ?? "";
+  document.getElementById("variantDescription").value =
+    variant.description || "";
+}
+
+function buildVariantUpdatePayload(originalVariant, formData) {
+  const payload = {};
+
+  if (Number(originalVariant.price) !== Number(formData.price)) {
+    payload.price = formData.price;
+  }
+
+  if (Number(originalVariant.stock) !== Number(formData.stock)) {
+    payload.stock = formData.stock;
+  }
+
+  if ((originalVariant.description || "") !== formData.description) {
+    payload.description = formData.description;
+  }
+
+  const originalAttributes = normalizeAttributes(originalVariant.attributes);
+  const currentAttributes = normalizeAttributes(formData.attributes);
+  if (
+    JSON.stringify(originalAttributes) !== JSON.stringify(currentAttributes)
+  ) {
+    payload.attributes = formData.attributes;
+  }
+
+  return payload;
 }
 
 window.goBack = () => (window.location.href = "/admin/products");
@@ -143,12 +220,23 @@ window.addVariant = async () => {
 };
 
 window.editVariant = async (variantId) => {
-  currentVariant = variantId;
-  document.getElementById("variantModalLabel").textContent = "Edit Variant";
-  resetAttributes();
-  await loadAttributes(currentProduct?.category?.id);
-  document.getElementById("variantModal")?.classList.add("show");
-  document.body.style.overflow = "hidden";
+  try {
+    const variant = await variantApi.getById(variantId);
+    currentVariant = variant;
+    document.getElementById("variantModalLabel").textContent = "Edit Variant";
+    document.getElementById("variantForm")?.reset();
+    resetAttributes();
+    populateVariantForm(variant);
+    await loadAttributes(
+      currentProduct?.category?.id,
+      variant.attributes || [],
+    );
+    document.getElementById("variantModal")?.classList.add("show");
+    document.body.style.overflow = "hidden";
+  } catch (error) {
+    console.error("Failed to load variant details:", error);
+    showToast("Failed to load variant details.", "error");
+  }
 };
 
 window.closeVariantModal = () => {
@@ -160,17 +248,22 @@ const closeVariantModal = window.closeVariantModal;
 window.saveVariant = async () => {
   if (getSubmitting() || !validateVariantForm()) return;
 
-  const variantData = {
-    productId: currentProduct.id,
-    price: parseFloat(document.getElementById("variantPrice").value),
-    stock: parseInt(document.getElementById("variantStock").value, 10),
-    description: document.getElementById("variantDescription").value,
-    attributes: collectAttributes(),
-  };
+  const variantData = getVariantFormData();
 
   try {
+    setSubmitting(true);
+
     if (currentVariant) {
-      await variantApi.updateVariant(currentVariant, variantData);
+      const changedFields = buildVariantUpdatePayload(
+        currentVariant,
+        variantData,
+      );
+      if (Object.keys(changedFields).length === 0) {
+        showToast("No variant changes detected.", "warning");
+        return;
+      }
+
+      await variantApi.updateVariant(currentVariant.id, changedFields);
       showToast("Variant updated successfully.", "success");
     } else {
       await variantApi.createVariant(variantData);
@@ -181,6 +274,8 @@ window.saveVariant = async () => {
     await loadProductDetails(currentProduct.id);
   } catch (error) {
     console.error("Failed to save variant:", error);
+  } finally {
+    setSubmitting(false);
   }
 };
 
