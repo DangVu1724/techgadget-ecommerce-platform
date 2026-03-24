@@ -36,6 +36,8 @@ public class Order {
 
     private String transactionId;
 
+    private Long orderCode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

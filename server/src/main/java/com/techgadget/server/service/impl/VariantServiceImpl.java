@@ -16,9 +16,16 @@ import com.techgadget.server.service.VariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,15 +63,30 @@ public class VariantServiceImpl implements VariantService {
 
     @Override
     public VariantResponse updateVariant(Long id, VariantRequest request) {
-        ProductVariant variant = variantRepository.findById(id)
+        ProductVariant variant = variantRepository.findDetailById(id)
                 .orElseThrow(() -> new NotFoundException("Variant not found with id: " + id));
 
-        variant.setName(request.getName());
-        variant.setPrice(request.getPrice());
-        variant.setStock(request.getStock());
-        variant.setDescription(request.getDescription());
-        variant.getAttributeValues().clear();
-        variant.getAttributeValues().addAll(buildAttributeValues(variant, request.getAttributes()));
+        if (request.getName() != null && !Objects.equals(request.getName(), variant.getName())) {
+            variant.setName(request.getName());
+        }
+
+        if (request.getPrice() != null && !Objects.equals(request.getPrice(), variant.getPrice())) {
+            variant.setPrice(request.getPrice());
+        }
+
+        if (request.getStock() != null && !Objects.equals(request.getStock(), variant.getStock())) {
+            variant.setStock(request.getStock());
+        }
+
+        if (request.getDescription() != null && !Objects.equals(request.getDescription(), variant.getDescription())) {
+            variant.setDescription(request.getDescription());
+        }
+
+        if (request.getAttributes() != null) {
+            variant.getAttributeValues().clear();
+            variant.getAttributeValues().addAll(buildAttributeValues(variant, request.getAttributes()));
+            variant.setSku(generateSku(variant.getProduct(), request.getAttributes()));
+        }
 
         ProductVariant updated = variantRepository.save(variant);
         return mapToResponse(updated);
@@ -96,6 +118,7 @@ public class VariantServiceImpl implements VariantService {
         VariantResponse response = new VariantResponse();
         response.setId(variant.getId());
         response.setName(variant.getName());
+        response.setSku(variant.getSku());
         response.setPrice(variant.getPrice());
         response.setStock(variant.getStock());
         response.setDescription(variant.getDescription());
@@ -128,39 +151,120 @@ public class VariantServiceImpl implements VariantService {
         return code.toString();
     }
 
-    public String colorCode(String color) {
-        if (color == null) {
-            return null;
-        }
-
-        return switch (color.toLowerCase()) {
-            case "black" -> "BLK";
-            case "blue" -> "BLU";
-            case "silver" -> "SLV";
-            case "gold" -> "GLD";
-            default -> color.substring(0, 3).toUpperCase();
+    private int getAttributePriority(String attributeName) {
+        return switch (normalizeToken(attributeName)) {
+            case "COLOR" -> 0;
+            case "RAM" -> 1;
+            case "STORAGE" -> 2;
+            case "CAPACITY" -> 3;
+            case "SIZE" -> 4;
+            default -> 10;
         };
     }
 
-    private String getAttributeValue(List<VariantAttributeRequest> attributes, Long attributeId) {
-        for (VariantAttributeRequest attr : attributes) {
-            if (attr.getAttributeId().equals(attributeId)) {
-                return attr.getValue();
+    private String normalizeToken(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        return Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .replaceAll("[^A-Za-z0-9]+", "")
+                .toUpperCase(Locale.ROOT);
+    }
+
+    private String abbreviateWord(String word) {
+        return switch (word) {
+            case "BLACK" -> "BLK";
+            case "WHITE" -> "WHT";
+            case "SILVER" -> "SLV";
+            case "GOLD" -> "GLD";
+            case "GRAY", "GREY" -> "GRY";
+            case "PURPLE" -> "PRP";
+            case "PINK" -> "PNK";
+            case "GREEN" -> "GRN";
+            case "YELLOW" -> "YLW";
+            case "ORANGE" -> "ORG";
+            case "RED" -> "RED";
+            case "BLUE" -> "BLU";
+            case "BROWN" -> "BRN";
+            case "WIRELESS" -> "WLS";
+            case "BLUETOOTH" -> "BT";
+            case "NOISECANCELLING" -> "NC";
+            case "NOISECANCELING" -> "NC";
+            default -> word.length() <= 4 ? word : word.substring(0, 4);
+        };
+    }
+
+    private String encodeAttributeValue(String value) {
+        String normalized = normalizeToken(value);
+        if (normalized.isEmpty()) {
+            return "NA";
+        }
+
+        if (normalized.matches("\\d+TB|\\d+GB|\\d+MHZ|\\d+HZ")) {
+            return normalized;
+        }
+
+        if (normalized.matches("\\d+")) {
+            return normalized;
+        }
+
+        if (normalized.matches("[A-Z]+\\d+")) {
+            return normalized;
+        }
+
+        String[] words = Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toUpperCase(Locale.ROOT)
+                .trim()
+                .split("[^A-Z0-9]+");
+
+        StringBuilder token = new StringBuilder();
+        for (String word : words) {
+            if (word.isBlank()) {
+                continue;
+            }
+            token.append(abbreviateWord(word));
+            if (token.length() >= 12) {
+                break;
             }
         }
-        return null;
+
+        if (token.isEmpty()) {
+            return normalized.substring(0, Math.min(12, normalized.length()));
+        }
+
+        return token.substring(0, Math.min(12, token.length()));
     }
 
     public String generateSku(Product product, List<VariantAttributeRequest> attributes) {
         String modelCode = generateModelCode(product.getName());
-        String color = colorCode(getAttributeValue(attributes, 22L));
-        String ram = getAttributeValue(attributes, 8L);
-        String storage = getAttributeValue(attributes, 9L);
-
-        if (color != null) {
-            return modelCode + "-" + color + "-" + storage;
+        if (attributes == null || attributes.isEmpty()) {
+            return modelCode;
         }
 
-        return modelCode + "-" + ram + "-" + storage;
+        Map<Long, Attribute> attributeMap = attributeRepository.findAllById(
+                attributes.stream()
+                        .map(VariantAttributeRequest::getAttributeId)
+                        .filter(Objects::nonNull)
+                        .toList()
+        ).stream().collect(Collectors.toMap(Attribute::getAttributeId, Function.identity()));
+
+        String attributeCode = attributes.stream()
+                .filter(attribute -> attribute.getAttributeId() != null && attribute.getValue() != null && !attribute.getValue().isBlank())
+                .sorted(Comparator
+                        .comparingInt((VariantAttributeRequest attribute) ->
+                                getAttributePriority(attributeMap.get(attribute.getAttributeId()) != null
+                                        ? attributeMap.get(attribute.getAttributeId()).getAttributeName()
+                                        : ""))
+                        .thenComparing(attribute -> {
+                            Attribute attributeEntity = attributeMap.get(attribute.getAttributeId());
+                            return attributeEntity != null ? attributeEntity.getAttributeName() : "";
+                        }, String.CASE_INSENSITIVE_ORDER))
+                .map(attribute -> encodeAttributeValue(attribute.getValue()))
+                .collect(Collectors.joining("-"));
+
+        return attributeCode.isBlank() ? modelCode : modelCode + "-" + attributeCode;
     }
 }

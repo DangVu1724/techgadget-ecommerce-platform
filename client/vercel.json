@@ -25,6 +25,14 @@
       "destination": "/modules/customer/features/checkout/checkout.html"
     },
     {
+      "source": "/checkout/success",
+      "destination": "/modules/customer/features/checkout/success.html"
+    },
+    {
+      "source": "/checkout/cancel",
+      "destination": "/modules/customer/features/checkout/cancel.html"
+    },
+    {
       "source": "/products/:id",
       "destination": "/modules/customer/features/product_detail/product_detail.html"
     },

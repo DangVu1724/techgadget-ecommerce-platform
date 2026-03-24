@@ -10,6 +10,7 @@ import java.util.List;
 public class OrderResponse {
 
     private Long id;
+    private Long orderCode;
     private BigDecimal amount;
     private LocalDateTime orderDate;
     private String orderStatus;

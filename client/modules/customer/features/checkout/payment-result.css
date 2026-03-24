@@ -1,0 +1,132 @@
+.payment-result-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(201, 230, 255, 0.7), transparent 40%),
+    linear-gradient(135deg, #f6f8fb 0%, #eef3f9 100%);
+  font-family: "Poppins", sans-serif;
+}
+
+.payment-result-card {
+  width: 100%;
+  max-width: 560px;
+  padding: 40px 32px;
+  background: #fff;
+  border: 1px solid #e5eaf1;
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(20, 35, 60, 0.08);
+  text-align: center;
+}
+
+.payment-result-badge {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.payment-result-badge.success {
+  color: #0f8a4b;
+  background: #e9f9f0;
+}
+
+.payment-result-badge.pending {
+  color: #9a6700;
+  background: #fff6da;
+}
+
+.payment-result-badge.failed {
+  color: #c62828;
+  background: #fdeaea;
+}
+
+.payment-result-title {
+  margin: 0 0 12px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #14233c;
+}
+
+.payment-result-message {
+  margin: 0 auto 24px;
+  max-width: 420px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #61708a;
+}
+
+.payment-result-meta {
+  margin: 0 0 28px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: #f7f9fc;
+  text-align: left;
+}
+
+.payment-result-meta p {
+  margin: 8px 0;
+  color: #334155;
+}
+
+.payment-result-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.payment-result-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payment-result-btn:hover {
+  transform: translateY(-1px);
+}
+
+.payment-result-btn.primary {
+  background: #14233c;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(20, 35, 60, 0.18);
+}
+
+.payment-result-btn.secondary {
+  background: #fff;
+  border-color: #d8e0ea;
+  color: #14233c;
+}
+
+@media (max-width: 640px) {
+  .payment-result-card {
+    padding: 32px 20px;
+  }
+
+  .payment-result-title {
+    font-size: 24px;
+  }
+
+  .payment-result-actions {
+    flex-direction: column;
+  }
+
+  .payment-result-btn {
+    width: 100%;
+  }
+}

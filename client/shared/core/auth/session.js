@@ -1,6 +1,10 @@
 const TOKEN_KEY = "token";
 const USER_KEY = "user";
 
+function getLoginPath() {
+  return window.location.pathname.startsWith("/admin") ? "/admin/login" : "/login";
+}
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -44,9 +48,16 @@ export function clearAuthSession() {
 
 export function redirectToLogin() {
   const currentPath = `${window.location.pathname}${window.location.search}`;
-  if (!currentPath.includes("/login")) {
+  const loginPath = getLoginPath();
+  const isAlreadyOnLoginPage = window.location.pathname === loginPath;
+
+  if (loginPath === "/login" && !currentPath.includes("/login")) {
     localStorage.setItem("redirectAfterLogin", currentPath);
   }
 
-  window.location.href = "/login";
+  if (isAlreadyOnLoginPage) {
+    return;
+  }
+
+  window.location.href = loginPath;
 }

@@ -7,22 +7,23 @@ import com.techgadget.server.model.dto.order.OrderItemRequest;
 import com.techgadget.server.model.dto.order.OrderItemResponse;
 import com.techgadget.server.model.dto.order.OrderRequest;
 import com.techgadget.server.model.dto.order.OrderResponse;
-import com.techgadget.server.model.dto.order.PaymentResponse;
+import com.techgadget.server.model.dto.order.PendingOrderPayload;
 import com.techgadget.server.model.entity.Cart;
 import com.techgadget.server.model.entity.CartItem;
 import com.techgadget.server.model.entity.Order;
 import com.techgadget.server.model.entity.OrderDetail;
 import com.techgadget.server.model.entity.ProductVariant;
 import com.techgadget.server.model.entity.User;
+import com.techgadget.server.model.enums.CheckoutType;
 import com.techgadget.server.model.enums.OrderStatus;
 import com.techgadget.server.model.enums.PaymentMethod;
 import com.techgadget.server.model.enums.PaymentStatus;
 import com.techgadget.server.repository.CartRepository;
-import com.techgadget.server.repository.OrderDetailRepository;
 import com.techgadget.server.repository.OrderRepository;
 import com.techgadget.server.repository.UserRepository;
 import com.techgadget.server.repository.VariantRepository;
 import com.techgadget.server.service.OrderService;
+import com.techgadget.server.service.PaymentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     private final VariantRepository variantRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
-    private final OrderDetailRepository orderDetailRepository;
+    private final PaymentService paymentService;
 
     @Override
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
@@ -92,12 +94,20 @@ public class OrderServiceImpl implements OrderService {
         return mapToResponse(order);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Object checkoutFromCart(OrderRequest request) {
         User user = getCurrentUser();
         Cart cart = cartRepository.findCartWithItems(user.getId())
                 .orElseThrow(() -> new NotFoundException("Cart not found for user id: " + user.getId()));
+
+        if (cart.getItems() == null || cart.getItems().isEmpty()) {
+            throw new BadRequestException("Cart is empty.");
+        }
+
+        if (request.getPaymentMethod() == PaymentMethod.PAYOS) {
+            return paymentService.createPayOSPayment(buildCartPendingPayload(request, user, cart));
+        }
 
         Order order = buildBaseOrder(request);
         BigDecimal total = BigDecimal.ZERO;
@@ -124,13 +134,22 @@ public class OrderServiceImpl implements OrderService {
         Order saved = orderRepository.save(order);
         cart.getItems().clear();
         cartRepository.save(cart);
-
-        return handlePayment(saved);
+        return mapToResponse(saved);
     }
 
     @Override
     @Transactional
     public Object checkoutBuyNow(OrderRequest request) {
+        User user = getCurrentUser();
+
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new BadRequestException("Order items are required.");
+        }
+
+        if (request.getPaymentMethod() == PaymentMethod.PAYOS) {
+            return paymentService.createPayOSPayment(buildBuyNowPendingPayload(request, user));
+        }
+
         Order order = buildBaseOrder(request);
         BigDecimal total = BigDecimal.ZERO;
         List<OrderDetail> details = new ArrayList<>();
@@ -153,36 +172,68 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderDetails(details);
         order.setAmount(total);
+        order.setUser(user);
 
         Order saved = orderRepository.save(order);
-        return handlePayment(saved);
+        return mapToResponse(saved);
     }
 
-    @Transactional
-    public void confirmOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
+    private PendingOrderPayload buildCartPendingPayload(OrderRequest request, User user, Cart cart) {
+        List<PendingOrderPayload.PendingOrderItemPayload> pendingItems = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
 
-        if (order.getPaymentStatus() == PaymentStatus.PAID) {
-            return;
+        for (CartItem item : cart.getItems()) {
+            ProductVariant variant = item.getVariant();
+            reserveStock(variant.getId(), item.getQuantity());
+            total = total.add(variant.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+            pendingItems.add(buildPendingItem(variant, item.getQuantity()));
         }
 
-        order.setPaymentStatus(PaymentStatus.PAID);
-        order.setOrderStatus(OrderStatus.CONFIRMED);
-        orderRepository.save(order);
+        return buildPendingPayload(request, user.getId(), CheckoutType.CART, total, pendingItems);
     }
 
-    @Transactional
-    public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
+    private PendingOrderPayload buildBuyNowPendingPayload(OrderRequest request, User user) {
+        List<PendingOrderPayload.PendingOrderItemPayload> pendingItems = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
 
-        for (OrderDetail item : order.getOrderDetails()) {
-            variantRepository.releaseStock(item.getVariant().getId(), item.getQuantity());
+        for (OrderItemRequest item : request.getItems()) {
+            ProductVariant variant = variantRepository.findById(item.getVariantId())
+                    .orElseThrow(() -> new NotFoundException("Variant not found with id: " + item.getVariantId()));
+            reserveStock(variant.getId(), item.getQuantity());
+            total = total.add(variant.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+            pendingItems.add(buildPendingItem(variant, item.getQuantity()));
         }
 
-        order.setOrderStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
+        return buildPendingPayload(request, user.getId(), CheckoutType.BUY_NOW, total, pendingItems);
+    }
+
+    private PendingOrderPayload buildPendingPayload(
+            OrderRequest request,
+            Long userId,
+            CheckoutType checkoutType,
+            BigDecimal total,
+            List<PendingOrderPayload.PendingOrderItemPayload> pendingItems
+    ) {
+        PendingOrderPayload payload = new PendingOrderPayload();
+        payload.setUserId(userId);
+        payload.setCheckoutType(checkoutType);
+        payload.setPaymentMethod(PaymentMethod.PAYOS);
+        payload.setShippingAddress(request.getShippingAddress());
+        payload.setPhoneNumber(request.getPhoneNumber());
+        payload.setOrderEmail(request.getOrderEmail());
+        payload.setAmount(total);
+        payload.setItems(pendingItems);
+        return payload;
+    }
+
+    private PendingOrderPayload.PendingOrderItemPayload buildPendingItem(ProductVariant variant, int quantity) {
+        PendingOrderPayload.PendingOrderItemPayload payload = new PendingOrderPayload.PendingOrderItemPayload();
+        payload.setVariantId(variant.getId());
+        payload.setProductName(variant.getProduct().getName());
+        payload.setVariantName(variant.getName());
+        payload.setPrice(variant.getPrice());
+        payload.setQuantity(quantity);
+        return payload;
     }
 
     private void validateStatusTransition(OrderStatus oldStatus, OrderStatus newStatus) {
@@ -228,6 +279,7 @@ public class OrderServiceImpl implements OrderService {
     private Order buildBaseOrder(OrderRequest request) {
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
+        order.setOrderCode(generateOrderCode());
         order.setShippingAddress(request.getShippingAddress());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setOrderEmail(request.getOrderEmail());
@@ -237,20 +289,10 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private Object handlePayment(Order order) {
-        if (order.getPaymentMethod() == PaymentMethod.COD) {
-            return mapToResponse(order);
-        }
-
-        PaymentResponse response = new PaymentResponse();
-        response.setTransactionId("TXN_" + order.getId());
-        response.setPaymentUrl("https://sandbox.vnpay.vn/pay?txn=" + order.getId());
-        return response;
-    }
-
     private OrderResponse mapToResponse(Order order) {
         OrderResponse response = new OrderResponse();
         response.setId(order.getId());
+        response.setOrderCode(order.getOrderCode());
         response.setAmount(order.getAmount());
         response.setOrderStatus(order.getOrderStatus().name());
         response.setOrderDate(order.getOrderDate());
@@ -262,6 +304,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailResponse mapToDetailResponse(Order order) {
         OrderDetailResponse response = new OrderDetailResponse();
         response.setId(order.getId());
+        response.setOrderCode(order.getOrderCode());
         response.setAmount(order.getAmount());
         response.setOrderStatus(order.getOrderStatus().name());
         response.setShippingAddress(order.getShippingAddress());
@@ -285,5 +328,9 @@ public class OrderServiceImpl implements OrderService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
+    }
+
+    private Long generateOrderCode() {
+        return System.currentTimeMillis() + ThreadLocalRandom.current().nextLong(1000);
     }
 }
