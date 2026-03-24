@@ -2,7 +2,13 @@ import { request } from "./base.api.js";
 import { normalizeCollection } from "/shared/core/api/collection.js";
 
 export const attributeApi = {
-  async getAll() {
+  async getAll(options = {}) {
+    const { search = "" } = options;
+
+    if (search && search.trim()) {
+      return normalizeCollection(await request(`/attributes/search?name=${encodeURIComponent(search)}`));
+    }
+
     return normalizeCollection(await request("/attributes"));
   },
 

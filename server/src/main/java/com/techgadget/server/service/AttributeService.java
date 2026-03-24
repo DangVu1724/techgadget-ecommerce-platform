@@ -7,6 +7,8 @@ import java.util.List;
 public interface AttributeService {
     List<AttributeResponse> getAllAttributes();
 
+    List<AttributeResponse> searchAttributesByName(String name);
+
     AttributeResponse getAttributeById(Long id);
 
     AttributeResponse createAttribute(AttributeRequest attributeRequest);

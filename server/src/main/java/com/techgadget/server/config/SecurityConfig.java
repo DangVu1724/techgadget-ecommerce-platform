@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -20,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {}) // Giữ lại CORS nếu bạn cần gọi API từ trình duyệt khác domain
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/payments/payos/webhook").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
@@ -48,12 +49,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/brands/**").permitAll()
                         .requestMatchers("/api/variants/**").permitAll()
                         .requestMatchers("/api/attributes/**").permitAll()
+                        .requestMatchers("/api/adminuser/**").permitAll()
 
                         .requestMatchers("/api/cart/**").authenticated()
                         .requestMatchers("/api/orders/**").authenticated()
                         .requestMatchers("/api/payments/**").authenticated()
 
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 

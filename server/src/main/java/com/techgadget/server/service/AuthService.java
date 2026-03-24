@@ -22,6 +22,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     public User register(RegisterRequest input) {
         Optional<User> existingUser = userRepository.findByEmail(input.getEmail());
         if (existingUser.isPresent()) {

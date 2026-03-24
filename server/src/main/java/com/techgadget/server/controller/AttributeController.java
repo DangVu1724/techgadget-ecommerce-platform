@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,6 +31,11 @@ public class AttributeController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<AttributeResponse>>> getAllAttributes() {
         return ResponseEntity.ok(ApiResponse.success("Attributes retrieved successfully.", attributeService.getAllAttributes()));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<AttributeResponse>>> searchAttributesByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(ApiResponse.success("Attributes retrieved successfully.", attributeService.searchAttributesByName(name)));
     }
 
     @GetMapping("/{id}")

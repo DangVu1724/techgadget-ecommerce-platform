@@ -63,6 +63,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductSummaryResponse> searchProductsByName(String name, Pageable pageable) {
+        return productRepository.findProductSummaryByName(name, pageable);
+    }
+
+    @Override
     public ProductResponse createProduct(ProductCreateRequest request) {
         Brand brand = brandRepository.findById(request.getBrandId())
                 .orElseThrow(() -> new NotFoundException("Brand not found with id: " + request.getBrandId()));

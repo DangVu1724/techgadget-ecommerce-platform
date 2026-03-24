@@ -29,6 +29,14 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
+    public List<AttributeResponse> searchAttributesByName(String name) {
+        return attributeRepository.findByAttributeNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public AttributeResponse getAttributeById(Long id) {
         Attribute attribute = attributeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Attribute not found with id: " + id));

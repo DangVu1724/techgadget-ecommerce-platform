@@ -7,7 +7,9 @@ export const routes = {
   categories: '../features/category/category.html',
   brands: '../features/brands/brands.html',
   attributes: '../features/attributes/attributes.html',
-  products: '../features/products/products.html'
+  products: '../features/products/products.html',
+  orders: '../features/order/orders.html',
+  users: '../features/users/users.html'
 };
 
 export function navigateTo(path) {

@@ -28,6 +28,7 @@ export class Sidebar {
           <a href="${ADMIN_BASE}/attributes" class="nav-link">Attributes</a>
           <a href="${ADMIN_BASE}/products" class="nav-link">Products</a>
           <a href="${ADMIN_BASE}/order" class="nav-link">Orders</a>
+          <a href="${ADMIN_BASE}/users" class="nav-link">Users</a>
         </nav>
         <div class="sidebar-footer">
           <a href="#" class="nav-link logout" id="logoutBtn">Logout</a>
