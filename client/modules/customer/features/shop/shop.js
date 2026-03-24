@@ -416,9 +416,26 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
+// ===== Shop Search =====
+const setupShopSearch = () => {
+  const searchForm = document.getElementById("shop-search-form");
+  const searchInput = document.getElementById("shop-search-input");
+
+  if (searchForm) {
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const keyword = searchInput.value.trim();
+      if (keyword) {
+        window.location.href = `/search?q=${encodeURIComponent(keyword)}`;
+      }
+    });
+  }
+};
+
 // ===== Initialize =====
 document.addEventListener("DOMContentLoaded", () => {
   initElements();
   loadShopProducts();
   setupFilters();
+  setupShopSearch();
 });

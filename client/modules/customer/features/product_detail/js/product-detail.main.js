@@ -27,8 +27,19 @@ const BUY_NOW_KEY = "buyNowCheckoutItem";
 
 const loadProductFromDb = async () => {
   try {
-    const params = new URLSearchParams(window.location.search);
-    const productId = params.get("id");
+    // Extract product ID from URL path (/products/:id) or query string (?id=123)
+    let productId = null;
+    
+    // Try URL path first: /products/123
+    const pathMatch = window.location.pathname.match(/\/products\/(\d+)/);
+    if (pathMatch && pathMatch[1]) {
+      productId = pathMatch[1];
+    } else {
+      // Fallback to query string: ?id=123
+      const params = new URLSearchParams(window.location.search);
+      productId = params.get("id");
+    }
+    
     if (!productId) return;
 
     const product = await productApi.getById(productId);
