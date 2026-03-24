@@ -2,12 +2,15 @@ import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { Table } from "/modules/admin/components/data/table/Table.js";
 import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { brandApi } from "../../core/api/brand.api.js";
+import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
+import { alertModal, confirmModal } from "/shared/ui/modal.js";
+import { showToast } from "/shared/ui/toast.js";
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-
+    checkAdmin();
     initTable();
   } catch (error) {
     console.error("Auth check failed:", error);
@@ -20,31 +23,13 @@ function initTable() {
     entityName: "Brand",
     pageSize: 10,
     columns: [
-      {
-        key: "brandId",
-        label: "ID",
-      },
-      {
-        key: "brandName",
-        label: "Brand Name",
-      },
-      {
-        key: "createdAt",
-        label: "Created At",
-      },
+      { key: "brandId", label: "ID" },
+      { key: "brandName", label: "Brand Name" },
+      { key: "createdAt", label: "Created At" },
     ],
     api: brandApi,
     formatters: {
-      createdAt: (value) => {
-        if (!value) return "-";
-        return new Date(value).toLocaleDateString("vi-VN", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      },
+      createdAt: (value) => (value ? new Date(value).toLocaleDateString("vi-VN") : "-"),
     },
     actions: {
       add: () => openBrandModal(),
@@ -56,10 +41,6 @@ function initTable() {
 }
 
 function openBrandModal(brand = null) {
-  console.log("OPEN BRAND MODAL");
-
-  console.log("Brand data:", brand);
-
   const modal = new Modal({
     title: brand ? "Edit Brand" : "Add Brand",
     size: "sm",
@@ -70,26 +51,23 @@ function openBrandModal(brand = null) {
         label: "Brand Name",
         type: "text",
         required: true,
-        placeholder: "Enter brand name (e.g., Nike, Apple, Samsung)",
+        placeholder: "Enter brand name",
       },
     ],
     onSave: async (formData) => {
       try {
-        console.log("Saving brand:", formData);
-
         if (brand) {
           await brandApi.update(brand.brandId, formData);
-          alert("Brand updated successfully!");
+          showToast("Brand updated successfully.", "success");
         } else {
           await brandApi.create(formData);
-          alert("Brand created successfully!");
+          showToast("Brand created successfully.", "success");
         }
 
         modal.close();
         window.brandTable.refresh();
       } catch (error) {
         console.error("Save error:", error);
-        alert("Failed to save brand: " + error.message);
       }
     },
   });
@@ -98,35 +76,32 @@ function openBrandModal(brand = null) {
 }
 
 async function deleteBrand(brand) {
-  if (confirm(`Are you sure you want to delete "${brand.brandName}"?`)) {
-    try {
-      await brandApi.delete(brand.brandId);
-      alert("Brand deleted successfully!");
-      window.brandTable.refresh();
-    } catch (error) {
-      console.error("Delete error:", error);
-      alert("Failed to delete brand: " + error.message);
-    }
+  const confirmed = await confirmModal(
+    `Delete "${brand.brandName}"? This action cannot be undone.`,
+    {
+      title: "Delete brand",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+    },
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await brandApi.delete(brand.brandId);
+    showToast("Brand deleted successfully.", "success");
+    window.brandTable.refresh();
+  } catch (error) {
+    console.error("Delete error:", error);
   }
 }
 
 function viewBrand(brand) {
-  alert(`
-                Brand Details:
-                ID: ${brand.brandId}
-                Name: ${brand.brandName}
-                Created: ${brand.createdAt ? new Date(brand.createdAt).toLocaleString() : "N/A"}
-            `);
+  alertModal(
+    `ID: ${brand.brandId}\nName: ${brand.brandName}\nCreated: ${brand.createdAt ? new Date(brand.createdAt).toLocaleString() : "N/A"}`,
+    { title: "Brand details" },
+  );
 }
-
-// Test API function
-window.testBrandAPI = async () => {
-  try {
-    const data = await brandApi.getAll();
-    console.log("API Test - All brands:", data);
-    alert(`Found ${data.content.length} brands. Check console for details.`);
-  } catch (error) {
-    console.error("API Test failed:", error);
-    alert("API Test failed: " + error.message);
-  }
-};

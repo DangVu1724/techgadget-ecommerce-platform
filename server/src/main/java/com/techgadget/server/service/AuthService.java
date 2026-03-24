@@ -1,5 +1,7 @@
 package com.techgadget.server.service;
 
+import com.techgadget.server.exception.ConflictException;
+import com.techgadget.server.exception.UnauthorizedException;
 import com.techgadget.server.model.dto.LoginRequest;
 import com.techgadget.server.model.dto.RegisterRequest;
 import com.techgadget.server.model.entity.User;
@@ -20,16 +22,11 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // REGISTER
 
-    public User register(RegisterRequest input){
-
-
+    public User register(RegisterRequest input) {
         Optional<User> existingUser = userRepository.findByEmail(input.getEmail());
-
-        if(existingUser.isPresent()){
-
-            throw new RuntimeException("Email already exists");
+        if (existingUser.isPresent()) {
+            throw new ConflictException("Email already exists.");
         }
 
         User user = new User();
@@ -41,14 +38,12 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    // LOGIN
-    public User login(LoginRequest input){
-
+    public User login(LoginRequest input) {
         User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new UnauthorizedException("Invalid email or password."));
 
-        if(!passwordEncoder.matches(input.getPassword(), user.getPassword())){
-            throw new RuntimeException("Invalid email or password");
+        if (!passwordEncoder.matches(input.getPassword(), user.getPassword())) {
+            throw new UnauthorizedException("Invalid email or password.");
         }
 
         return user;

@@ -1,5 +1,6 @@
 package com.techgadget.server.service.impl;
 
+import com.techgadget.server.exception.NotFoundException;
 import com.techgadget.server.model.dto.brand.BrandRequest;
 import com.techgadget.server.model.dto.brand.BrandResponse;
 import com.techgadget.server.model.entity.Brand;
@@ -17,13 +18,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public List<BrandResponse> getAllBrands() {
-        return brandRepository.findAll().stream().map(brand -> {
-            BrandResponse dto = new BrandResponse();
-            dto.setBrandId(brand.getBrandId());
-            dto.setBrandName(brand.getBrandName());
-            dto.setCreatedAt(brand.getCreatedAt());
-            return dto;
-        }).toList();
+        return brandRepository.findAll().stream().map(this::mapToResponse).toList();
     }
 
     @Override
@@ -36,26 +31,29 @@ public class BrandServiceImpl implements BrandService {
         }).toList();
     }
 
+    @Override
+    public List<BrandResponse> searchByName(String name) {
+        return brandRepository.findByBrandNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
 
     @Override
     public BrandResponse createBrand(BrandRequest request) {
-
         Brand brand = new Brand();
         brand.setBrandName(request.getBrandName());
 
         Brand saved = brandRepository.save(brand);
-
         return mapToResponse(saved);
     }
 
     @Override
     public BrandResponse updateBrand(Long brandId, BrandRequest request) {
-
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new RuntimeException("Brand not found"));
+                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + brandId));
 
         brand.setBrandName(request.getBrandName());
-
         Brand updated = brandRepository.save(brand);
 
         return mapToResponse(updated);
@@ -63,9 +61,8 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public void deleteBrand(Long brandId) {
-
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new RuntimeException("Brand not found"));
+                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + brandId));
 
         brandRepository.delete(brand);
     }

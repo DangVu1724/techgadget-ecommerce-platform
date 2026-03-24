@@ -4,13 +4,15 @@ import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { productApi } from "../../core/api/product.api.js";
 import { brandApi } from "../../core/api/brand.api.js";
 import { categoryApi } from "../../core/api/category.api.js";
-
+import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
+import { confirmModal } from "/shared/ui/modal.js";
+import { showToast } from "/shared/ui/toast.js";
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-
+    checkAdmin();
     initTable();
   } catch (error) {
     console.error("Auth check failed:", error);
@@ -32,13 +34,8 @@ function initTable() {
     ],
     api: productApi,
     formatters: {
-      minPrice: (value) => {
-        return `<span class="price">${formatCurrency(value)}</span>`;
-      },
-      maxPrice: (value) => {
-        if (!value) return "-";
-        return `<span class="price">${formatCurrency(value)}</span>`;
-      },
+      minPrice: (value) => `<span class="price">${formatCurrency(value)}</span>`,
+      maxPrice: (value) => (value ? `<span class="price">${formatCurrency(value)}</span>` : "-"),
       totalStock: (value) => {
         let status = "high";
         let text = value;
@@ -51,15 +48,11 @@ function initTable() {
           text = `${value} (Low)`;
         } else if (value < 50) {
           status = "medium";
-          text = `${value}`;
         }
 
         return `<span class="stock-badge ${status}">${text}</span>`;
       },
-      createdAt: (value) => {
-        if (!value) return "-";
-        return new Date(value).toLocaleDateString("vi-VN");
-      },
+      createdAt: (value) => (value ? new Date(value).toLocaleDateString("vi-VN") : "-"),
     },
     actions: {
       add: () => openProductModal(),
@@ -71,108 +64,98 @@ function initTable() {
 }
 
 async function openProductModal(product = null) {
-  console.log("Product data:", product);
-  const categoriesRes = await categoryApi.getAll();
-  const brandsRes = await brandApi.getAll();
+  try {
+    const categoriesRes = await categoryApi.getAll();
+    const brandsRes = await brandApi.getAll();
 
-    console.log("Product data:", categoriesRes);
+    const categoryOptions = categoriesRes.content.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
 
+    const brandOptions = brandsRes.content.map((brand) => ({
+      value: brand.brandId,
+      label: brand.brandName,
+    }));
 
-  const categories = categoriesRes.content;
-  const brands = brandsRes.content;
+    const modal = new Modal({
+      title: product ? "Edit Product" : "Add Product",
+      size: "lg",
+      data: product || {},
+      fields: [
+        {
+          name: "name",
+          label: "Product Name",
+          type: "text",
+          required: true,
+          placeholder: "Enter product name",
+        },
+        {
+          name: "description",
+          label: "Description",
+          type: "textarea",
+          placeholder: "Enter product description",
+        },
+        {
+          name: "categoryId",
+          label: "Category",
+          type: "select",
+          required: true,
+          options: categoryOptions,
+        },
+        {
+          name: "brandId",
+          label: "Brand",
+          type: "select",
+          required: true,
+          options: brandOptions,
+        },
+      ],
+      onSave: async (formData) => {
+        try {
+          if (product) {
+            await productApi.update(product.id, formData);
+            showToast("Product updated successfully.", "success");
+          } else {
+            await productApi.create(formData);
+            showToast("Product created successfully.", "success");
+          }
 
-  const categoryOptions = categories.map((c) => ({
-    value: c.id,
-    label: c.name,
-  }));
-
-  const brandOptions = brands.map((b) => ({
-    value: b.brandId,
-    label: b.brandName,
-  }));
-
-  const modal = new Modal({
-    title: product ? "Edit Product" : "Add Product",
-    size: "lg",
-    data: product || {},
-    fields: [
-      {
-        name: "name",
-        label: "Product Name",
-        type: "text",
-        required: true,
-        placeholder: "Enter product name",
-      },
-      {
-        name: "description",
-        label: "Description",
-        type: "textarea",
-        placeholder: "Enter product description",
-      },
-      {
-        name: "totalStock",
-        label: "Stock Quantity",
-        type: "number",
-        required: true,
-        placeholder: "0",
-      },
-      {
-        name: "categoryId",
-        label: "Category",
-        type: "select",
-        required: true,
-        options: categoryOptions,
-      },
-      {
-        name: "brandId",
-        label: "Brand",
-        type: "select",
-        required: true,
-        options: brandOptions,
-      },
-    ],
-    onSave: async (formData) => {
-      try {
-        // Convert string to numbers
-        const productData = {
-          ...formData,
-          minPrice: parseFloat(formData.minPrice) || 0,
-          maxPrice: parseFloat(formData.maxPrice) || null,
-          totalStock: parseInt(formData.totalStock) || 0,
-        };
-
-        console.log("Saving product:", productData);
-
-        if (product) {
-          await productApi.update(product.id, productData);
-          alert("Product updated successfully!");
-        } else {
-          await productApi.create(productData);
-          alert("Product created successfully!");
+          modal.close();
+          window.productTable.refresh();
+        } catch (error) {
+          console.error("Save error:", error);
         }
+      },
+    });
 
-        modal.close();
-        window.productTable.refresh();
-      } catch (error) {
-        console.error("Save error:", error);
-        alert("Failed to save product: " + error.message);
-      }
-    },
-  });
-
-  modal.open();
+    modal.open();
+  } catch (error) {
+    console.error("Failed to open product modal:", error);
+  }
 }
 
 async function deleteProduct(product) {
-  if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
-    try {
-      await productApi.delete(product.id);
-      alert("Product deleted successfully!");
-      window.productTable.refresh();
-    } catch (error) {
-      console.error("Delete error:", error);
-      alert("Failed to delete product: " + error.message);
-    }
+  const confirmed = await confirmModal(
+    `Delete "${product.name}"? This action cannot be undone.`,
+    {
+      title: "Delete product",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+    },
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await productApi.delete(product.id);
+    showToast("Product deleted successfully.", "success");
+    window.productTable.refresh();
+  } catch (error) {
+    console.error("Delete error:", error);
   }
 }
 

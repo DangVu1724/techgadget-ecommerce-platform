@@ -6,6 +6,9 @@ import {
   isSmartphoneCategory,
   groupSmartphoneVariants,
   getColorsFromGroup,
+  setText,
+  formatPrice,
+  formatStock,
 } from "./product-detail.utils.js";
 import {
   renderSmartphoneGroups,
@@ -15,66 +18,46 @@ import {
   updateThumbnails,
   updateAttributesTable,
 } from "./product-detail.render.js";
-import { setText, formatPrice, formatStock } from "./product-detail.utils.js";
+import { showToast } from "/shared/ui/toast.js";
 
-// ==================== STATE ====================
 let currentProduct = null;
 let variantGroups = null;
 let selectedVariant = null;
 
-// ==================== LOAD PRODUCT ====================
 const loadProductFromDb = async () => {
   try {
     const params = new URLSearchParams(window.location.search);
     const productId = params.get("id");
-
-    if (!productId) {
-      console.error("No product ID in URL");
-      return;
-    }
+    if (!productId) return;
 
     const product = await productApi.getById(productId);
-    if (!product) {
-      console.error("Product not found");
-      return;
-    }
+    if (!product) return;
 
     currentProduct = product;
-
     const productName = product.name || "No name";
+
     setText("#productTitle", productName);
     setText("#breadcrumbName", productName);
     document.title = `${productName} | TechGadget`;
-
-    setText(
-      "#productDescription",
-      product.description || "No description available.",
-    );
-    setText(
-      "#descriptionText",
-      product.description || "No description available.",
-    );
+    setText("#productDescription", product.description || "No description available.");
+    setText("#descriptionText", product.description || "No description available.");
     setText("#productCategory", product.category?.name || "Unknown");
     setText("#productStars", "★★★★★");
 
     const images = product.images?.length
       ? product.images
       : [product.image || "/modules/customer/assets/images/macbook.png"];
+
     updateThumbnails(images);
 
     const isSmartphone = isSmartphoneCategory(product.category);
-
-    const colorVariation = document.querySelector(
-      ".p-variation:has(#colorOptions)",
-    );
+    const colorVariation = document.querySelector(".p-variation:has(#colorOptions)");
     const colorLabel = colorVariation?.querySelector(".v-label");
-
     if (colorLabel) {
       colorLabel.style.display = isSmartphone ? "block" : "none";
     }
 
     const variants = product.variants || [];
-
     if (isSmartphone && variants.length > 0) {
       variantGroups = groupSmartphoneVariants(variants);
 
@@ -104,44 +87,40 @@ const loadProductFromDb = async () => {
           updateVariantDetail(product, firstColors[0].variant);
         }
       }
-    } else {
-      renderRegularVariants(variants, product, (variant) => {
-        selectedVariant = variant;
-        updateVariantDetail(product, variant);
-        setText("#productPrice", formatPrice(variant.price));
-        setText("#productStock", formatStock(variant.stock));
-      });
 
-      if (variants.length > 0) {
-        selectedVariant = variants[0];
-        updateVariantDetail(product, variants[0]);
-        setText("#productPrice", formatPrice(variants[0].price));
-        setText("#productStock", formatStock(variants[0].stock));
-      }
-
-      if (variants[0]?.attributes) {
-        updateAttributesTable(variants[0].attributes);
-      } else {
-        updateAttributesTable(product.attributes || []);
-      }
+      return;
     }
+
+    renderRegularVariants(variants, product, (variant) => {
+      selectedVariant = variant;
+      updateVariantDetail(product, variant);
+      setText("#productPrice", formatPrice(variant.price));
+      setText("#productStock", formatStock(variant.stock));
+    });
+
+    if (variants.length > 0) {
+      selectedVariant = variants[0];
+      updateVariantDetail(product, variants[0]);
+      setText("#productPrice", formatPrice(variants[0].price));
+      setText("#productStock", formatStock(variants[0].stock));
+    }
+
+    updateAttributesTable(variants[0]?.attributes || product.attributes || []);
   } catch (error) {
     console.error("Failed to load product:", error);
+    showToast("Unable to load product details.", "error");
   }
 };
 
-// ==================== EVENT HANDLERS ====================
 const setupWishlist = () => {
   const wishlistBtn = document.querySelector(".btn-wishlist");
   if (!wishlistBtn) return;
 
   wishlistBtn.addEventListener("click", function () {
     const icon = this.querySelector("i");
-    icon.classList.toggle("fas");
-    icon.classList.toggle("far");
-    this.style.backgroundColor = icon.classList.contains("fas")
-      ? "#FF6F42"
-      : "";
+    icon?.classList.toggle("fas");
+    icon?.classList.toggle("far");
+    this.style.backgroundColor = icon?.classList.contains("fas") ? "#FF6F42" : "";
   });
 };
 
@@ -155,13 +134,9 @@ const setupTabs = () => {
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      tabs.forEach((t) => t.classList.remove("active"));
+      tabs.forEach((item) => item.classList.remove("active"));
       tab.classList.add("active");
-
-      Object.values(panes).forEach((pane) => {
-        if (pane) pane.style.display = "none";
-      });
-
+      Object.values(panes).forEach((pane) => pane && (pane.style.display = "none"));
       const tabId = tab.dataset.tab;
       if (panes[tabId]) {
         panes[tabId].style.display = "block";
@@ -170,45 +145,43 @@ const setupTabs = () => {
   });
 };
 
-// ==================== QUANTITY CONTROL ====================
 window.changeQty = (amount) => {
   const input = document.getElementById("quantity");
   if (!input) return;
 
-  const current = parseInt(input.value) || 1;
-  const newValue = current + amount;
-
-  if (newValue >= 1 && newValue <= 99) {
-    input.value = newValue;
+  const current = parseInt(input.value || "1", 10);
+  const nextValue = current + amount;
+  if (nextValue >= 1 && nextValue <= 99) {
+    input.value = nextValue;
   }
 };
 
-// ==================== ADD TO CART ====================
 const setupAddToCart = () => {
   const addToCartBtn = document.querySelector(".btn-secondary");
   if (!addToCartBtn) return;
 
   addToCartBtn.addEventListener("click", async () => {
-    // Check login
     if (!authAPI.isLoggedIn()) {
-      showLoginModal(() => {
+      localStorage.setItem("redirectAfterLogin", window.location.href);
+      await showLoginModal(() => {
         window.location.href = "/login";
       });
       return;
     }
 
     if (!selectedVariant) {
-      alert("Vui lòng chọn một variant!");
+      showToast("Please select a variant first.", "warning");
       return;
     }
 
-    const quantity = parseInt(document.getElementById("quantity").value) || 1;
+    const quantity = parseInt(document.getElementById("quantity")?.value || "1", 10);
 
     try {
       await cartAPI.addToCart(selectedVariant.id, quantity);
-      alert("Thêm vào giỏ hàng thành công!");
+      showToast("Item added to cart.", "success");
+      window.dispatchEvent(new Event("cartUpdated", { bubbles: true }));
     } catch (error) {
-      alert("Lỗi: " + error.message);
+      console.error("Add to cart failed:", error);
     }
   });
 };
@@ -217,21 +190,18 @@ const setupOrderNow = () => {
   const orderNowBtn = document.querySelector(".btn-primary");
   if (!orderNowBtn) return;
 
-  orderNowBtn.addEventListener("click", () => {
-    // Check login
+  orderNowBtn.addEventListener("click", async () => {
     if (!authAPI.isLoggedIn()) {
-      showLoginModal(() => {
+      await showLoginModal(() => {
         window.location.href = "/login";
       });
       return;
     }
 
-    // TODO: Redirect to checkout
-    alert("Chức năng order sẽ được cập nhật!");
+    showToast("Buy now flow will be available soon.", "info");
   });
 };
 
-// ==================== INITIALIZATION ====================
 document.addEventListener("DOMContentLoaded", () => {
   loadProductFromDb();
   setupWishlist();
@@ -241,9 +211,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const reviewForm = document.getElementById("reviewForm");
   if (reviewForm) {
-    reviewForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      alert("Review submitted successfully!");
+    reviewForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      showToast("Review submitted successfully.", "success");
       reviewForm.reset();
     });
   }

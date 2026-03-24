@@ -2,12 +2,15 @@ import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { Table } from "/modules/admin/components/data/table/Table.js";
 import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { attributeApi } from "../../core/api/attribute.api.js";
+import { checkAdmin } from "/modules/admin/core/auth/adminGuard.js";
+import { alertModal, confirmModal } from "/shared/ui/modal.js";
+import { showToast } from "/shared/ui/toast.js";
 
 new Sidebar();
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-
+    checkAdmin();
     initTable();
   } catch (error) {
     console.error("Auth check failed:", error);
@@ -17,51 +20,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initTable() {
   window.attributeTable = new Table({
     container: document.getElementById("table-container"),
-
     entityName: "Attribute",
-
     pageSize: 10,
-
     columns: [
-      {
-        key: "attributeId",
-        label: "ID",
-      },
-
-      {
-        key: "attributeName",
-        label: "Attribute Name",
-      },
-
-      {
-        key: "dataType",
-        label: "Data Type",
-      },
+      { key: "attributeId", label: "ID" },
+      { key: "attributeName", label: "Attribute Name" },
+      { key: "dataType", label: "Data Type" },
     ],
-
     api: attributeApi,
-
-    formatters: {
-      createdAt: (value) => {
-        if (!value) return "-";
-
-        return new Date(value).toLocaleDateString("vi-VN", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      },
-    },
-
     actions: {
       add: () => openAttributeModal(),
-
       edit: (attribute) => openAttributeModal(attribute),
-
       delete: (attribute) => deleteAttribute(attribute),
-
       view: (attribute) => viewAttribute(attribute),
     },
   });
@@ -70,20 +40,16 @@ function initTable() {
 function openAttributeModal(attribute = null) {
   const modal = new Modal({
     title: attribute ? "Edit Attribute" : "Add Attribute",
-
     size: "sm",
-
     data: attribute || {},
-
     fields: [
       {
         name: "attributeName",
         label: "Attribute Name",
         type: "text",
         required: true,
-        placeholder: "Enter attribute name (RAM, CPU, Screen Size...)",
+        placeholder: "Enter attribute name",
       },
-
       {
         name: "dataType",
         label: "Data Type",
@@ -96,22 +62,20 @@ function openAttributeModal(attribute = null) {
         ],
       },
     ],
-
     onSave: async (formData) => {
       try {
         if (attribute) {
           await attributeApi.update(attribute.attributeId, formData);
-          alert("Attribute updated successfully!");
+          showToast("Attribute updated successfully.", "success");
         } else {
           await attributeApi.create(formData);
-          alert("Attribute created successfully!");
+          showToast("Attribute created successfully.", "success");
         }
 
         modal.close();
         window.attributeTable.refresh();
       } catch (error) {
-        console.error(error);
-        alert("Failed to save attribute: " + error.message);
+        console.error("Failed to save attribute:", error);
       }
     },
   });
@@ -120,31 +84,32 @@ function openAttributeModal(attribute = null) {
 }
 
 async function deleteAttribute(attribute) {
-  if (
-    confirm(`Are you sure you want to delete "${attribute.attributeName}"?`)
-  ) {
-    try {
-      await attributeApi.delete(attribute.attributeId);
+  const confirmed = await confirmModal(
+    `Delete "${attribute.attributeName}"? This action cannot be undone.`,
+    {
+      title: "Delete attribute",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+    },
+  );
 
-      alert("Attribute deleted successfully!");
+  if (!confirmed) {
+    return;
+  }
 
-      window.attributeTable.refresh();
-    } catch (error) {
-      console.error(error);
-      alert("Failed to delete attribute: " + error.message);
-    }
+  try {
+    await attributeApi.delete(attribute.attributeId);
+    showToast("Attribute deleted successfully.", "success");
+    window.attributeTable.refresh();
+  } catch (error) {
+    console.error("Failed to delete attribute:", error);
   }
 }
 
 function viewAttribute(attribute) {
-  alert(`
-Attribute Details:
-
-ID: ${attribute.attributeId}
-
-Name: ${attribute.attributeName}
-
-Data Type: ${attribute.dataType}
-
-`);
+  alertModal(
+    `ID: ${attribute.attributeId}\nName: ${attribute.attributeName}\nData Type: ${attribute.dataType}`,
+    { title: "Attribute details" },
+  );
 }

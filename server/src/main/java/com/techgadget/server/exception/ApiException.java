@@ -1,30 +1,15 @@
 package com.techgadget.server.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public abstract class ApiException extends RuntimeException {
 
-    private final ErrorCode errorCode;
-    private final String[] params;
+    private final HttpStatus status;
 
-    public ApiException(ErrorCode errorCode, String... params) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
-        this.params = params;
-    }
-
-    public ApiException(ErrorCode errorCode, Throwable cause, String... params) {
-        super(errorCode.getMessage(), cause);
-        this.errorCode = errorCode;
-        this.params = params;
-    }
-
-    public int getStatus() {
-        return errorCode.getStatus();
-    }
-
-    public String getCode() {
-        return errorCode.getCode();
+    protected ApiException(HttpStatus status, String message) {
+        super(message);
+        this.status = status;
     }
 }

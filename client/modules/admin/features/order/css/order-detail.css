@@ -1,0 +1,388 @@
+/* order-detail.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f3f4f6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Back Button */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background: white;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* Order Header */
+.order-header {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-info h1 {
+    font-size: 24px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.order-date {
+    color: #6b7280;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.order-status-large {
+    padding: 8px 20px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Status Grid */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.status-step {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    opacity: 0.5;
+    transition: all 0.3s;
+}
+
+.status-step.completed {
+    opacity: 1;
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+}
+
+.status-step.active {
+    opacity: 1;
+    background: #dbeafe;
+    border: 1px solid #2563eb;
+}
+
+.status-step i {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.status-step .step-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.status-step .step-date {
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Customer Card */
+.customer-card, .payment-card, .order-notes {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.card-title i {
+    color: #2563eb;
+}
+
+/* Customer Info */
+.customer-info p {
+    margin-bottom: 8px;
+    color: #4b5563;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.customer-info i {
+    width: 20px;
+    color: #9ca3af;
+}
+
+/* Payment Info */
+.payment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #f3f4f6;
+}
+
+.payment-label {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.payment-value {
+    font-weight: 500;
+    color: #111827;
+}
+
+.total-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #059669;
+}
+
+/* Products Table */
+.products-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.products-table th {
+    text-align: left;
+    padding: 12px 8px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.products-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #111827;
+    font-size: 14px;
+}
+
+.product-image {
+    width: 50px;
+    height: 50px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+}
+
+.product-name {
+    font-weight: 500;
+}
+
+.product-price {
+    color: #059669;
+    font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.status-processing {
+    background: #e0f2fe;
+    color: #0891b2;
+}
+
+.order-status-large.status-processing {
+    background: #e0f2fe;
+    color: #0891b2;
+}
+
+/* Thêm vào file order-detail.css hoặc orders.css */
+
+/* Style cho select với màu sắc */
+.status-select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+/* Màu sắc cho từng option */
+.status-select option[value="PENDING"] {
+  background-color: #fef3c7;
+  color: #d97706;
+  font-weight: 500;
+}
+
+.status-select option[value="CONFIRMED"] {
+  background-color: #dbeafe;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.status-select option[value="PROCESSING"] {
+  background-color: #e0f2fe;
+  color: #0891b2;
+  font-weight: 500;
+}
+
+.status-select option[value="SHIPPING"] {
+  background-color: #ede9fe;
+  color: #7c3aed;
+  font-weight: 500;
+}
+
+.status-select option[value="DELIVERED"] {
+  background-color: #dcfce7;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.status-select option[value="CANCELLED"] {
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* Hover effect */
+.status-select option:hover {
+  filter: brightness(95%);
+}
+
+/* Style cho modal content */
+.modal-content select {
+  font-weight: 500;
+}
+
+/* Preview selected value */
+.status-select option:checked {
+  font-weight: 600;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .order-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}

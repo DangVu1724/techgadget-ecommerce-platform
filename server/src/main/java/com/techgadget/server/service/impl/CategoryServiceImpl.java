@@ -1,5 +1,6 @@
 package com.techgadget.server.service.impl;
 
+import com.techgadget.server.exception.NotFoundException;
 import com.techgadget.server.model.dto.category.CategoryRequest;
 import com.techgadget.server.model.dto.category.CategoryResponse;
 import com.techgadget.server.model.entity.Attribute;
@@ -19,66 +20,70 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> getCategories() {
-        return  categoryRepository.findAll().stream().map(category -> {
-            CategoryResponse categoryResponse = new CategoryResponse();
-            categoryResponse.setId(category.getId());
-            categoryResponse.setName(category.getName());
-            categoryResponse.setDescription(category.getDescription());
-            return categoryResponse;
+        return categoryRepository.findAll().stream().map(category -> {
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+            return response;
         }).toList();
     }
 
     @Override
     public List<CategoryResponse> getCategoriesByBrand(Long brandId) {
         return categoryRepository.getCategoriesByBrand(brandId).stream().map(category -> {
-            CategoryResponse categoryResponse = new CategoryResponse();
-            categoryResponse.setId(category.getId());
-            categoryResponse.setName(category.getName());
-            return  categoryResponse;
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            return response;
         }).toList();
     }
 
+    @Override
+    public List<CategoryResponse> searchCategoriesByName(String name) {
+        return categoryRepository.findByNameContainingIgnoreCase(name).stream().map(category -> {
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+            return response;
+        }).toList();
+    }
 
     @Override
     public Set<Attribute> getAttributesByCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found"));
-
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId));
         return category.getAttributes();
     }
 
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
+        Category category = new Category();
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
 
-        Category Category = new Category();
-        Category.setName(request.getName());
-        Category.setDescription(request.getDescription());
-
-        Category saved = categoryRepository.save(Category);
-
+        Category saved = categoryRepository.save(category);
         return mapToResponse(saved);
     }
 
     @Override
     public CategoryResponse updateCategory(Long categoryId, CategoryRequest request) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId));
 
-        Category Category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
 
-        Category.setName(request.getName());
-        Category.setDescription(request.getDescription());
-
-        Category updated = categoryRepository.save(Category);
-
+        Category updated = categoryRepository.save(category);
         return mapToResponse(updated);
     }
 
     @Override
     public void deleteCategory(Long categoryId) {
-
-        Category Category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
-        categoryRepository.delete(Category);
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId));
+        categoryRepository.delete(category);
     }
 
     private CategoryResponse mapToResponse(Category category) {

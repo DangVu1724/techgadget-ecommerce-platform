@@ -1,110 +1,38 @@
-const BASE_URL = "http://localhost:8080/api";
+import { request } from "./base.api.js";
+import { normalizeCollection } from "/shared/core/api/collection.js";
 
 export const attributeApi = {
-  // Lấy tất cả attributes (không phân trang)
-  getAll: async (params = {}) => {
-    try {
-      let url = `${BASE_URL}/attributes`;
-      
-      // Thêm search param nếu có
-      if (params.search) {
-        url += `?search=${encodeURIComponent(params.search)}`;
-      }
-      
-      const res = await fetch(url);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      const data = await res.json();
-      
-      // Trả về format chuẩn cho table component
-      return {
-        content: data, // API trả về array trực tiếp
-        totalPages: 1,
-        totalElements: data.length
-      };
-    } catch (error) {
-      console.error('Error fetching attributes:', error);
-      throw error;
+  async getAll(options = {}) {
+    const { search = "" } = options;
+
+    if (search && search.trim()) {
+      return normalizeCollection(await request(`/attributes/search?name=${encodeURIComponent(search)}`));
     }
+
+    return normalizeCollection(await request("/attributes"));
   },
-  
-  getById: async (id) => {
-    try {
-      const res = await fetch(`${BASE_URL}/attributes/${id}`);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error(`Error fetching brand ${id}:`, error);
-      throw error;
-    }
+
+  getById(id) {
+    return request(`/attributes/${id}`);
   },
-  
-  // Tạo brand mới
-  create: async (data) => {
-    try {
-      const res = await fetch(`${BASE_URL}/attributes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error('Error creating brand:', error);
-      throw error;
-    }
+
+  create(data) {
+    return request("/attributes", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   },
-  
-  // Cập nhật brand
-  update: async (id, data) => {
-    try {
-      const res = await fetch(`${BASE_URL}/attributes/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error(`Error updating brand ${id}:`, error);
-      throw error;
-    }
+
+  update(id, data) {
+    return request(`/attributes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
   },
-  
-  // Xóa brand
-  delete: async (id) => {
-    try {
-      const res = await fetch(`${BASE_URL}/attributes/${id}`, {
-        method: 'DELETE'
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return true;
-    } catch (error) {
-      console.error(`Error deleting brand ${id}:`, error);
-      throw error;
-    }
-  }
+
+  delete(id) {
+    return request(`/attributes/${id}`, {
+      method: "DELETE",
+    });
+  },
 };

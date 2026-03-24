@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Người Dùng - Admin Panel</title>
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/sidebar/sidebar.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/data/table/table.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/header.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/layout.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/modules/admin/components/layouts/css/modal.css"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <div id="sidebar-container"></div>
+
+      <main class="main-content">
+        <header class="top-header">
+          <div class="header-left">
+            <div class="page-title">
+              <h1>Quản Lý Người Dùng</h1>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="user-dropdown" id="userDropdown">
+              <div class="avatar" id="userAvatar">A</div>
+              <span id="userName">Loading...</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+          <div id="table-container" class="table-wrapper"></div>
+        </div>
+      </main>
+    </div>
+
+    <script
+      type="module"
+      src="/modules/admin/features/users/js/users.js"
+    ></script>
+  </body>
+</html>

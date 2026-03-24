@@ -1,110 +1,48 @@
-const BASE_URL = "http://localhost:8080/api";
+import { request } from "./base.api.js";
+import { normalizeCollection } from "/shared/core/api/collection.js";
 
 export const productApi = {
-  // Lấy products có phân trang
-  getAll: async (params = {}) => {
-    try {
-      const page = params.page || 0;
-      const size = params.size || 10;
-      
-      let url = `${BASE_URL}/products?page=${page}&size=${size}`;
-      
-      // Thêm search param nếu có
-      if (params.search) {
-        url += `&search=${encodeURIComponent(params.search)}`;
-      }
-      
-      const res = await fetch(url);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      const data = await res.json();
-      
-      // API trả về dạng { content, totalPages, totalElements }
-      return data;
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      throw error;
+  async getAll(params = {}) {
+    const { page = 0, size = 10, search = "" } = params;
+
+    if (search && search.trim()) {
+      const query = new URLSearchParams({ page, size });
+      return normalizeCollection(await request(`/products/search?name=${encodeURIComponent(search)}&${query.toString()}`));
     }
+
+    const query = new URLSearchParams({ page, size });
+    return normalizeCollection(await request(`/products?${query.toString()}`));
   },
-  
-  // Lấy product theo ID
-  getById: async (id) => {
-    try {
-      const res = await fetch(`${BASE_URL}/products/${id}`);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error(`Error fetching product ${id}:`, error);
-      throw error;
-    }
+
+  getById(id) {
+    return request(`/products/${id}`);
   },
-  
-  // Tạo product mới
-  create: async (data) => {
-    try {
-      const res = await fetch(`${BASE_URL}/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error('Error creating product:', error);
-      throw error;
-    }
+
+  create(data) {
+    return request("/products", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   },
-  
-  // Cập nhật product
-  update: async (id, data) => {
-    try {
-      const res = await fetch(`${BASE_URL}/products/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return await res.json();
-    } catch (error) {
-      console.error(`Error updating product ${id}:`, error);
-      throw error;
-    }
+
+  update(id, data) {
+    return request(`/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
   },
-  
-  // Xóa product
-  delete: async (id) => {
-    try {
-      const res = await fetch(`${BASE_URL}/products/${id}`, {
-        method: 'DELETE'
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
-      return true;
-    } catch (error) {
-      console.error(`Error deleting product ${id}:`, error);
-      throw error;
-    }
-  }
+
+  delete(id) {
+    return request(`/products/${id}`, {
+      method: "DELETE",
+    });
+  },
+
+  getTopSelling(limit = 5) {
+    return request(`/products/top-selling?limit=${limit}`);
+  },
+
+  getNewest(limit = 5) {
+    return request(`/products/newest?limit=${limit}`);
+  },
 };

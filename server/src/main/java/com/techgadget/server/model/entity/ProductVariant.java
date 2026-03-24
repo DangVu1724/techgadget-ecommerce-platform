@@ -36,6 +36,9 @@ public class ProductVariant {
     @Column(nullable = false)
     private Integer stock = 0;
 
+    @Column(nullable = false)
+    private Integer reservedStock = 0;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 

@@ -1,13 +1,11 @@
 package com.techgadget.server.service;
 
-import com.techgadget.server.model.dto.product.ProductCreateRequest;
-import com.techgadget.server.model.dto.product.ProductUpdateRequest;
-import com.techgadget.server.model.dto.product.ProductResponse;
-import com.techgadget.server.model.dto.product.ProductSummaryResponse;
+import com.techgadget.server.model.dto.product.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 public interface ProductService {
@@ -21,11 +19,17 @@ public interface ProductService {
                                                  String ram,
                                                  String storage);
 
+     Page<ProductSummaryResponse> searchProductsByName(String name, Pageable pageable);
+
      ProductResponse createProduct(ProductCreateRequest request);
 
      ProductResponse updateProduct(Long id, ProductUpdateRequest request);
 
      void deleteProduct(Long id);
+
+     List<TopProductResponse> getTopSellingProducts(int limit);
+
+     List<TopProductResponse> getNewestProducts(int limit);
 
 
 

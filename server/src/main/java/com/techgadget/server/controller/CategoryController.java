@@ -1,18 +1,26 @@
 package com.techgadget.server.controller;
 
-import com.techgadget.server.model.dto.brand.BrandRequest;
-import com.techgadget.server.model.dto.brand.BrandResponse;
+import com.techgadget.server.model.dto.ApiResponse;
 import com.techgadget.server.model.dto.category.CategoryRequest;
 import com.techgadget.server.model.dto.category.CategoryResponse;
+import com.techgadget.server.model.entity.Attribute;
 import com.techgadget.server.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Set;
 
-@CrossOrigin
 @RestController
 @RequestMapping("api/category")
 @RequiredArgsConstructor
@@ -20,33 +28,41 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<CategoryResponse> getCategories() {
-        return categoryService.getCategories();
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getCategories() {
+        return ResponseEntity.ok(ApiResponse.success("Categories retrieved successfully.", categoryService.getCategories()));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> searchCategories(@RequestParam String name) {
+        return ResponseEntity.ok(ApiResponse.success("Categories retrieved successfully.", categoryService.searchCategoriesByName(name)));
     }
 
     @GetMapping("/{id}/attributes")
-    public ResponseEntity<?> getAttributesByCategory(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getAttributesByCategory(id));
+    public ResponseEntity<ApiResponse<Set<Attribute>>> getAttributesByCategory(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success("Category attributes retrieved successfully.", categoryService.getAttributesByCategory(id)));
     }
 
     @GetMapping("/brand/{brandId}")
-    public List<CategoryResponse> getCategoriesByBrand(@PathVariable Long brandId) {
-        return categoryService.getCategoriesByBrand(brandId);
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getCategoriesByBrand(@PathVariable Long brandId) {
+        return ResponseEntity.ok(ApiResponse.success("Categories retrieved successfully.", categoryService.getCategoriesByBrand(brandId)));
     }
 
-
     @PostMapping
-    public CategoryResponse createBrand(@Valid @RequestBody CategoryRequest request) {
-        return categoryService.createCategory(request);
+    public ResponseEntity<ApiResponse<CategoryResponse>> createBrand(@Valid @RequestBody CategoryRequest request) {
+        return ResponseEntity.ok(ApiResponse.success("Category created successfully.", categoryService.createCategory(request)));
     }
 
     @PutMapping("/{id}")
-    public CategoryResponse updateBrand(@PathVariable Long id,@Valid @RequestBody CategoryRequest request) {
-        return categoryService.updateCategory(id,request);
+    public ResponseEntity<ApiResponse<CategoryResponse>> updateBrand(
+            @PathVariable Long id,
+            @Valid @RequestBody CategoryRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.success("Category updated successfully.", categoryService.updateCategory(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBrand(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteBrand(@PathVariable Long id) {
         categoryService.deleteCategory(id);
+        return ResponseEntity.ok(ApiResponse.success("Category deleted successfully.", null));
     }
 }
