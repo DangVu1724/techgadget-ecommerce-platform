@@ -38,7 +38,10 @@ async function init() {
   state.keyword = params.get("q") || "";
 
   attachEventListeners();
+<<<<<<< HEAD
   updatePricePresetState();
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 
   if (!state.keyword) {
     elements.searchKeyword.textContent = "";
@@ -49,7 +52,10 @@ async function init() {
 
   elements.searchKeyword.textContent = state.keyword;
   elements.searchInput.value = state.keyword;
+<<<<<<< HEAD
   syncPriceInputs();
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 
   await Promise.all([loadCategories(), loadBrands()]);
   await loadProducts();
@@ -210,8 +216,12 @@ function renderPagination(totalPages) {
 
   elements.pagination.querySelectorAll(".pagination-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
+<<<<<<< HEAD
       state.currentPage =
         Number.parseInt(e.currentTarget.dataset.page, 10) || 0;
+=======
+      state.currentPage = Number.parseInt(e.currentTarget.dataset.page, 10) || 0;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
       loadProducts();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -232,6 +242,7 @@ async function loadCategories() {
       )
       .join("");
 
+<<<<<<< HEAD
     elements.categoryList
       .querySelectorAll(".category-filter")
       .forEach((checkbox) => {
@@ -242,6 +253,16 @@ async function loadCategories() {
           loadProducts();
         });
       });
+=======
+    elements.categoryList.querySelectorAll(".category-filter").forEach((checkbox) => {
+      checkbox.addEventListener("change", (e) => {
+        state.categoryId = e.target.checked ? e.target.value : null;
+        state.currentPage = 0;
+        enforceSingleChecked(".category-filter", e.target);
+        loadProducts();
+      });
+    });
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
   } catch (error) {
     console.error("Error loading categories:", error);
   }
@@ -254,8 +275,13 @@ async function loadBrands() {
       .map(
         (brand) => `
         <label class="checkbox-label">
+<<<<<<< HEAD
           <input type="checkbox" value="${brand.brandId}" class="brand-filter" />
           ${escapeHtml(brand.brandName)}
+=======
+          <input type="checkbox" value="${brand.id}" class="brand-filter" />
+          ${escapeHtml(brand.name)}
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
         </label>
       `,
       )
@@ -295,18 +321,24 @@ function attachEventListeners() {
 
   elements.minPrice?.addEventListener("change", (e) => {
     state.minPrice = e.target.value ? Number(e.target.value) : null;
+<<<<<<< HEAD
     normalizePriceRange();
     syncPriceInputs();
     updatePricePresetState();
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
     state.currentPage = 0;
     loadProducts();
   });
 
   elements.maxPrice?.addEventListener("change", (e) => {
     state.maxPrice = e.target.value ? Number(e.target.value) : null;
+<<<<<<< HEAD
     normalizePriceRange();
     syncPriceInputs();
     updatePricePresetState();
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
     state.currentPage = 0;
     loadProducts();
   });
@@ -315,10 +347,17 @@ function attachEventListeners() {
     btn.addEventListener("click", (e) => {
       const min = Number(e.currentTarget.dataset.min);
       const max = Number(e.currentTarget.dataset.max);
+<<<<<<< HEAD
       state.minPrice = min;
       state.maxPrice = max;
       syncPriceInputs();
       updatePricePresetState();
+=======
+      elements.minPrice.value = String(min);
+      elements.maxPrice.value = String(max);
+      state.minPrice = min;
+      state.maxPrice = max;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
       state.currentPage = 0;
       loadProducts();
     });
@@ -340,8 +379,13 @@ function attachEventListeners() {
     state.brandId = null;
     state.ram = null;
     state.currentPage = 0;
+<<<<<<< HEAD
     syncPriceInputs();
     updatePricePresetState();
+=======
+    elements.minPrice.value = "";
+    elements.maxPrice.value = "";
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 
     document.querySelectorAll(".checkbox-label input").forEach((input) => {
       input.checked = false;
@@ -350,6 +394,7 @@ function attachEventListeners() {
   });
 }
 
+<<<<<<< HEAD
 function syncPriceInputs() {
   if (elements.minPrice) {
     elements.minPrice.value =
@@ -379,6 +424,8 @@ function updatePricePresetState() {
   });
 }
 
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 function enforceSingleChecked(selector, currentInput) {
   if (!currentInput.checked) return;
   document.querySelectorAll(selector).forEach((input) => {
@@ -434,4 +481,8 @@ function showErrorMessage(message) {
   elements.emptyState.style.display = "flex";
 }
 
+<<<<<<< HEAD
 init();
+=======
+init();
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe

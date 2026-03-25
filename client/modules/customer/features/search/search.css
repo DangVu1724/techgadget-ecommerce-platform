@@ -209,6 +209,7 @@ body {
 
 /* Price Inputs */
 .price-inputs {
+<<<<<<< HEAD
   display: grid;
   grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
   align-items: end;
@@ -259,11 +260,26 @@ body {
   border: none;
   background: transparent;
   font-size: 14px;
+=======
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.price-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
   transition: all 0.2s;
 }
 
 .price-input:focus {
   outline: none;
+<<<<<<< HEAD
   box-shadow: none;
 }
 
@@ -286,10 +302,15 @@ body {
   font-size: 12px;
   line-height: 1.5;
   color: var(--text-lighter);
+=======
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.1);
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 }
 
 /* Price Presets */
 .price-presets {
+<<<<<<< HEAD
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
@@ -306,20 +327,43 @@ body {
   color: var(--text-light);
   transition: all 0.2s;
   text-align: center;
+=======
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-preset {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-light);
+  transition: all 0.2s;
+  text-align: left;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 }
 
 .price-preset:hover {
   background: var(--orange-light);
   border-color: var(--orange);
   color: var(--orange);
+<<<<<<< HEAD
   transform: translateY(-1px);
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 }
 
 .price-preset.active {
   background: var(--orange);
   border-color: var(--orange);
   color: var(--white);
+<<<<<<< HEAD
   box-shadow: 0 10px 16px rgba(189, 96, 46, 0.18);
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 }
 
 /* Clear Filters Button */
@@ -353,7 +397,11 @@ body {
   flex-direction: column;
   gap: 20px;
   min-width: 0;
+<<<<<<< HEAD
   width: 800px;
+=======
+  width: 100%;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 }
 
 /* Sort Options */
@@ -611,6 +659,7 @@ body {
 }
 
 @media (max-width: 480px) {
+<<<<<<< HEAD
   .price-inputs,
   .price-presets {
     grid-template-columns: 1fr;
@@ -620,6 +669,8 @@ body {
     display: none;
   }
 
+=======
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
   .product-grid {
     grid-template-columns: repeat(1, 1fr);
   }

@@ -1,6 +1,13 @@
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
 import { orderAPI } from "/modules/customer/core/api/order.api.js";
+import { orderAPI } from "/modules/customer/core/api/order.api.js";
 import { showToast } from "/shared/ui/toast.js";
+
+const state = {
+  allOrders: [],
+  activeOrderTab: "all",
+  searchKeyword: "",
+};
 
 const state = {
   allOrders: [],
@@ -10,6 +17,7 @@ const state = {
 
 const checkLogin = () => {
   if (!authAPI.isLoggedIn()) {
+    showToast("Vui lòng đăng nhập trước.", "warning");
     showToast("Vui lòng đăng nhập trước.", "warning");
     window.location.href = "/login";
     return false;
@@ -268,6 +276,9 @@ const initOrderFilters = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!checkLogin()) return;
+  renderUserInfo();
+  initMainTabNavigation();
+  initOrderFilters();
   renderUserInfo();
   initMainTabNavigation();
   initOrderFilters();

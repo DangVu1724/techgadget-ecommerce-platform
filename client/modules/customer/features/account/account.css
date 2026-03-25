@@ -1,16 +1,26 @@
 /* --- BIẾN MÀU & FONT CHUẨN TECHGADGET --- */
 :root {
     --accent: #FF6F42; /* Cam TechGadget */
+<<<<<<< HEAD
     --bg: #f4f7f9;
+=======
+    --dark-bg: #1a1a1a;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
     --border-grey: #333;
     --font-main: 'Poppins', sans-serif;
     --font-heading: 'Montserrat', sans-serif;
 }
 
 body {
+<<<<<<< HEAD
     background-color: #fff;
     font-family: var(--font-main);
     color: #000;
+=======
+    background-color: #000;
+    font-family: var(--font-main);
+    color: #fff;
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
 }
 
 .container { width: 90%; max-width: 1200px; margin: 0 auto; }
@@ -53,7 +63,11 @@ body {
 
 /* MAIN CONTENT */
 .profile-main {
+<<<<<<< HEAD
     background: var(--bg);
+=======
+    background: var(--dark-bg);
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
     padding: 35px;
     border-radius: 12px;
     border: 1px solid #333;
@@ -532,6 +546,7 @@ body {
 .order-actions { display: flex; justify-content: flex-end; gap: 10px; }
 /* Nút bấm chuẩn style Shopee */
 .btn-main { background: #EE4D2D; color: #fff; border: none; padding: 10px 25px; border-radius: 2px; cursor: pointer; }
+<<<<<<< HEAD
 .btn-sub { background: transparent; color: #ccc; border: 1px solid #444; padding: 10px 25px; border-radius: 2px; cursor: pointer; }
 
 /* Simplified account profile */
@@ -893,3 +908,6 @@ body {
 .btn-primary:hover {
     background: var(--accent-dark) !important;
 }
+=======
+.btn-sub { background: transparent; color: #ccc; border: 1px solid #444; padding: 10px 25px; border-radius: 2px; cursor: pointer; }
+>>>>>>> 0d1447f841e86f3d9bd36e4a4c807fa3fab006fe
