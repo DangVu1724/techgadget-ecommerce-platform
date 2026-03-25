@@ -59,21 +59,75 @@ const mapStatusToOrderTab = (status) => {
   }
 };
 
+const escapeHtml = (value) => {
+  const div = document.createElement("div");
+  div.textContent = String(value || "");
+  return div.innerHTML;
+};
+
+const getAvatarText = (user) => {
+  const source = user?.fullName || user?.email || "T";
+  return source.charAt(0).toUpperCase();
+};
+
+const renderProfileDetails = (user) => {
+  const detailsContainer = document.getElementById("profileDetails");
+  const emptyState = document.getElementById("profileEmpty");
+  if (!detailsContainer || !emptyState) return;
+
+  const fields = [
+    { label: "Họ và tên", value: user?.fullName },
+    { label: "Email", value: user?.email },
+    { label: "Số điện thoại", value: user?.phone },
+    { label: "Địa chỉ", value: user?.address },
+  ].filter((item) => normalizeText(item.value));
+
+  if (!fields.length) {
+    detailsContainer.innerHTML = "";
+    emptyState.style.display = "flex";
+    return;
+  }
+
+  emptyState.style.display = "none";
+  detailsContainer.innerHTML = fields
+    .map(
+      (item) => `
+        <article class="profile-detail-card">
+          <span class="profile-detail-label">${escapeHtml(item.label)}</span>
+          <strong class="profile-detail-value">${escapeHtml(item.value)}</strong>
+        </article>
+      `,
+    )
+    .join("");
+};
+
 const renderUserInfo = () => {
   const user = authAPI.getUser();
   if (!user) return;
 
-  const usernameEl = document.querySelector(".username");
-  if (usernameEl) {
-    usernameEl.textContent = user.fullName || user.email || "Người dùng";
+  const name = user.fullName || user.email || "Tài khoản";
+  const email = user.email || "Chưa có email";
+  const avatarText = getAvatarText(user);
+
+  document.querySelectorAll(".username").forEach((element) => {
+    element.textContent = name;
+  });
+
+  const profileDisplayName = document.querySelector(".profile-display-name");
+  if (profileDisplayName) {
+    profileDisplayName.textContent = name;
   }
 
-  const profileNameInput = document.querySelector(
-    '#tab-hoso .profile-form input[type="text"]',
-  );
-  if (profileNameInput) {
-    profileNameInput.value = user.fullName || "";
+  const profileEmail = document.querySelector(".profile-email");
+  if (profileEmail) {
+    profileEmail.textContent = email;
   }
+
+  document.querySelectorAll(".profile-avatar-initial").forEach((element) => {
+    element.textContent = avatarText;
+  });
+
+  renderProfileDetails(user);
 };
 
 const renderOrderList = () => {
@@ -84,7 +138,8 @@ const renderOrderList = () => {
   const tab = state.activeOrderTab;
 
   const filteredOrders = state.allOrders.filter((order) => {
-    const tabMatch = tab === "all" || mapStatusToOrderTab(order.orderStatus) === tab;
+    const tabMatch =
+      tab === "all" || mapStatusToOrderTab(order.orderStatus) === tab;
     const keywordMatch =
       !keyword ||
       normalizeText(order.orderCode).includes(keyword) ||
@@ -106,35 +161,35 @@ const renderOrderList = () => {
   container.innerHTML = filteredOrders
     .map(
       (order) => `
-      <div class="order-card">
-        <div class="order-shop-header">
-          <div class="shop-info">
-            <span class="badge-mall">Mall</span>
-            <span class="shop-name">TechGadget Official</span>
+        <div class="order-card">
+          <div class="order-shop-header">
+            <div class="shop-info">
+              <span class="badge-mall">Mall</span>
+              <span class="shop-name">TechGadget Official</span>
+            </div>
+            <div class="order-status">${escapeHtml(formatOrderStatus(order.orderStatus))}</div>
           </div>
-          <div class="order-status">${formatOrderStatus(order.orderStatus)}</div>
-        </div>
 
-        <div class="order-body">
-          <img src="/modules/customer/assets/images/default-pro.png" alt="Order item" />
-          <div class="product-info">
-            <h4 class="product-name">Đơn hàng #${order.orderCode || order.id}</h4>
-            <p class="product-variant">Ngày đặt: ${formatDate(order.orderDate)}</p>
-            <p class="product-variant">Thanh toán: ${order.paymentMethod || "-"}</p>
+          <div class="order-body">
+            <img src="/modules/customer/assets/images/tech_item.png" alt="Order item" />
+            <div class="product-info">
+              <h4 class="product-name">Đơn hàng #${escapeHtml(order.orderCode || order.id || "-")}</h4>
+              <p class="product-variant">Ngày đặt: ${escapeHtml(formatDate(order.orderDate))}</p>
+              <p class="product-variant">Thanh toán: ${escapeHtml(order.paymentMethod || "-")}</p>
+            </div>
           </div>
-        </div>
 
-        <div class="order-footer">
-          <div class="total-row">
-            <span>Tổng tiền:</span>
-            <span class="total-price">${formatCurrency(order.amount)}</span>
-          </div>
-          <div class="order-actions">
-            <a class="btn-main" href="/cart">Mua lại</a>
+          <div class="order-footer">
+            <div class="total-row">
+              <span>Tổng tiền:</span>
+              <span class="total-price">${escapeHtml(formatCurrency(order.amount))}</span>
+            </div>
+            <div class="order-actions">
+              <a class="btn-main" href="/cart">Mua lại</a>
+            </div>
           </div>
         </div>
-      </div>
-    `,
+      `,
     )
     .join("");
 };
@@ -142,7 +197,8 @@ const renderOrderList = () => {
 const loadOrderHistory = async () => {
   const container = document.getElementById("order-list-content");
   if (container) {
-    container.innerHTML = '<div class="empty-state"><p>Đang tải lịch sử đơn hàng...</p></div>';
+    container.innerHTML =
+      '<div class="empty-state"><p>Đang tải lịch sử đơn hàng...</p></div>';
   }
 
   try {
@@ -167,15 +223,12 @@ const activateTab = (tabId) => {
   });
   targetTab.classList.add("active");
 
-  document.querySelectorAll(".menu-item, .sub-menu li").forEach((item) => {
+  document.querySelectorAll(".menu-item").forEach((item) => {
     item.classList.remove("active");
   });
 
   const menuItem = document.querySelector(`.menu-item[data-tab="${tabId}"]`);
-  const subItem = document.querySelector(`.sub-menu li[data-tab="${tabId}"]`);
   menuItem?.classList.add("active");
-  subItem?.classList.add("active");
-  subItem?.closest(".menu-item")?.classList.add("active");
 
   if (tabId === "tab-donmua") {
     loadOrderHistory();
@@ -183,7 +236,7 @@ const activateTab = (tabId) => {
 };
 
 const initMainTabNavigation = () => {
-  document.querySelectorAll(".sub-menu li, .menu-item[data-tab]").forEach((item) => {
+  document.querySelectorAll(".menu-item[data-tab]").forEach((item) => {
     item.addEventListener("click", () => {
       const tabId = item.getAttribute("data-tab");
       if (!tabId) return;
@@ -195,7 +248,9 @@ const initMainTabNavigation = () => {
 const initOrderFilters = () => {
   document.querySelectorAll(".ot-item").forEach((item) => {
     item.addEventListener("click", () => {
-      document.querySelectorAll(".ot-item").forEach((el) => el.classList.remove("active"));
+      document
+        .querySelectorAll(".ot-item")
+        .forEach((element) => element.classList.remove("active"));
       item.classList.add("active");
       state.activeOrderTab = item.dataset.order || "all";
       renderOrderList();

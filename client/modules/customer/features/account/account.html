@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Account | TechGadget</title>
+    <title>Tài khoản của tôi | TechGadget</title>
 
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
@@ -11,521 +11,91 @@
     />
     <link
       rel="stylesheet"
-      href="/modules/customer/features/account/account.css">
-    <link
-      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Poppins", sans-serif;
-        color: #333;
-        background-color: #f5f5f5;
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
-
-      .account-page {
-        min-height: 100vh;
-        padding: 40px 0;
-      }
-
-      .account-header {
-        text-align: center;
-        margin-bottom: 40px;
-        padding: 30px 0;
-        border-bottom: 2px solid #e0e0e0;
-      }
-
-      .account-header h1 {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-      }
-
-      .account-wrapper {
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-        gap: 30px;
-        margin-bottom: 40px;
-      }
-
-      .account-sidebar {
-        background: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        height: fit-content;
-      }
-
-      .account-sidebar h3 {
-        font-size: 1.2rem;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #007bff;
-      }
-
-      .sidebar-menu {
-        list-style: none;
-      }
-
-      .sidebar-menu li {
-        margin-bottom: 10px;
-      }
-
-      .sidebar-menu a {
-        display: block;
-        padding: 12px 15px;
-        color: #333;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-      }
-
-      .sidebar-menu a:hover,
-      .sidebar-menu a.active {
-        background-color: #007bff;
-        color: white;
-      }
-
-      .account-content {
-        background: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .content-section {
-        display: none;
-      }
-
-      .content-section.active {
-        display: block;
-      }
-
-      .section-title {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e0e0e0;
-      }
-
-      .user-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        margin-bottom: 30px;
-      }
-
-      .info-item {
-        padding: 15px;
-        background-color: #f9f9f9;
-        border-left: 4px solid #007bff;
-        border-radius: 4px;
-      }
-
-      .info-label {
-        font-weight: 600;
-        color: #666;
-        font-size: 0.9rem;
-      }
-
-      .info-value {
-        font-size: 1.1rem;
-        color: #333;
-        margin-top: 5px;
-      }
-
-      .order-item {
-        border: 1px solid #e0e0e0;
-        padding: 20px;
-        margin-bottom: 15px;
-        border-radius: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .order-info {
-        flex: 1;
-      }
-
-      .order-id {
-        font-weight: 600;
-        margin-bottom: 5px;
-      }
-
-      .order-date {
-        color: #666;
-        font-size: 0.9rem;
-      }
-
-      .order-total {
-        font-weight: 600;
-        color: #007bff;
-        font-size: 1.2rem;
-        margin-right: 20px;
-      }
-
-      .order-status {
-        padding: 5px 15px;
-        background-color: #e8f4f8;
-        color: #007bff;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-      }
-
-      .empty-message {
-        text-align: center;
-        padding: 40px 20px;
-        color: #999;
-      }
-
-      .mt-30 {
-        margin-top: 30px;
-      }
-
-      .button-group {
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-      }
-
-      .btn {
-        padding: 12px 30px;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-      }
-
-      .btn-primary {
-        background-color: #007bff;
-        color: white;
-      }
-
-      .btn-primary:hover {
-        background-color: #0056b3;
-      }
-
-      .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-      }
-
-      .btn-secondary:hover {
-        background-color: #545b62;
-      }
-
-      .btn-danger {
-        background-color: #dc3545;
-        color: white;
-      }
-
-      .btn-danger:hover {
-        background-color: #c82333;
-      }
-
-      @media (max-width: 768px) {
-        .account-wrapper {
-          grid-template-columns: 1fr;
-        }
-
-        .user-info {
-          grid-template-columns: 1fr;
-        }
-
-        .order-item {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .order-total {
-          margin-right: 0;
-          margin-top: 10px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="/modules/customer/features/account/account.css" />
   </head>
   <body>
-   <div class="container section-padding">
-        <div class="profile-layout">
-            <aside class="profile-sidebar">
-                <div class="user-brief">
-                    <img src="https://via.placeholder.com/50" alt="avatar" class="avatar-sm">
-                    <div class="user-brief-info">
-                        <span class="username">huylquang</span>
-                        <a href="#" class="text-muted"><i class="fas fa-pen"></i> Sửa Hồ Sơ</a>
-                    </div>
-                </div>
-                
-                <nav class="profile-menu" style="margin-left: 20px;">
-                    <div class="menu-item active">
-                        <i class="far fa-user"></i> <span class="v-label">Tài Khoản Của Tôi</span>
-                        <ul class="sub-menu">
-                            <li class="active" data-tab="tab-hoso">Hồ Sơ</li>
-                            <li data-tab="tab-nganhang">Ngân Hàng</li>
-                            <li data-tab="tab-diachi">Địa Chỉ</li>
-                            <li data-tab="tab-doimatkhau">Đổi Mật Khẩu</li>
-                        </ul>
-                    </div>
-                    <div class="menu-item" data-tab="tab-donmua">
-                        <i class="fas fa-file-alt"></i> <span class="v-label">Đơn Mua</span>
-                    </div>
-                    <div class="menu-item" data-tab="tab-voucher">
-                        <i class="fas fa-ticket-alt"></i> <span class="v-label">Kho Voucher</span>
-                    </div>
-                    <div class="menu-item" data-tab="tab-shopeexu">
-                        <i class="fas fa-coins"></i> <span class="v-label">Xu</span>
-                    </div>
-                </nav>
-            </aside>
+    <div class="container section-padding">
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <div class="user-brief">
+            <div class="avatar-sm avatar-fallback">
+              <span class="profile-avatar-initial">T</span>
+            </div>
+            <div class="user-brief-info">
+              <span class="username">Tài khoản</span>
+              <span class="text-muted profile-subtitle">Thông tin được đồng bộ từ hệ thống</span>
+            </div>
+          </div>
 
-            <main class="profile-main">
-                <div id="tab-hoso" class="tab-content active">
-                    <div class="profile-header">
-                        <h2 class="section-title-slanted">Hồ Sơ Của Tôi</h2>
-                        <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
-                    </div>
-                    <div class="profile-content">
-                        <form class="profile-form">
-                            <div class="form-group">
-                                <label class="v-label">Tên đăng nhập</label>
-                                <div class="input-static">huylquang</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="v-label">Tên</label>
-                                <input type="text" value="Lê Quang Huy" class="custom-input">
-                            </div>
-                            <div class="form-group">
-                                <label class="v-label">Email</label>
-                                <div class="input-static">hu************@gmail.com <a href="#" class="text-accent">Thay Đổi</a></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="v-label">Số điện thoại</label>
-                                <div class="input-static">*********71 <a href="#" class="text-accent">Thay Đổi</a></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="v-label">Giới tính</label>
-                                <div class="v-options">
-                                    <label><input type="radio" name="gender" checked> Nam</label>
-                                    <label><input type="radio" name="gender"> Nữ</label>
-                                    <label><input type="radio" name="gender"> Khác</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="v-label">Ngày sinh</label>
-                                <div class="date-selects">
-                                    <select class="custom-input"><option>01</option><option selected>22</option></select>
-                                    <select class="custom-input"><option>Tháng 01</option><option selected>Tháng 03</option></select>
-                                    <select class="custom-input"><option>1998</option><option selected>2000</option></select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label></label>
-                                <button type="submit" class="btn-primary">Lưu Thay Đổi</button>
-                            </div>
-                        </form>
-                        <div class="profile-avatar-upload">
-                            <div class="avatar-preview"><i class="fas fa-user"></i></div>
-                            <button class="v-btn">Chọn Ảnh</button>
-                            <p>Dung lượng tối đa 1MB. Định dạng: .JPG, .PNG</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-nganhang" class="tab-content">
-                    <div class="profile-header flex-between">
-                        <h2 class="section-title-slanted">Thẻ Tín Dụng/Ghi Nợ</h2>
-                        <button class="btn-primary">+ Thêm Thẻ Mới</button>
-                    </div>
-                    <div class="empty-state">
-                        <i class="fas fa-credit-card" style="font-size: 50px; margin-bottom: 20px;"></i>
-                        <p>Bạn chưa liên kết thẻ nào.</p>
-                    </div>
-                </div>
+          <nav class="profile-menu">
+            <div class="menu-item active" data-tab="tab-hoso">
+              <i class="far fa-user"></i>
+              <span class="v-label">Hồ sơ</span>
+            </div>
+            <div class="menu-item" data-tab="tab-donmua">
+              <i class="fas fa-file-alt"></i>
+              <span class="v-label">Đơn mua</span>
+            </div>
+            
+          </nav>
+        </aside>
 
-                <div id="tab-diachi" class="tab-content">
-                    <div class="profile-header flex-between">
-                        <h2 class="section-title-slanted">Địa Chỉ Của Tôi</h2>
-                        <button class="btn-primary">+ Thêm Địa Chỉ Mới</button>
-                    </div>
-                    <div class="address-item">
-                        <div class="address-info">
-                            <div class="flex-between">
-                                <strong>Lê Quang Huy | (+84) 377 771 771</strong>
-                                <a href="#" class="text-accent">Cập nhật</a>
-                            </div>
-                            <p class="text-muted">Yên Nghĩa, Phường Yên Nghĩa, Quận Hà Đông, Hà Nội</p>
-                            <span class="badge-outline">Mặc định</span>
-                        </div>
-                    </div>
-                </div>
+        <main class="profile-main">
+          <div id="tab-hoso" class="tab-content active">
+            <div class="profile-header">
+              <h2 class="section-title-slanted">Hồ sơ của tôi</h2>
+            </div>
 
-                <div id="tab-donmua" class="tab-content">
-                    <div class="order-tabs-container">
-                        <div class="ot-item active" data-order="all">Tất cả</div>
-                        <div class="ot-item" data-order="pending">Chờ thanh toán</div>
-                        <div class="ot-item" data-order="shipping">Vận chuyển</div>
-                        <div class="ot-item" data-order="delivering">Chờ giao hàng</div>
-                        <div class="ot-item" data-order="completed">Hoàn thành</div>
-                        <div class="ot-item" data-order="cancelled">Đã hủy</div>
-                        <div class="ot-item" data-order="refund">Trả hàng/Hoàn tiền</div>
-                    </div>
-                    <div class="order-search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm">
-                    </div>
-                    <div id="order-list-content">
-                        </div>
-                </div>
-                <div  class ="tab-content" id="tab-voucher">
-                  <div class="voucher-card">
-                      <div class="v-left">
-                          <div class="v-icon-circle"><i class="fas fa-bolt"></i></div>
-                          <span class="v-type">Giảm 15%</span>
-                      </div>
-                      <div class="v-right">
-                          <div class="v-info">
-                              <span class="v-tag">Độc quyền</span>
-                              <strong class="v-title">Mã Giảm Giá TechGadget Toàn Sàn</strong>
-                              <p class="text-muted">Đơn tối thiểu ₫500k - Tối đa ₫100k</p>
-                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 31.03.2026</div>
-                          </div>
-                          <button class="v-btn-action">Sử Dụng</button>
-                      </div>
-                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
-                  </div>
-
-                  <div class="voucher-card v-freeship">
-                      <div class="v-left">
-                          <div class="v-icon-circle"><i class="fas fa-truck"></i></div>
-                          <span class="v-type">Freeship</span>
-                      </div>
-                      <div class="v-right">
-                          <div class="v-info">
-                              <span class="v-tag">Vận chuyển</span>
-                              <strong class="v-title">Miễn Phí Vận Chuyển Toàn Quốc</strong>
-                              <p class="text-muted">Đơn tối thiểu ₫0 - Tối đa ₫25k</p>
-                              <div class="v-expiry">Sắp hết hạn: Còn 2 ngày</div>
-                          </div>
-                          <button class="v-btn-action">Sử Dụng</button>
-                      </div>
-                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
-                  </div>
-
-                  <div class="voucher-card">
-                      <div class="v-left">
-                          <div class="v-icon-circle"><i class="fas fa-gamepad"></i></div>
-                          <span class="v-type">Giảm ₫50k</span>
-                      </div>
-                      <div class="v-right">
-                          <div class="v-info">
-                              <span class="v-tag">Gaming</span>
-                              <strong class="v-title">Voucher Phụ Kiện Gaming Sidotech</strong>
-                              <p class="text-muted">Đơn tối thiểu ₫250k</p>
-                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 15.04.2026</div>
-                          </div>
-                          <button class="v-btn-action">Sử Dụng</button>
-                      </div>
-                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
-                  </div>
-
-                  <div class="voucher-card v-hoanxu">
-                      <div class="v-left">
-                          <div class="v-icon-circle"><i class="fas fa-coins"></i></div>
-                          <span class="v-type">Hoàn 10%</span>
-                      </div>
-                      <div class="v-right">
-                          <div class="v-info">
-                              <span class="v-tag">Hoàn xu</span>
-                              <strong class="v-title">Hoàn Xu Đơn Hàng Điện Tử</strong>
-                              <p class="text-muted">Hoàn tối đa 50k xu</p>
-                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 05.04.2026</div>
-                          </div>
-                          <button class="v-btn-action">Sử Dụng</button>
-                      </div>
-                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
-                  </div>
-
-                  <div class="voucher-card">
-                      <div class="v-left">
-                          <div class="v-icon-circle"><i class="fab fa-apple"></i></div>
-                          <span class="v-type">Giảm ₫200k</span>
-                      </div>
-                      <div class="v-right">
-                          <div class="v-info">
-                              <span class="v-tag">High-tech</span>
-                              <strong class="v-title">Ưu đãi bộ sưu tập Apple</strong>
-                              <p class="text-muted">Đơn tối thiểu ₫5.000k</p>
-                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: 20.04.2026</div>
-                          </div>
-                          <button class="v-btn-action">Sử Dụng</button>
-                      </div>
-                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
-                  </div>
-
-                  <div class="voucher-card">
-                      <div class="v-left">
-                          <div class="v-icon-circle"><i class="fas fa-user-plus"></i></div>
-                          <span class="v-type">Giảm ₫30k</span>
-                      </div>
-                      <div class="v-right">
-                          <div class="v-info">
-                              <span class="v-tag">Newbie</span>
-                              <strong class="v-title">Quà Tặng Thành Viên Mới</strong>
-                              <p class="text-muted">Đơn tối thiểu ₫0</p>
-                              <div class="v-expiry"><i class="far fa-clock"></i> HSD: Vô thời hạn</div>
-                          </div>
-                          <button class="v-btn-action">Sử Dụng</button>
-                      </div>
-                      <div class="v-cutout-top"></div><div class="v-cutout-bottom"></div>
-                  </div>
+            <section class="profile-summary-card">
+              <div class="profile-summary-avatar">
+                <span class="profile-avatar-initial">T</span>
               </div>
+              <div class="profile-summary-copy">
+                <h3 class="profile-display-name">Tài khoản</h3>
+                <p class="profile-email text-muted"></p>
+              </div>
+            </section>
 
-                <div id="tab-shopeexu" class="tab-content">
-                    <div class="xu-header-card">
-                        <div class="xu-balance">
-                            <img src="https://cf.shopee.vn/file/7bbf98836474df6c89ca9a6a8219194e" alt="xu">
-                            <div>
-                                <h3>200</h3>
-                                <p>Xu đang có</p>
-                            </div>
-                        </div>
-                        <button class="v-btn">Nhận thêm Xu</button>
-                    </div>
-                    <div class="xu-history">
-                        <h4 class="v-label">Lịch sử Xu</h4>
-                        <div class="xu-item">
-                            <div class="xu-info">
-                                <strong>Hoàn xu đơn hàng #240322</strong>
-                                <p class="text-muted">22-03-2026 10:00</p>
-                            </div>
-                            <span class="text-accent">+100 Xu</span>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
+            <section class="profile-details-section">
+              <div id="profileDetails" class="profile-details-grid"></div>
+              <div id="profileEmpty" class="empty-state" style="display: none">
+                <i class="fas fa-circle-info"></i>
+                <p>Hiện chưa có thêm thông tin hồ sơ để hiển thị.</p>
+              </div>
+            </section>
+          </div>
+
+          <div id="tab-donmua" class="tab-content">
+            <div class="profile-header">
+              <h2 class="section-title-slanted">Đơn mua</h2>
+              <p>Theo dõi các đơn hàng đã tạo trên tài khoản của bạn.</p>
+            </div>
+
+            <div class="order-tabs-container">
+              <div class="ot-item active" data-order="all">Tất cả</div>
+              <div class="ot-item" data-order="pending">Chờ thanh toán</div>
+              <div class="ot-item" data-order="shipping">Đang xử lý</div>
+              <div class="ot-item" data-order="completed">Hoàn thành</div>
+              <div class="ot-item" data-order="cancelled">Đã hủy</div>
+            </div>
+
+            <div class="order-search-bar">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Tìm theo mã đơn, trạng thái hoặc nội dung liên quan"
+              />
+            </div>
+
+            <div id="order-list-content"></div>
+          </div>
+        </main>
+      </div>
     </div>
 
-    <script
-      type="module"
-      src="/modules/customer/features/account/account.js"
-    ></script>
+    <script type="module" src="/modules/customer/features/account/account.js"></script>
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
   </body>

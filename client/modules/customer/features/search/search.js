@@ -38,6 +38,7 @@ async function init() {
   state.keyword = params.get("q") || "";
 
   attachEventListeners();
+  updatePricePresetState();
 
   if (!state.keyword) {
     elements.searchKeyword.textContent = "";
@@ -48,6 +49,7 @@ async function init() {
 
   elements.searchKeyword.textContent = state.keyword;
   elements.searchInput.value = state.keyword;
+  syncPriceInputs();
 
   await Promise.all([loadCategories(), loadBrands()]);
   await loadProducts();
@@ -208,7 +210,8 @@ function renderPagination(totalPages) {
 
   elements.pagination.querySelectorAll(".pagination-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      state.currentPage = Number.parseInt(e.currentTarget.dataset.page, 10) || 0;
+      state.currentPage =
+        Number.parseInt(e.currentTarget.dataset.page, 10) || 0;
       loadProducts();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -229,14 +232,16 @@ async function loadCategories() {
       )
       .join("");
 
-    elements.categoryList.querySelectorAll(".category-filter").forEach((checkbox) => {
-      checkbox.addEventListener("change", (e) => {
-        state.categoryId = e.target.checked ? e.target.value : null;
-        state.currentPage = 0;
-        enforceSingleChecked(".category-filter", e.target);
-        loadProducts();
+    elements.categoryList
+      .querySelectorAll(".category-filter")
+      .forEach((checkbox) => {
+        checkbox.addEventListener("change", (e) => {
+          state.categoryId = e.target.checked ? e.target.value : null;
+          state.currentPage = 0;
+          enforceSingleChecked(".category-filter", e.target);
+          loadProducts();
+        });
       });
-    });
   } catch (error) {
     console.error("Error loading categories:", error);
   }
@@ -249,8 +254,8 @@ async function loadBrands() {
       .map(
         (brand) => `
         <label class="checkbox-label">
-          <input type="checkbox" value="${brand.id}" class="brand-filter" />
-          ${escapeHtml(brand.name)}
+          <input type="checkbox" value="${brand.brandId}" class="brand-filter" />
+          ${escapeHtml(brand.brandName)}
         </label>
       `,
       )
@@ -290,12 +295,18 @@ function attachEventListeners() {
 
   elements.minPrice?.addEventListener("change", (e) => {
     state.minPrice = e.target.value ? Number(e.target.value) : null;
+    normalizePriceRange();
+    syncPriceInputs();
+    updatePricePresetState();
     state.currentPage = 0;
     loadProducts();
   });
 
   elements.maxPrice?.addEventListener("change", (e) => {
     state.maxPrice = e.target.value ? Number(e.target.value) : null;
+    normalizePriceRange();
+    syncPriceInputs();
+    updatePricePresetState();
     state.currentPage = 0;
     loadProducts();
   });
@@ -304,10 +315,10 @@ function attachEventListeners() {
     btn.addEventListener("click", (e) => {
       const min = Number(e.currentTarget.dataset.min);
       const max = Number(e.currentTarget.dataset.max);
-      elements.minPrice.value = String(min);
-      elements.maxPrice.value = String(max);
       state.minPrice = min;
       state.maxPrice = max;
+      syncPriceInputs();
+      updatePricePresetState();
       state.currentPage = 0;
       loadProducts();
     });
@@ -329,13 +340,42 @@ function attachEventListeners() {
     state.brandId = null;
     state.ram = null;
     state.currentPage = 0;
-    elements.minPrice.value = "";
-    elements.maxPrice.value = "";
+    syncPriceInputs();
+    updatePricePresetState();
 
     document.querySelectorAll(".checkbox-label input").forEach((input) => {
       input.checked = false;
     });
     loadProducts();
+  });
+}
+
+function syncPriceInputs() {
+  if (elements.minPrice) {
+    elements.minPrice.value =
+      state.minPrice != null ? String(state.minPrice) : "";
+  }
+  if (elements.maxPrice) {
+    elements.maxPrice.value =
+      state.maxPrice != null ? String(state.maxPrice) : "";
+  }
+}
+
+function normalizePriceRange() {
+  if (state.minPrice == null || state.maxPrice == null) return;
+  if (state.minPrice <= state.maxPrice) return;
+
+  const nextMin = state.maxPrice;
+  state.maxPrice = state.minPrice;
+  state.minPrice = nextMin;
+}
+
+function updatePricePresetState() {
+  document.querySelectorAll(".price-preset").forEach((btn) => {
+    const min = Number(btn.dataset.min);
+    const max = Number(btn.dataset.max);
+    const isActive = state.minPrice === min && state.maxPrice === max;
+    btn.classList.toggle("active", isActive);
   });
 }
 
