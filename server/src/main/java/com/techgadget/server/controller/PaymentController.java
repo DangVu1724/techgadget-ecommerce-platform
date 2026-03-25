@@ -22,23 +22,23 @@ public class PaymentController {
     private final PayOS payOS;
     private final PaymentService paymentService;
 
-    @PostMapping(path = "/payos/webhook")
-    public ResponseEntity<ApiResponse<WebhookData>> payosTransferHandler(@RequestBody Object body)
+    @PostMapping(path = "/qr/webhook")
+    public ResponseEntity<ApiResponse<WebhookData>> qrTransferHandler(@RequestBody Object body)
             throws JsonProcessingException, IllegalArgumentException {
         try {
             WebhookData data = payOS.webhooks().verify(body);
-            paymentService.syncPayOSPayment(data.getOrderCode().toString());
-            System.out.println("Thanh toán thành công: " + data);
+            paymentService.syncQrPayment(data.getOrderCode().toString());
+            System.out.println("QR payment completed: " + data);
             return ResponseEntity.ok(ApiResponse.success("Webhook delivered", data));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage(), null));
         }
     }
 
-    @GetMapping("/payos/{transactionId}")
-    public ResponseEntity<ApiResponse<PaymentResponse>> getPayOSStatus(@PathVariable String transactionId) {
+    @GetMapping("/qr/{transactionId}")
+    public ResponseEntity<ApiResponse<PaymentResponse>> getQrStatus(@PathVariable String transactionId) {
         return ResponseEntity.ok(
-                ApiResponse.success("PayOS payment status retrieved successfully.", paymentService.syncPayOSPayment(transactionId))
+                ApiResponse.success("QR payment status retrieved successfully.", paymentService.syncQrPayment(transactionId))
         );
     }
 }

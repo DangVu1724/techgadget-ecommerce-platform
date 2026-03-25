@@ -111,8 +111,8 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("Cart is empty.");
         }
 
-        if (request.getPaymentMethod() == PaymentMethod.PAYOS) {
-            return paymentService.createPayOSPayment(buildCartPendingPayload(request, user, cart));
+        if (request.getPaymentMethod() == PaymentMethod.QR) {
+            return paymentService.createQrPayment(buildCartPendingPayload(request, user, cart));
         }
 
         Order order = buildBaseOrder(request);
@@ -152,8 +152,8 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("Order items are required.");
         }
 
-        if (request.getPaymentMethod() == PaymentMethod.PAYOS) {
-            return paymentService.createPayOSPayment(buildBuyNowPendingPayload(request, user));
+        if (request.getPaymentMethod() == PaymentMethod.QR) {
+            return paymentService.createQrPayment(buildBuyNowPendingPayload(request, user));
         }
 
         Order order = buildBaseOrder(request);
@@ -223,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
         PendingOrderPayload payload = new PendingOrderPayload();
         payload.setUserId(userId);
         payload.setCheckoutType(checkoutType);
-        payload.setPaymentMethod(PaymentMethod.PAYOS);
+        payload.setPaymentMethod(PaymentMethod.QR);
         payload.setShippingAddress(request.getShippingAddress());
         payload.setPhoneNumber(request.getPhoneNumber());
         payload.setOrderEmail(request.getOrderEmail());
