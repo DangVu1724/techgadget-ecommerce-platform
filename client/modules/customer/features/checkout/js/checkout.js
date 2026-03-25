@@ -6,7 +6,7 @@ import { showLoginModal } from "/modules/customer/components/login-modal/login-m
 import { showToast } from "/shared/ui/toast.js";
 
 let cartData = null;
-const PENDING_PAYOS_KEY = "pendingPayOSTransactionId";
+const PENDING_QR_KEY = "pendingQrTransactionId";
 const BUY_NOW_KEY = "buyNowCheckoutItem";
 const checkoutMode =
   new URLSearchParams(window.location.search).get("mode") === "buy-now" ? "buy-now" : "cart";
@@ -159,8 +159,8 @@ const handleCheckoutSubmit = async (event) => {
     })),
   };
 
-  if (orderRequest.paymentMethod === "PAYOS") {
-    await handlePayOSPayment(orderRequest);
+  if (orderRequest.paymentMethod === "QR") {
+    await handleQrPayment(orderRequest);
     return;
   }
 
@@ -197,7 +197,7 @@ const submitCheckout = async (orderRequest) => {
   }
 };
 
-const handlePayOSPayment = async (orderRequest) => {
+const handleQrPayment = async (orderRequest) => {
   const submitBtn = document.querySelector(".btn-checkout-submit");
   const originalText = submitBtn?.textContent || "PLACE ORDER";
 
@@ -213,13 +213,13 @@ const handlePayOSPayment = async (orderRequest) => {
         : await checkoutAPI.checkoutFromCart(orderRequest);
 
     if (!payment?.paymentUrl || !payment?.transactionId) {
-      throw new Error("Unable to initialize PayOS payment.");
+      throw new Error("Unable to initialize QR payment.");
     }
 
-    localStorage.setItem(PENDING_PAYOS_KEY, payment.transactionId);
+    localStorage.setItem(PENDING_QR_KEY, payment.transactionId);
     window.location.href = payment.paymentUrl;
   } catch (error) {
-    console.error("PayOS failed:", error);
+    console.error("QR payment failed:", error);
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;

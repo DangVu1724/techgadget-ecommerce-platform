@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public PaymentResponse createPayOSPayment(PendingOrderPayload payload) {
+    public PaymentResponse createQrPayment(PendingOrderPayload payload) {
         PendingPayment pendingPayment = new PendingPayment();
         pendingPayment.setOrderCode(generateOrderCode());
         pendingPayment.setTransactionId(UUID.randomUUID().toString());
@@ -97,7 +97,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public PaymentResponse syncPayOSPayment(String transactionId) {
+    public PaymentResponse syncQrPayment(String transactionId) {
         PendingPayment pendingPayment = findPendingPayment(transactionId);
 
         if (pendingPayment.getStatus() == PendingPaymentStatus.COMPLETED) {
@@ -146,7 +146,7 @@ public class PaymentServiceImpl implements PaymentService {
         order.setOrderEmail(payload.getOrderEmail());
         order.setOrderStatus(OrderStatus.CONFIRMED);
         order.setOrderCode(pendingPayment.getOrderCode());
-        order.setPaymentMethod(PaymentMethod.PAYOS);
+        order.setPaymentMethod(PaymentMethod.QR);
         order.setPaymentStatus(PaymentStatus.PAID);
         order.setTransactionId(pendingPayment.getTransactionId());
         order.setAmount(payload.getAmount());

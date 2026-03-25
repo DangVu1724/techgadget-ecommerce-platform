@@ -15,6 +15,6 @@ public class OrderRequest {
     @NotBlank
     private String orderEmail;
 
-    private PaymentMethod paymentMethod; // COD | PAYOS
+    private PaymentMethod paymentMethod; // COD | QR
     private List<OrderItemRequest> items;
 }

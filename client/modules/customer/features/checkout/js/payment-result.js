@@ -1,7 +1,7 @@
 import { checkoutAPI } from "/modules/customer/core/api/checkout.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
-const PENDING_PAYOS_KEY = "pendingPayOSTransactionId";
+const PENDING_QR_KEY = "pendingQrTransactionId";
 const BUY_NOW_KEY = "buyNowCheckoutItem";
 const PAGE_MODE = document.body.dataset.paymentPage || "success";
 
@@ -23,7 +23,7 @@ const setState = ({ tone, badge, title, message, transactionId, paymentStatus, o
 };
 
 const clearPendingPayment = () => {
-  localStorage.removeItem(PENDING_PAYOS_KEY);
+  localStorage.removeItem(PENDING_QR_KEY);
   sessionStorage.removeItem(BUY_NOW_KEY);
   sessionStorage.removeItem("cart");
   window.dispatchEvent(new Event("cartUpdated", { bubbles: true }));
@@ -35,7 +35,7 @@ const syncPayment = async (transactionId) => {
   const attempts = PAGE_MODE === "success" ? 4 : 1;
 
   for (let attempt = 0; attempt < attempts; attempt += 1) {
-    const payment = await checkoutAPI.checkPayOSStatus(transactionId);
+    const payment = await checkoutAPI.checkQrStatus(transactionId);
 
     if (payment?.paymentStatus === "PAID" && payment?.orderId) {
       clearPendingPayment();
@@ -53,7 +53,7 @@ const syncPayment = async (transactionId) => {
     }
 
     if (["CANCELLED", "FAILED", "EXPIRED"].includes(payment?.paymentStatus)) {
-      localStorage.removeItem(PENDING_PAYOS_KEY);
+      localStorage.removeItem(PENDING_QR_KEY);
       setState({
         tone: "failed",
         badge: "!",
@@ -75,7 +75,7 @@ const syncPayment = async (transactionId) => {
     tone: "pending",
     badge: "...",
     title: "Payment is still processing",
-    message: "We have not received a final result from PayOS yet. Please refresh this page in a moment.",
+    message: "We have not received a final QR payment result yet. Please refresh this page in a moment.",
     transactionId,
     paymentStatus: "PENDING",
     orderId: "-",
@@ -83,14 +83,14 @@ const syncPayment = async (transactionId) => {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const transactionId = localStorage.getItem(PENDING_PAYOS_KEY);
+  const transactionId = localStorage.getItem(PENDING_QR_KEY);
 
   if (!transactionId) {
     setState({
       tone: "failed",
       badge: "!",
       title: "Missing payment session",
-      message: "No PayOS transaction was found in this browser session.",
+      message: "No QR payment transaction was found in this browser session.",
       transactionId: "-",
       paymentStatus: "UNKNOWN",
       orderId: "-",
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       title: PAGE_MODE === "cancel" ? "Checking cancelled payment" : "Checking payment",
       message:
         PAGE_MODE === "cancel"
-          ? "We are checking whether the payment was cancelled or completed before leaving PayOS."
+          ? "We are checking whether the payment was cancelled or completed before leaving the QR payment page."
           : "We are verifying your payment and creating your order.",
       transactionId,
       paymentStatus: "PENDING",
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await syncPayment(transactionId);
   } catch (error) {
-    console.error("Failed to sync PayOS payment:", error);
+    console.error("Failed to sync QR payment:", error);
     setState({
       tone: "failed",
       badge: "!",

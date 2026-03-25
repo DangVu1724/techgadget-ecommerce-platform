@@ -19,14 +19,14 @@ export const checkoutAPI = {
     return request(`/orders/${orderId}`);
   },
 
-  createPayOSPayment(paymentData) {
-    return request("/payments/payos", {
+  createQrPayment(paymentData) {
+    return request("/payments/qr", {
       method: "POST",
       body: JSON.stringify(paymentData),
     });
   },
 
-  checkPayOSStatus(transactionId) {
-    return request(`/payments/payos/${transactionId}`);
+  checkQrStatus(transactionId) {
+    return request(`/payments/qr/${transactionId}`);
   },
 };
