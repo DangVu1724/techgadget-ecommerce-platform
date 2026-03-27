@@ -26,8 +26,26 @@ export const productApi = {
       query.append("maxPrice", finalParams.maxPrice);
     if (finalParams.ram) query.append("ram", finalParams.ram);
     if (finalParams.storage) query.append("storage", finalParams.storage);
+    if (
+      finalParams.attributeFilters &&
+      Object.keys(finalParams.attributeFilters).length
+    ) {
+      query.append(
+        "attributeFilters",
+        JSON.stringify(finalParams.attributeFilters),
+      );
+    }
 
     return request(`/products?${query.toString()}`);
+  },
+
+  getFilters({ categoryId, brandId } = {}) {
+    const query = new URLSearchParams();
+
+    if (categoryId) query.append("categoryId", categoryId);
+    if (brandId) query.append("brandId", brandId);
+
+    return request(`/products/filters?${query.toString()}`);
   },
 
   search(keyword, params = {}) {

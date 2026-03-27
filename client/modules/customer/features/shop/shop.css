@@ -358,9 +358,18 @@ body {
   gap: 20px;
 }
 
+#dynamicFilterSections {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
 .filter-section {
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 15px;
+  border: 1px solid #f1e7e2;
+  border-radius: 14px;
+  padding: 14px;
+  background: #fffaf7;
 }
 
 .filter-section h4 {
@@ -385,7 +394,7 @@ body {
 }
 
 .filter-content {
-  max-height: 200px;
+  max-height: 220px;
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
@@ -454,8 +463,20 @@ body {
   gap: 8px;
   margin-bottom: 8px;
   font-size: 13px;
-  color: #555;
+  color: #444;
   cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #eee4de;
+  background: #fff;
+  transition: border-color 0.2s ease, background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.checkbox-label:hover {
+  border-color: #ffb59d;
+  background: #fff6f1;
+  transform: translateY(-1px);
 }
 
 .star-rating {
@@ -467,6 +488,23 @@ body {
   height: 16px;
   cursor: pointer;
   accent-color: #ff6f42;
+}
+
+.dynamic-filter-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.dynamic-filter-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dynamic-filter-list::-webkit-scrollbar-thumb {
+  background: #f3c3b1;
+  border-radius: 999px;
 }
 
 /* Filter Actions */

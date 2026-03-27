@@ -1,6 +1,9 @@
 package com.techgadget.server.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techgadget.server.model.dto.ApiResponse;
+import com.techgadget.server.model.dto.product.ProductAttributeFilterResponse;
 import com.techgadget.server.model.dto.product.ProductCreateRequest;
 import com.techgadget.server.model.dto.product.ProductResponse;
 import com.techgadget.server.model.dto.product.ProductSummaryResponse;
@@ -24,29 +27,55 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 @CrossOrigin
 public class ProductController {
+    private static final TypeReference<Map<String, List<Object>>> ATTRIBUTE_FILTERS_TYPE = new TypeReference<>() {};
+
     private final ProductService productService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductSummaryResponse>>> filterProducts(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Long brandId,   
+            @RequestParam(required = false) Long brandId,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String attributeFilters,
             @RequestParam(required = false) String ram,
             @RequestParam(required = false) String storage,
             Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse.success(
                 "Products retrieved successfully.",
-                productService.filterProducts(pageable, keyword, brandId, categoryId, minPrice, maxPrice, ram, storage)
+                productService.filterProducts(
+                        pageable,
+                        keyword,
+                        brandId,
+                        categoryId,
+                        minPrice,
+                        maxPrice,
+                        parseAttributeFilters(attributeFilters, ram, storage)
+                )
+        ));
+    }
+
+    @GetMapping("/filters")
+    public ResponseEntity<ApiResponse<List<ProductAttributeFilterResponse>>> getProductFilters(
+            @RequestParam Long categoryId,
+            @RequestParam(required = false) Long brandId
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+                "Product filters retrieved successfully.",
+                productService.getAvailableFilters(categoryId, brandId)
         ));
     }
 
@@ -103,5 +132,50 @@ public class ProductController {
     @GetMapping("/newest")
     public ResponseEntity<ApiResponse<List<TopProductResponse>>> getNewest(@RequestParam(defaultValue = "5") int limit) {
         return ResponseEntity.ok(ApiResponse.success("Newest products retrieved successfully.", productService.getNewestProducts(limit)));
+    }
+
+    private Map<String, List<String>> parseAttributeFilters(String attributeFilters, String ram, String storage) {
+        Map<String, List<String>> result = new LinkedHashMap<>();
+
+        if (attributeFilters != null && !attributeFilters.isBlank()) {
+            try {
+                Map<String, List<Object>> parsed = objectMapper.readValue(attributeFilters, ATTRIBUTE_FILTERS_TYPE);
+                parsed.forEach((key, values) -> result.put(key, values == null
+                        ? List.of()
+                        : values.stream()
+                        .map(value -> value == null ? null : String.valueOf(value).trim())
+                        .filter(value -> value != null && !value.isBlank())
+                        .toList()));
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Invalid attributeFilters payload.", ex);
+            }
+        }
+
+        mergeLegacyFilter(result, "ram", ram);
+        mergeLegacyFilter(result, "storage", storage);
+
+        return result.entrySet().stream()
+                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
+                .collect(LinkedHashMap::new,
+                        (map, entry) -> map.put(entry.getKey(), entry.getValue()),
+                        LinkedHashMap::putAll);
+    }
+
+    private void mergeLegacyFilter(Map<String, List<String>> result, String key, String rawValue) {
+        if (rawValue == null || rawValue.isBlank()) {
+            return;
+        }
+
+        List<String> values = new ArrayList<>();
+        for (String token : rawValue.split(",")) {
+            String trimmed = token == null ? null : token.trim();
+            if (trimmed != null && !trimmed.isBlank()) {
+                values.add(trimmed);
+            }
+        }
+
+        if (!values.isEmpty()) {
+            result.putIfAbsent(key, values);
+        }
     }
 }

@@ -179,7 +179,7 @@ class OrderDetailManager {
       customerName: this.orderDetail.customerName || "Khách hàng",
       customerPhone: this.orderDetail.phoneNumber || "Chưa cập nhật",
       customerAddress: this.orderDetail.shippingAddress || "Chưa cập nhật",
-      customerEmail: this.orderDetail.customerEmail || "Chưa cập nhật",
+      customerEmail: this.orderDetail.orderEmail || "Chưa cập nhật",
     };
 
     Object.entries(elements).forEach(([id, value]) => {
