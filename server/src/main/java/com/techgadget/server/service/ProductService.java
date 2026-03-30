@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -27,6 +28,15 @@ public interface ProductService {
 
      List<TopProductResponse> getNewestProducts(int limit);
 
+     List<ProductSummaryResponse> getRelatedProductsByPriority(
+             Long categoryId,
+             Long brandId,
+             Long currentProductId,
+             Integer totalStock,
+             LocalDateTime createdAt
+     );
+
+     List<ProductSummaryResponse> getRelatedProductsForProduct(Long productId, int limit);
 
 
 }

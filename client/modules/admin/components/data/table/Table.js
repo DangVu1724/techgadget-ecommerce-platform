@@ -28,7 +28,7 @@ export class Table {
       <div class="table-container">
         <div class="table-toolbar">
           <div class="search-box">
-            <i class="search-icon">🔍</i>
+            <i class="search-icon">&#128269;</i>
             <input type="text" 
                    id="${this.container.id}-search" 
                    placeholder="Search ${this.entityName.toLowerCase()}..." 
@@ -88,7 +88,6 @@ export class Table {
         search: this.searchTerm,
       });
 
-      // Handle both paginated and non-paginated responses
       if (response.content) {
         this.data = response.content;
         this.totalPages = response.totalPages || 1;
@@ -131,17 +130,14 @@ export class Table {
       item.id || item.brandId || item.categoryId || item.attributeId,
     );
 
-    // Add data cells
     this.columns.forEach((col) => {
       const cell = document.createElement("td");
       let value = this.getNestedValue(item, col.key);
 
-      // Apply formatter if exists
       if (this.formatters[col.key]) {
         value = this.formatters[col.key](value, item);
       }
 
-      // Apply custom class if specified
       if (col.className) {
         cell.className = col.className;
       }
@@ -150,10 +146,7 @@ export class Table {
       row.appendChild(cell);
     });
 
-    // Add action buttons
     row.appendChild(this.createActionCell(item));
-
-    // Add animation delay based on index
     row.style.animation = `fadeIn 0.3s ease ${index * 0.05}s both`;
 
     return row;
@@ -167,25 +160,46 @@ export class Table {
     actionsContainer.className = "action-buttons";
 
     if (this.actions.view) {
-      const viewBtn = this.createActionButton("view", "👁️", "View", () =>
+      const viewBtn = this.createActionButton("view", "&#128065;", "View", () =>
         this.actions.view(item),
       );
       actionsContainer.appendChild(viewBtn);
     }
 
     if (this.actions.edit) {
-      const editBtn = this.createActionButton("edit", "✏️", "Edit", () =>
+      const editBtn = this.createActionButton("edit", "&#9998;", "Edit", () =>
         this.actions.edit(item),
       );
       actionsContainer.appendChild(editBtn);
     }
 
     if (this.actions.delete) {
-      const deleteBtn = this.createActionButton("delete", "🗑️", "Delete", () =>
+      const deleteBtn = this.createActionButton("delete", "&#128465;", "Delete", () =>
         this.actions.delete(item),
       );
       actionsContainer.appendChild(deleteBtn);
     }
+
+    const customActions = Array.isArray(this.actions.custom)
+      ? this.actions.custom
+      : [];
+
+    customActions.forEach((action) => {
+      if (!action || typeof action.onClick !== "function") return;
+
+      const type = action.type || "custom";
+      const icon = action.icon || "?";
+      const title = action.title || "Action";
+      const button = this.createActionButton(type, icon, title, () =>
+        action.onClick(item),
+      );
+
+      if (action.className) {
+        button.classList.add(action.className);
+      }
+
+      actionsContainer.appendChild(button);
+    });
 
     cell.appendChild(actionsContainer);
     return cell;
@@ -231,7 +245,7 @@ export class Table {
     this.tableBody.innerHTML = `
       <tr>
         <td colspan="${this.columns.length + 1}" class="no-data">
-          <div class="no-data-icon">📭</div>
+          <div class="no-data-icon">&#128237;</div>
           <h3>No ${this.entityName.toLowerCase()} found</h3>
           <p>Click the "Add ${this.entityName}" button to create your first ${this.entityName.toLowerCase()}.</p>
         </td>
@@ -243,7 +257,7 @@ export class Table {
     this.tableBody.innerHTML = `
       <tr>
         <td colspan="${this.columns.length + 1}" class="error">
-          <div class="error-icon">⚠️</div>
+          <div class="error-icon">&#9888;</div>
           <h3>Failed to load data</h3>
           <p>Please try again or contact support if the problem persists.</p>
           <button class="btn btn-secondary retry-btn" onclick="location.reload()">
@@ -275,14 +289,12 @@ export class Table {
     const pagination = document.createElement("div");
     pagination.className = "pagination-buttons";
 
-    // Previous button
     if (this.currentPage > 0) {
       pagination.appendChild(
-        this.createPageButton("‹", this.currentPage - 1, "prev"),
+        this.createPageButton("<", this.currentPage - 1, "prev"),
       );
     }
 
-    // Page numbers
     const pages = this.getVisiblePages();
 
     if (pages[0] > 0) {
@@ -305,10 +317,9 @@ export class Table {
       );
     }
 
-    // Next button
     if (this.currentPage < this.totalPages - 1) {
       pagination.appendChild(
-        this.createPageButton("›", this.currentPage + 1, "next"),
+        this.createPageButton(">", this.currentPage + 1, "next"),
       );
     }
 
@@ -350,7 +361,6 @@ export class Table {
   }
 
   setupEventListeners() {
-    // Search input with debounce
     const searchInput = document.getElementById(`${this.container.id}-search`);
     if (searchInput) {
       let timeout;
@@ -363,7 +373,6 @@ export class Table {
       });
     }
 
-    // Add button
     const addBtn = document.getElementById(`${this.container.id}-add`);
     if (addBtn && this.actions.add) {
       addBtn.onclick = () => this.actions.add();

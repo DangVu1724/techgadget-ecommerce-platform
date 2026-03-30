@@ -209,6 +209,50 @@ public class ProductServiceImpl implements ProductService {
         return variations.stream().distinct().toList();
     }
 
+    @Override
+    public List<ProductSummaryResponse> getRelatedProductsByPriority(
+            Long categoryId,
+            Long brandId,
+            Long currentProductId,
+            Integer totalStock,
+            java.time.LocalDateTime createdAt
+    ) {
+        if (currentProductId == null) {
+            throw new NotFoundException("Current product id is required.");
+        }
+
+        // We rely on DB aggregation to enforce stock > 0 and ordering by createdAt.
+        // totalStock/createdAt inputs are not used for filtering; they are derived from DB state.
+        Pageable pageable = PageRequest.of(0, 5);
+        return productRepository.findRelatedProductsByPriority(
+                currentProductId,
+                categoryId,
+                brandId,
+                pageable
+        );
+    }
+
+    @Override
+    public List<ProductSummaryResponse> getRelatedProductsForProduct(Long productId, int limit) {
+        if (productId == null) {
+            throw new NotFoundException("Product id is required.");
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found with id: " + productId));
+
+        Long categoryId = product.getCategory() != null ? product.getCategory().getId() : null;
+        Long brandId = product.getBrand() != null ? product.getBrand().getBrandId() : null;
+        int safeLimit = limit > 0 ? Math.min(limit, 5) : 5;
+
+        return productRepository.findRelatedProductsByPriority(
+                productId,
+                categoryId,
+                brandId,
+                PageRequest.of(0, safeLimit)
+        );
+    }
+
     private ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
