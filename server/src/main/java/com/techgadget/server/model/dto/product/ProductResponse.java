@@ -30,4 +30,5 @@ public class ProductResponse {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private Integer totalStock;
+
 }

@@ -25,6 +25,36 @@ let variantGroups = null;
 let selectedVariant = null;
 const BUY_NOW_KEY = "buyNowCheckoutItem";
 
+const renderRelatedProducts = (products = []) => {
+  const container = document.getElementById("relatedProductsGrid");
+  if (!container) return;
+
+  const relatedItems = products.slice(0, 5);
+  if (!relatedItems.length) {
+    container.innerHTML = '<p class="related-empty">No related products available.</p>';
+    return;
+  }
+
+  container.innerHTML = relatedItems
+    .map(
+      (item) => `
+      <a class="product-card-link" href="/products/${item.id}">
+        <article class="product-card-simple">
+          <div class="p-img-box">
+            <img
+              src="${item.image || "/modules/customer/assets/images/macbook.png"}"
+              alt="${item.name || "Related product"}"
+            />
+          </div>
+          <h4>${item.name || "Unnamed product"}</h4>
+          <p class="p-price">${formatPrice(item.minPrice || 0)}</p>
+        </article>
+      </a>
+    `,
+    )
+    .join("");
+};
+
 const loadProductFromDb = async () => {
   try {
     // Extract product ID from URL path (/products/:id) or query string (?id=123)
@@ -55,6 +85,13 @@ const loadProductFromDb = async () => {
     setText("#descriptionText", product.description || "No description available.");
     setText("#productCategory", product.category?.name || "Unknown");
     setText("#productStars", "★★★★★");
+    try {
+      const related = await productApi.getRelated(product.id, 5);
+      renderRelatedProducts(related || []);
+    } catch (error) {
+      console.error("Failed to load related products:", error);
+      renderRelatedProducts(product.relatedProducts || []);
+    }
 
     const images = product.images?.length
       ? product.images

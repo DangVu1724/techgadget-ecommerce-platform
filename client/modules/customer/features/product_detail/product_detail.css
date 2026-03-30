@@ -683,6 +683,17 @@ body {
     margin-top: 30px;
 }
 
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.related-empty {
+    grid-column: 1 / -1;
+    color: #666;
+    font-size: 14px;
+}
+
 .product-card-simple { 
     text-align: center; 
     transition: all 0.3s; 
