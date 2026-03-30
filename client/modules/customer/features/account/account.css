@@ -86,7 +86,7 @@ body {
 .form-group label.v-label {
     width: 140px;
     text-align: right;
-    margin-right: 25px;
+    margin-right: 40px;
     font-size: 13px;
     color: #bbb;
     text-transform: uppercase;
@@ -533,3 +533,133 @@ body {
 /* Nút bấm chuẩn style Shopee */
 .btn-main { background: #EE4D2D; color: #fff; border: none; padding: 10px 25px; border-radius: 2px; cursor: pointer; }
 .btn-sub { background: transparent; color: #ccc; border: 1px solid #444; padding: 10px 25px; border-radius: 2px; cursor: pointer; }
+
+/* --- PHẦN HỒ SƠ (TAB-HOSO) --- */
+
+/* Tiêu đề chính có hiệu ứng gạch chân cam */
+.section-title-slanted {
+    color: #ffffff !important;
+    font-size: 24px;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.section-title-slanted::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* Card tóm tắt (Avatar & Tên) */
+.profile-summary-card {
+    background: linear-gradient(135deg, #1e1e1e 0%, #121212 100%) !important;
+    border: 1px solid #333;
+    padding: 25px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.profile-summary-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+}
+
+/* Avatar tròn xoay */
+.profile-summary-avatar {
+    width: 80px;
+    height: 80px;
+    background: #252525 !important;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: var(--accent);
+    font-weight: bold;
+    transition: 0.5s ease;
+}
+
+.profile-summary-card:hover .profile-summary-avatar {
+    box-shadow: 0 0 20px var(--accent);
+    transform: rotate(360deg);
+}
+
+.profile-display-name {
+    color: #ffffff !important;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+/* Grid chi tiết thông tin */
+.profile-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Chia 2 cột */
+    gap: 20px;
+}
+
+/* Từng ô thông tin (Họ tên, Email...) */
+.profile-detail-card {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hiệu ứng trượt và đổi màu khi hover */
+.profile-detail-card:hover {
+    background: #222 !important;
+    border-color: var(--accent) !important;
+    padding-left: 30px; /* Đẩy nội dung sang phải */
+}
+
+/* Thanh chỉ thị màu cam khi hover */
+.profile-detail-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.profile-detail-card:hover::before {
+    width: 4px;
+}
+
+.profile-detail-label {
+    color: #888 !important; /* Label màu xám cho chuyên nghiệp */
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.profile-detail-value {
+    color: #ffffff !important; /* Giá trị màu trắng nổi bật */
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Responsive cho điện thoại */
+@media (max-width: 768px) {
+    .profile-details-grid {
+        grid-template-columns: 1fr;
+    }
+}

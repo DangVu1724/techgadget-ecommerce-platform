@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductSummaryResponse> filterProducts(
             Pageable pageable,
+            String keyword,
             Long brandId,
             Long categoryId,
             BigDecimal minPrice,
@@ -59,7 +61,30 @@ public class ProductServiceImpl implements ProductService {
             String ram,
             String storage
     ) {
-        return productRepository.filterProducts(pageable, brandId, categoryId, minPrice, maxPrice, ram, storage);
+        // Apply smart search corrections
+        String smartKeyword = correctSearchKeyword(keyword);
+        
+        // Try exact match first
+        Page<ProductSummaryResponse> results = productRepository.filterProducts(
+            pageable, smartKeyword, brandId, categoryId, minPrice, maxPrice, ram, storage);
+        
+        // If no results and keyword has typos, try fuzzy variations
+        if (results.isEmpty() && keyword != null && keyword.length() >= 3) {
+            List<String> variations = generateFuzzyVariations(smartKeyword);
+            
+            for (String variation : variations) {
+                if (!variation.equals(smartKeyword)) {
+                    Page<ProductSummaryResponse> fuzzyResults = productRepository.filterProducts(
+                        pageable, variation, brandId, categoryId, minPrice, maxPrice, ram, storage);
+                    
+                    if (!fuzzyResults.isEmpty()) {
+                        return fuzzyResults;
+                    }
+                }
+            }
+        }
+        
+        return results;
     }
 
     @Override
@@ -132,6 +157,56 @@ public class ProductServiceImpl implements ProductService {
                         0L
                 ))
                 .toList();
+    }
+    // Smart search algorithm - allows up to 2 character differences
+    private String correctSearchKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) return null;
+        
+        String normalized = keyword.toLowerCase().trim();
+        
+        // Quick common typo corrections for performance
+        normalized = applyQuickCorrections(normalized);
+        
+        return normalized;
+    }
+    
+    private String applyQuickCorrections(String keyword) {
+        // Most common typos for performance optimization
+        return keyword.replace("samung", "samsung")
+                      .replace("samsun", "samsung")
+                      .replace("ipone", "iphone")
+                      .replace("ihone", "iphone")
+                      .replace("macbok", "macbook");
+    }
+    
+    // Generate fuzzy search variations (missing/extra characters)
+    private List<String> generateFuzzyVariations(String keyword) {
+        List<String> variations = new ArrayList<>();
+        variations.add(keyword); // Original
+        
+        if (keyword.length() >= 3) {
+            // Remove 1 character at different positions
+            for (int i = 0; i < keyword.length(); i++) {
+                String removed = keyword.substring(0, i) + keyword.substring(i + 1);
+                if (removed.length() >= 2) {
+                    variations.add(removed);
+                }
+            }
+            
+            // Remove 2 characters (combinations)
+            for (int i = 0; i < keyword.length() - 1; i++) {
+                for (int j = i + 1; j < keyword.length(); j++) {
+                    String removed = keyword.substring(0, i) + 
+                                   keyword.substring(i + 1, j) + 
+                                   keyword.substring(j + 1);
+                    if (removed.length() >= 2) {
+                        variations.add(removed);
+                    }
+                }
+            }
+        }
+        
+        return variations.stream().distinct().toList();
     }
 
     private ProductResponse mapToProductResponse(Product product) {

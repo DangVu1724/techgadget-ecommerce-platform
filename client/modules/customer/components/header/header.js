@@ -48,22 +48,38 @@ if (searchInput) {
 // Hàm load suggestions
 async function loadSuggestions(keyword) {
   try {
-    const response = await productApi.searchSuggestions(keyword);
-    const products = response.content || response;
-    const normalizedKeyword = normalizeText(keyword);
-    const matchedProducts = (products || []).filter((product) =>
-      normalizeText(product?.name).includes(normalizedKeyword)
-    );
+    // Sử dụng smart search API với fuzzy matching
+    const response = await productApi.searchSuggestions(keyword, 5);
+    const products = response?.content || [];
 
-    if (!matchedProducts.length) {
+    if (!products.length) {
       suggestionsDiv.innerHTML =
         '<div class="no-suggestions">Không tìm thấy sản phẩm</div>';
       suggestionsDiv.classList.add("active");
       return;
     }
 
-    // Hiển thị top 5 suggestions
-    const html = matchedProducts
+    // Kiểm tra xem có typo correction không
+    const searchUrl = `/api/products?keyword=${encodeURIComponent(keyword)}`;
+    const isTypoCorrected = products.some(product => 
+      product.name.toLowerCase().includes(keyword.toLowerCase()) === false &&
+      (product.name.toLowerCase().includes('iphone') && keyword.toLowerCase().includes('ihone')) ||
+      (product.name.toLowerCase().includes('samsung') && keyword.toLowerCase().includes('samung')) ||
+      (product.name.toLowerCase().includes('macbook') && keyword.toLowerCase().includes('macbok'))
+    );
+
+    // Hiển thị kết quả với smart search
+    let html = '';
+    
+    // Nếu có typo correction, hiển thị thông báo
+    if (isTypoCorrected) {
+      html += `<div class="typo-correction">
+        <i class="fas fa-magic"></i>
+        <span>Đang tìm kiếm với từ khóa đã sửa: "${products[0]?.name?.split(' ')[0] || '...'}"</span>
+      </div>`;
+    }
+
+    html += products
       .slice(0, 5)
       .map(
         (product) =>

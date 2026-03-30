@@ -1,5 +1,5 @@
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
-import { orderAPI } from "/modules/customer/core/api/order.api.js";
+import { orderApi } from "/modules/customer/core/api/order.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
 const state = {
@@ -103,11 +103,18 @@ const renderProfileDetails = (user) => {
 
 const renderUserInfo = () => {
   const user = authAPI.getUser();
-  if (!user) return;
+  console.log("User data from authAPI:", user); // Debug log
+  
+  if (!user) {
+    console.warn("No user data found");
+    return;
+  }
 
   const name = user.fullName || user.email || "Tài khoản";
   const email = user.email || "Chưa có email";
   const avatarText = getAvatarText(user);
+
+  console.log("Rendering user info:", { name, email, avatarText }); // Debug log
 
   document.querySelectorAll(".username").forEach((element) => {
     element.textContent = name;
@@ -185,7 +192,8 @@ const renderOrderList = () => {
               <span class="total-price">${escapeHtml(formatCurrency(order.amount))}</span>
             </div>
             <div class="order-actions">
-              <a class="btn-main" href="/cart">Mua lại</a>
+              <a class="btn-main" href="/modules/customer/features/order_detail/order_detail.html?id=${order.id}">Xem chi tiết</a>
+              <a class="btn-secondary" href="/cart">Mua lại</a>
             </div>
           </div>
         </div>
@@ -202,7 +210,7 @@ const loadOrderHistory = async () => {
   }
 
   try {
-    const response = await orderAPI.getMyOrders({ page: 0, size: 100 });
+    const response = await orderApi.getMyOrders({ page: 0, size: 100 });
     state.allOrders = response?.content || [];
     renderOrderList();
   } catch (error) {

@@ -61,56 +61,42 @@ async function loadProducts() {
     elements.productGrid.innerHTML = "";
     elements.emptyState.style.display = "none";
 
-    const hasFilter =
-      state.categoryId ||
-      state.brandId ||
-      state.minPrice != null ||
-      state.maxPrice != null ||
-      state.ram;
+    // Truyền TOÀN BỘ thông tin (trang, keyword, filter) xuống backend
+    const response = await productApi.filterProducts({
+      page: state.currentPage,
+      size: state.pageSize,
+      keyword: state.keyword, // Bây giờ backend đã nhận keyword chung với filter
+      categoryId: state.categoryId,
+      brandId: state.brandId,
+      minPrice: state.minPrice,
+      maxPrice: state.maxPrice,
+      ram: state.ram,
+      sortBy: state.sortBy // Backend cũng nên hỗ trợ sort, nếu backend chưa có bạn báo lại để mình viết thêm nhé
+    });
 
-    // Backend hiện tách endpoint search và filter, nên khi có filter
-    // sẽ lấy danh sách theo filter rồi lọc keyword tại client.
-    let products = [];
-    if (hasFilter) {
-      const response = await productApi.filterProducts({
-        page: 0,
-        size: 200,
-        categoryId: state.categoryId,
-        brandId: state.brandId,
-        minPrice: state.minPrice,
-        maxPrice: state.maxPrice,
-        ram: state.ram,
-      });
-      const filteredByServer = response?.content || [];
-      products = filterProductsByKeyword(filteredByServer, state.keyword);
-    } else {
-      const response = await productApi.search(state.keyword, {
-        page: 0,
-        size: 200,
-      });
-      products = response?.content || [];
-    }
-
-    state.allMatchedProducts = sortProducts(products);
-    state.totalResults = state.allMatchedProducts.length;
-    const totalPages = Math.max(
-      1,
-      Math.ceil(state.totalResults / state.pageSize),
-    );
+    // Backend trả về: ApiResponse.success(message, Page<ProductSummaryResponse>)
+    // Request.js return: payload?.data = Page<ProductSummaryResponse>
+    // Page object có: content, totalElements, totalPages, NOT data
+    const pageData = response; // response là Page object
+    const products = pageData?.content || []; 
+    
+    // Server trả về sẵn totalElements và totalPages
+    state.totalResults = pageData?.totalElements || products.length;
+    const totalPages = pageData?.totalPages || 1;
 
     elements.resultsCount.textContent = String(state.totalResults);
 
-    if (state.totalResults === 0) {
+    if (state.totalResults === 0 || products.length === 0) {
       elements.emptyState.style.display = "flex";
       elements.pagination.innerHTML = "";
       return;
     }
 
-    const start = state.currentPage * state.pageSize;
-    const end = start + state.pageSize;
-    const pagedProducts = state.allMatchedProducts.slice(start, end);
-    renderProducts(pagedProducts);
-    renderPagination(totalPages);
+    // Sort tạm ở client nếu backend chưa làm (Tốt nhất nên đem sort xuống JPA backend luôn)
+    const sortedProducts = sortProducts(products); 
+
+    renderProducts(sortedProducts);
+    renderPagination(totalPages); // Trực tiếp dùng totalPages từ Server
   } catch (error) {
     console.error("Error loading search products:", error);
     showErrorMessage("Lỗi khi tải sản phẩm. Vui lòng thử lại.");

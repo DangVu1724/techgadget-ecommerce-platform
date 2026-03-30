@@ -49,7 +49,7 @@ FROM Product p
 LEFT JOIN p.category c
 LEFT JOIN p.brand b
 LEFT JOIN p.variants v
-WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+WHERE LOWER(CAST(p.name AS text)) LIKE LOWER(CONCAT('%', CAST(:name AS text), '%'))
 GROUP BY p.id, p.name, p.image, c.name, b.brandName,p.createdAt
 """)
     Page<ProductSummaryResponse> findProductSummaryByName(@Param("name") String name, Pageable pageable);
@@ -65,6 +65,7 @@ WHERE p.id = :id
 """)
     Optional<Product> findProductDetail(Long id);
 
+// Thêm tham số keyword vào @Query filterProducts
     @Query("""
 SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.id,
@@ -86,6 +87,12 @@ AND (:categoryId IS NULL OR c.id = :categoryId)
 
 AND (:minPrice IS NULL OR v.price >= :minPrice)
 AND (:maxPrice IS NULL OR v.price <= :maxPrice)
+
+AND (
+    :keyword IS NULL 
+    OR LOWER(CAST(p.name AS text)) LIKE LOWER(CONCAT('%', CAST(:keyword AS text), '%'))
+    OR LOWER(CAST(b.brandName AS text)) LIKE LOWER(CONCAT('%', CAST(:keyword AS text), '%'))
+)
 
 AND (
     :ram IS NULL OR EXISTS (
@@ -113,14 +120,14 @@ GROUP BY p.id, p.name, p.image, c.name, b.brandName, p.createdAt
 """)
     Page<ProductSummaryResponse> filterProducts(
             Pageable pageable,
-            Long brandId,
-            Long categoryId,
-            BigDecimal minPrice,
-            BigDecimal maxPrice,
-            String ram,
-            String storage
+            @Param("keyword") String keyword, // Thêm dòng này
+            @Param("brandId") Long brandId,
+            @Param("categoryId") Long categoryId,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("ram") String ram,
+            @Param("storage") String storage
     );
-
 
     boolean existsByName(@NotBlank(message = "Tên sản phẩm không được để trống") String name);
 }

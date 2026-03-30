@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết đơn hàng - TechGadget</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/modules/customer/assets/css/header.css">
+    <link rel="stylesheet" href="/modules/customer/assets/css/footer.css">
+    <link rel="stylesheet" href="/modules/customer/features/order_detail/order_detail.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="header"></header>
+
+    <!-- Main Content -->
+    <main class="order-detail-page">
+        <div class="container">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p>Đang tải thông tin đơn hàng...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error-state" style="display: none;">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Không thể tải thông tin đơn hàng</h3>
+                <p id="errorMessage">Vui lòng thử lại sau.</p>
+                <button class="btn btn-primary" onclick="window.location.reload()">
+                    <i class="fas fa-redo"></i>
+                    Thử lại
+                </button>
+            </div>
+
+            <!-- Order Content -->
+            <div id="orderContent" class="order-content" style="display: none;">
+                <!-- Breadcrumb -->
+                <nav class="breadcrumb">
+                    <a href="/index.html">Trang chủ</a>
+                    <span class="separator">/</span>
+                    <a href="/modules/customer/features/account/account.html">Tài khoản</a>
+                    <span class="separator">/</span>
+                    <span class="current">Chi tiết đơn hàng</span>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="order-status-badge" id="orderStatus">
+                        <i class="fas fa-clock"></i>
+                        <span>Đang xử lý</span>
+                    </div>
+                    <h1 class="page-title">Chi tiết đơn hàng</h1>
+                    <p class="order-number">Mã đơn hàng: <strong id="orderCode">#TG2024001</strong></p>
+                </div>
+
+                <!-- Order Info Cards -->
+                <div class="order-info-grid">
+                    <!-- Order Date Card -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Ngày đặt hàng</h3>
+                            <p id="orderDate">30/03/2024</p>
+                            <p class="info-time" id="orderTime">14:30:25</p>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Time Card -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Thời gian giao hàng</h3>
+                            <p id="deliveryDate">02/04/2024</p>
+                            <p class="info-time" id="deliveryTime">09:00 - 12:00</p>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Card -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Phương thức thanh toán</h3>
+                            <p id="paymentMethod">Thanh toán khi nhận hàng (COD)</p>
+                            <p class="payment-status" id="paymentStatus">Chưa thanh toán</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Details Section -->
+                <div class="order-details-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-shopping-bag"></i>
+                        Chi tiết sản phẩm
+                    </h2>
+                    
+                    <div class="order-items" id="orderItems">
+                        <!-- Order items will be loaded here -->
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Tạm tính:</span>
+                            <span id="subtotal">0đ</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Phí vận chuyển:</span>
+                            <span id="shippingFee">0đ</span>
+                        </div>
+                        <div class="summary-row discount-row" id="discountRow" style="display: none;">
+                            <span>Giảm giá:</span>
+                            <span id="discount">-0đ</span>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Tổng cộng:</span>
+                            <span id="totalAmount">0đ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="shipping-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Địa chỉ giao hàng
+                    </h2>
+                    
+                    <div class="address-card">
+                        <div class="address-info">
+                            <h4 id="customerName">Nguyễn Văn A</h4>
+                            <p id="customerPhone">0912345678</p>
+                            <p id="customerAddress">123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
+                        </div>
+                        <div class="address-actions">
+                            <button class="btn-edit" onclick="editAddress()">
+                                <i class="fas fa-edit"></i>
+                                Sửa địa chỉ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Actions -->
+                <div class="order-actions">
+                    <button class="btn btn-primary" onclick="trackOrder()">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Theo dõi đơn hàng
+                    </button>
+                    <button class="btn btn-secondary" onclick="printOrder()">
+                        <i class="fas fa-print"></i>
+                        In đơn hàng
+                    </button>
+                    <button class="btn btn-outline" onclick="contactSupport()">
+                        <i class="fas fa-headset"></i>
+                        Hỗ trợ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer"></footer>
+
+    <!-- JavaScript -->
+    <script type="module" src="/modules/customer/features/order_detail/order_detail.js"></script>
+    <script type="module" src="/modules/customer/assets/js/header.js"></script>
+    <script type="module" src="/modules/customer/assets/js/footer.js"></script>
+</body>
+</html>
