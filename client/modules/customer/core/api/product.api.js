@@ -7,7 +7,7 @@ export const productApi = {
       keywordOrParams !== null &&
       !Array.isArray(keywordOrParams);
 
-    const keyword = isKeywordOnlyObject ? "" : String(keywordOrParams || "");
+    const keyword = isKeywordOnlyObject ? (keywordOrParams.keyword || "") : String(keywordOrParams || "");
     const finalParams = isKeywordOnlyObject ? keywordOrParams : params;
 
     const query = new URLSearchParams({
@@ -15,7 +15,7 @@ export const productApi = {
       size: finalParams.size ?? 20,
     });
 
-    if (keyword) query.append("name", keyword);
+    if (keyword) query.append("keyword", keyword);
 
     if (finalParams.brandId) query.append("brandId", finalParams.brandId);
     if (finalParams.categoryId)
@@ -41,7 +41,12 @@ export const productApi = {
   },
 
   searchSuggestions(keyword, limit = 5) {
-    return this.search(keyword, { page: 0, size: limit });
+    // Use the main filterProducts endpoint with keyword for smart search
+    return this.filterProducts({
+      keyword: keyword,
+      page: 0,
+      size: limit
+    });
   },
 
   getById(id) {

@@ -35,7 +35,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductSummaryResponse>>> filterProducts(
-            @RequestParam(required = false) Long brandId,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long brandId,   
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
@@ -45,7 +46,7 @@ public class ProductController {
     ) {
         return ResponseEntity.ok(ApiResponse.success(
                 "Products retrieved successfully.",
-                productService.filterProducts(pageable, brandId, categoryId, minPrice, maxPrice, ram, storage)
+                productService.filterProducts(pageable, keyword, brandId, categoryId, minPrice, maxPrice, ram, storage)
         ));
     }
 

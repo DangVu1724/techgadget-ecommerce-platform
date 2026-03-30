@@ -184,6 +184,28 @@ header {
     font-size: 13px;
 }
 
+/* Typo Correction Notification */
+.typo-correction {
+    padding: 10px 20px;
+    background: #e8f4fd;
+    border-left: 3px solid #2196f3;
+    color: #1976d2;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.typo-correction i {
+    color: #2196f3;
+    font-size: 11px;
+}
+
+.typo-correction span {
+    font-weight: 500;
+}
+
 .search-container:focus-within .search-suggestions {
     display: block;
 }

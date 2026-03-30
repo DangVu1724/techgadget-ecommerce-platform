@@ -14,11 +14,7 @@ public interface ProductService {
      Page<ProductSummaryResponse> getProducts(Pageable pageable);
 
      ProductResponse getProductById(Long id);
-
-     Page<ProductSummaryResponse> filterProducts(Pageable pageable, Long brandId, Long categoryId, BigDecimal minPrice,
-                                                 BigDecimal maxPrice,
-                                                 String ram,
-                                                 String storage);
+     Page<ProductSummaryResponse> filterProducts(Pageable pageable, String keyword, Long brandId, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, String ram, String storage);
 
      Page<ProductSummaryResponse> searchProductsByName(String name, Pageable pageable);
 
