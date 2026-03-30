@@ -73,6 +73,10 @@ export const productApi = {
     return request(`/products/${id}`);
   },
 
+  getRelated(id, limit = 5) {
+    return request(`/products/${id}/related?limit=${limit}`);
+  },
+
   getByCategory(categoryId, params = {}) {
     const query = new URLSearchParams({
       page: params.page ?? 0,
