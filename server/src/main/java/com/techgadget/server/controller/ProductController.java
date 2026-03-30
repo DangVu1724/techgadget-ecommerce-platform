@@ -54,6 +54,17 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("Product retrieved successfully.", productService.getProductById(id)));
     }
 
+    @GetMapping("/{id}/related")
+    public ResponseEntity<ApiResponse<List<ProductSummaryResponse>>> getRelatedProducts(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "5") int limit
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+                "Related products retrieved successfully.",
+                productService.getRelatedProductsForProduct(id, limit)
+        ));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductCreateRequest request) {
         return ResponseEntity.ok(ApiResponse.success("Product created successfully.", productService.createProduct(request)));

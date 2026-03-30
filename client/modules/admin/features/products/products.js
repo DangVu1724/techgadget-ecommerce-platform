@@ -1,4 +1,4 @@
-import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
+﻿import { Sidebar } from "/modules/admin/components/layouts/sidebar/sidebar.js";
 import { Table } from "/modules/admin/components/data/table/Table.js";
 import { Modal } from "/modules/admin/components/data/table/Modal.js";
 import { productApi } from "../../core/api/product.api.js";
@@ -35,7 +35,8 @@ function initTable() {
     api: productApi,
     formatters: {
       minPrice: (value) => `<span class="price">${formatCurrency(value)}</span>`,
-      maxPrice: (value) => (value ? `<span class="price">${formatCurrency(value)}</span>` : "-"),
+      maxPrice: (value) =>
+        value ? `<span class="price">${formatCurrency(value)}</span>` : "-",
       totalStock: (value) => {
         let status = "high";
         let text = value;
@@ -162,10 +163,13 @@ async function deleteProduct(product) {
 function viewProduct(product) {
   window.location.href = `/admin/products/${product.id}`;
 }
-
-function formatCurrency(value) {
+function formatCurrency(value) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(value || 0);
 }
+
+
+
+
