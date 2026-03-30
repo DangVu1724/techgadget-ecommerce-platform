@@ -18,6 +18,7 @@ import com.techgadget.server.model.enums.PendingPaymentStatus;
 import com.techgadget.server.model.enums.PaymentMethod;
 import com.techgadget.server.model.enums.PaymentStatus;
 import com.techgadget.server.repository.CartRepository;
+import com.techgadget.server.repository.CouponRepository;
 import com.techgadget.server.repository.OrderDetailRepository;
 import com.techgadget.server.repository.OrderRepository;
 import com.techgadget.server.repository.PendingPaymentRepository;
@@ -51,6 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final VariantRepository variantRepository;
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
+    private final CouponRepository couponRepository;
     private final ObjectMapper objectMapper;
     private final PayOS payOS;
     private final PayOSConfig payOSConfig;
@@ -150,6 +152,8 @@ public class PaymentServiceImpl implements PaymentService {
         order.setPaymentStatus(PaymentStatus.PAID);
         order.setTransactionId(pendingPayment.getTransactionId());
         order.setAmount(payload.getAmount());
+        order.setCouponCode(payload.getCouponCode());
+        order.setDiscountAmount(payload.getDiscountAmount());
 
         if (payload.getUserId() != null) {
             User user = userRepository.findById(payload.getUserId())
@@ -173,6 +177,8 @@ public class PaymentServiceImpl implements PaymentService {
         Order savedOrder = orderRepository.save(order);
         orderDetailRepository.saveAll(details);
 
+        incrementCouponUsage(payload.getCouponCode());
+
         if (payload.getCheckoutType() == CheckoutType.CART && payload.getUserId() != null) {
             clearCart(payload.getUserId());
         }
@@ -189,6 +195,15 @@ public class PaymentServiceImpl implements PaymentService {
             cart.getItems().clear();
             cartRepository.save(cart);
         });
+    }
+
+    private void incrementCouponUsage(String couponCode) {
+        if (couponCode == null || couponCode.trim().isEmpty()) {
+            return;
+        }
+
+        couponRepository.findByCodeIgnoreCase(couponCode.trim())
+                .ifPresent(coupon -> couponRepository.incrementUsedCount(coupon.getId()));
     }
 
     private void failPendingPayment(PendingPayment pendingPayment, PendingPaymentStatus status) {

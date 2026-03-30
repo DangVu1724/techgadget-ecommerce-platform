@@ -17,4 +17,6 @@ public class OrderRequest {
 
     private PaymentMethod paymentMethod; // COD | QR
     private List<OrderItemRequest> items;
+
+    private String couponCode;
 }

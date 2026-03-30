@@ -165,10 +165,33 @@
                   <span>Shipping</span>
                   <span id="summary-shipping">$0.00</span>
                 </div>
+                <div class="total-row" id="summary-discount-row" style="display: none">
+                  <span>Discount</span>
+                  <span id="summary-discount">-$0.00</span>
+                </div>
                 <div class="total-row main-total">
                   <span>Total</span>
                   <span id="summary-total">$0.00</span>
                 </div>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="coupon-section">
+                <h4 class="summary-title" style="margin-bottom: 10px">COUPON</h4>
+                <div style="display: flex; gap: 10px;">
+                  <input
+                    type="text"
+                    id="coupon-code"
+                    placeholder="Enter coupon code"
+                    style="flex: 1; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 6px;"
+                  />
+                  <button type="button" id="apply-coupon-btn" class="btn-checkout-submit" style="padding: 10px 16px;">
+                    Apply
+                  </button>
+                </div>
+                <p id="coupon-message" style="margin: 8px 0 0; font-size: 0.9rem; color: #888;"></p>
+                <div id="coupon-list" style="margin-top: 12px;"></div>
               </div>
 
               <!-- Return to Cart -->
