@@ -19,4 +19,8 @@ public class OrderRequest {
     private List<OrderItemRequest> items;
 
     private String couponCode;
+
+    private java.math.BigDecimal amount;
+    private java.math.BigDecimal discountAmount;
+    private java.math.BigDecimal finalAmount;
 }

@@ -19,6 +19,7 @@ import com.techgadget.server.model.enums.PaymentMethod;
 import com.techgadget.server.model.enums.PaymentStatus;
 import com.techgadget.server.repository.CartRepository;
 import com.techgadget.server.repository.CouponRepository;
+import com.techgadget.server.service.CouponService;
 import com.techgadget.server.repository.OrderDetailRepository;
 import com.techgadget.server.repository.OrderRepository;
 import com.techgadget.server.repository.PendingPaymentRepository;
@@ -53,6 +54,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final CouponRepository couponRepository;
+    private final CouponService couponService;
     private final ObjectMapper objectMapper;
     private final PayOS payOS;
     private final PayOSConfig payOSConfig;
@@ -74,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService {
             CreatePaymentLinkResponse payOSResponse = payOS.paymentRequests().create(
                     CreatePaymentLinkRequest.builder()
                             .orderCode(pendingPayment.getOrderCode())
-                            .amount(toPayOSAmount(payload.getAmount()))
+                            .amount(toPayOSAmount(payload.getFinalAmount() != null ? payload.getFinalAmount() : payload.getAmount()))
                             .description(buildPayOSDescription(pendingPayment.getOrderCode()))
                             .cancelUrl(payOSConfig.getCancelUrl())
                             .returnUrl(payOSConfig.getReturnUrl())
@@ -154,6 +156,7 @@ public class PaymentServiceImpl implements PaymentService {
         order.setAmount(payload.getAmount());
         order.setCouponCode(payload.getCouponCode());
         order.setDiscountAmount(payload.getDiscountAmount());
+        order.setFinalAmount(payload.getFinalAmount() != null ? payload.getFinalAmount() : payload.getAmount());
 
         if (payload.getUserId() != null) {
             User user = userRepository.findById(payload.getUserId())
@@ -177,7 +180,7 @@ public class PaymentServiceImpl implements PaymentService {
         Order savedOrder = orderRepository.save(order);
         orderDetailRepository.saveAll(details);
 
-        incrementCouponUsage(payload.getCouponCode());
+        incrementCouponUsage(payload.getCouponCode(), payload.getUserId());
 
         if (payload.getCheckoutType() == CheckoutType.CART && payload.getUserId() != null) {
             clearCart(payload.getUserId());
@@ -197,13 +200,8 @@ public class PaymentServiceImpl implements PaymentService {
         });
     }
 
-    private void incrementCouponUsage(String couponCode) {
-        if (couponCode == null || couponCode.trim().isEmpty()) {
-            return;
-        }
-
-        couponRepository.findByCodeIgnoreCase(couponCode.trim())
-                .ifPresent(coupon -> couponRepository.incrementUsedCount(coupon.getId()));
+    private void incrementCouponUsage(String couponCode, Long userId) {
+        couponService.recordCouponUsage(couponCode, userId);
     }
 
     private void failPendingPayment(PendingPayment pendingPayment, PendingPaymentStatus status) {

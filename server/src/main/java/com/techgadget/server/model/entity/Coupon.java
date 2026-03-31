@@ -40,5 +40,7 @@ public class Coupon {
 
     private Integer usedCount;
 
+    private Integer usageLimitPerUser;
+
     private Boolean isActive;
 }

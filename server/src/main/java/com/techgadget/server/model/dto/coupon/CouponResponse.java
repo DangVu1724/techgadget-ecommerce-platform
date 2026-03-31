@@ -24,5 +24,6 @@ public class CouponResponse {
     private LocalDateTime endAt;
     private Integer usageLimit;
     private Integer usedCount;
+    private Integer usageLimitPerUser;
     private Boolean isActive;
 }

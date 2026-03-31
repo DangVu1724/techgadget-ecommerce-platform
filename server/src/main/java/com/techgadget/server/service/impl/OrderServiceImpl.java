@@ -143,9 +143,10 @@ public class OrderServiceImpl implements OrderService {
 
         CouponApplication couponApplication = applyCouponIfPresent(request.getCouponCode(), total);
         order.setOrderDetails(details);
-        order.setAmount(couponApplication.finalAmount());
+        order.setAmount(couponApplication.subtotal());
         order.setCouponCode(couponApplication.code());
         order.setDiscountAmount(couponApplication.discountAmount());
+        order.setFinalAmount(couponApplication.finalAmount());
         order.setUser(user);
 
         Order saved = orderRepository.save(order);
@@ -190,9 +191,10 @@ public class OrderServiceImpl implements OrderService {
 
         CouponApplication couponApplication = applyCouponIfPresent(request.getCouponCode(), total);
         order.setOrderDetails(details);
-        order.setAmount(couponApplication.finalAmount());
+        order.setAmount(couponApplication.subtotal());
         order.setCouponCode(couponApplication.code());
         order.setDiscountAmount(couponApplication.discountAmount());
+        order.setFinalAmount(couponApplication.finalAmount());
         order.setUser(user);
 
         Order saved = orderRepository.save(order);
@@ -253,9 +255,10 @@ public class OrderServiceImpl implements OrderService {
         payload.setShippingAddress(request.getShippingAddress());
         payload.setPhoneNumber(request.getPhoneNumber());
         payload.setOrderEmail(request.getOrderEmail());
-        payload.setAmount(couponApplication.finalAmount());
+        payload.setAmount(couponApplication.subtotal());
         payload.setCouponCode(couponApplication.code());
         payload.setDiscountAmount(couponApplication.discountAmount());
+        payload.setFinalAmount(couponApplication.finalAmount());
         payload.setItems(pendingItems);
         return payload;
     }
@@ -328,6 +331,8 @@ public class OrderServiceImpl implements OrderService {
         response.setId(order.getId());
         response.setOrderCode(order.getOrderCode());
         response.setAmount(order.getAmount());
+        response.setDiscountAmount(order.getDiscountAmount());
+        response.setFinalAmount(order.getFinalAmount());
         response.setOrderStatus(order.getOrderStatus().name());
         response.setOrderDate(order.getOrderDate());
         response.setPaymentMethod(order.getPaymentMethod().name());
@@ -340,6 +345,8 @@ public class OrderServiceImpl implements OrderService {
         response.setId(order.getId());
         response.setOrderCode(order.getOrderCode());
         response.setAmount(order.getAmount());
+        response.setDiscountAmount(order.getDiscountAmount());
+        response.setFinalAmount(order.getFinalAmount());
         response.setOrderStatus(order.getOrderStatus().name());
         response.setShippingAddress(order.getShippingAddress());
         response.setPhoneNumber(order.getPhoneNumber());
@@ -371,14 +378,15 @@ public class OrderServiceImpl implements OrderService {
     private CouponApplication applyCouponIfPresent(String couponCode, BigDecimal orderAmount) {
         BigDecimal safeAmount = orderAmount != null ? orderAmount : BigDecimal.ZERO;
         if (couponCode == null || couponCode.trim().isEmpty()) {
-            return new CouponApplication(null, BigDecimal.ZERO, safeAmount);
+            return new CouponApplication(null, BigDecimal.ZERO, safeAmount, safeAmount);
         }
 
         var validation = couponService.validateCoupon(couponCode, safeAmount);
         return new CouponApplication(
                 validation.getCode(),
                 validation.getDiscountAmount(),
-                validation.getFinalAmount()
+                validation.getFinalAmount(),
+                safeAmount
         );
     }
 
@@ -387,10 +395,19 @@ public class OrderServiceImpl implements OrderService {
             return;
         }
 
-        couponRepository.findByCodeIgnoreCase(couponApplication.code())
-                .ifPresent(coupon -> couponRepository.incrementUsedCount(coupon.getId()));
+        Long userId = null;
+        try {
+            userId = getCurrentUser().getId();
+        } catch (RuntimeException ignored) {
+        }
+        couponService.recordCouponUsage(couponApplication.code(), userId);
     }
 
-    private record CouponApplication(String code, BigDecimal discountAmount, BigDecimal finalAmount) {
+    private record CouponApplication(
+            String code,
+            BigDecimal discountAmount,
+            BigDecimal finalAmount,
+            BigDecimal subtotal
+    ) {
     }
 }

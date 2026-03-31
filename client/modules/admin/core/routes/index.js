@@ -8,6 +8,7 @@ export const routes = {
   brands: '../features/brands/brands.html',
   attributes: '../features/attributes/attributes.html',
   products: '../features/products/products.html',
+  popups: '../features/popups/popups.html',
   discounts: '../features/discounts/discounts.html',
   orders: '../features/order/orders.html',
   users: '../features/users/users.html'

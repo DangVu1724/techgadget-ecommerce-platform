@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/variants/**").permitAll()
                         .requestMatchers("/api/attributes/**").permitAll()
                         .requestMatchers("/api/coupons/**").permitAll()
+                        .requestMatchers("/api/public/popups/**").permitAll()
                         .requestMatchers("/api/adminuser/**").permitAll()
 
                         .requestMatchers("/api/cart/**").authenticated()

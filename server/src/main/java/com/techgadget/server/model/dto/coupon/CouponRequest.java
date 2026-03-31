@@ -38,5 +38,7 @@ public class CouponRequest {
 
     private Integer usedCount;
 
+    private Integer usageLimitPerUser;
+
     private Boolean isActive;
 }

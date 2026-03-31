@@ -22,4 +22,8 @@ public interface CouponService {
     void deleteCoupon(Long id);
 
     CouponValidationResponse validateCoupon(String code, java.math.BigDecimal orderAmount);
+
+    java.util.List<CouponValidationResponse> getCheckoutCoupons(java.math.BigDecimal orderAmount);
+
+    void recordCouponUsage(String code, Long userId);
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +27,18 @@ public class CouponController {
     public ResponseEntity<ApiResponse<List<CouponResponse>>> getActiveCoupons() {
         return ResponseEntity.ok(
                 ApiResponse.success("Active coupons retrieved successfully.", couponService.getActiveCoupons())
+        );
+    }
+
+    @GetMapping("/checkout")
+    public ResponseEntity<ApiResponse<List<CouponValidationResponse>>> getCheckoutCoupons(
+            @RequestParam(required = false) java.math.BigDecimal orderAmount
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Checkout coupons retrieved successfully.",
+                        couponService.getCheckoutCoupons(orderAmount)
+                )
         );
     }
 

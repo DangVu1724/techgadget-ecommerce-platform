@@ -24,7 +24,13 @@ public class CouponValidationResponse {
     private Integer usageLimit;
     private Integer usedCount;
     private Boolean isActive;
+    private Integer usageLimitPerUser;
+    private Integer userUsedCount;
+    private Integer userRemainingUses;
     private BigDecimal orderAmount;
     private BigDecimal discountAmount;
     private BigDecimal finalAmount;
+
+    private Boolean valid;
+    private String invalidReason;
 }

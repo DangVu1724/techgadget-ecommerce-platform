@@ -32,6 +32,7 @@ function initTable() {
       { key: "startAt", label: "Start At" },
       { key: "endAt", label: "End At" },
       { key: "usageLimit", label: "Usage Limit" },
+      { key: "usageLimitPerUser", label: "Số lượt/user" },
       { key: "usedCount", label: "Used" },
       { key: "isActive", label: "Active" },
     ],
@@ -44,6 +45,7 @@ function initTable() {
       startAt: (value) => formatDateTime(value),
       endAt: (value) => formatDateTime(value),
       usageLimit: (value) => (value ?? "-"),
+      usageLimitPerUser: (value) => (value ?? "-"),
       usedCount: (value) => (value ?? "-"),
       isActive: (value) => (value === true ? "Yes" : value === false ? "No" : "-"),
     },
@@ -114,6 +116,12 @@ function openCouponModal(coupon = null) {
         label: "Usage Limit",
         type: "number",
         placeholder: "Total usage limit",
+      },
+      {
+        name: "usageLimitPerUser",
+        label: "Số lượt dùng mỗi tài khoản",
+        type: "number",
+        placeholder: "Nhập số lượt dùng mỗi tài khoản",
       },
       {
         name: "usedCount",
@@ -190,6 +198,7 @@ function viewCoupon(coupon) {
     `Start At: ${formatDateTime(coupon.startAt)}`,
     `End At: ${formatDateTime(coupon.endAt)}`,
     `Usage Limit: ${coupon.usageLimit ?? "-"}`,
+    `Per User Limit: ${coupon.usageLimitPerUser ?? "-"}`,
     `Used Count: ${coupon.usedCount ?? "-"}`,
     `Active: ${coupon.isActive === true ? "Yes" : coupon.isActive === false ? "No" : "-"}`,
   ];
@@ -218,6 +227,7 @@ function normalizeCouponPayload(formData) {
     startAt: normalizeDateTime(formData.startAt),
     endAt: normalizeDateTime(formData.endAt),
     usageLimit: normalizeInteger(formData.usageLimit),
+    usageLimitPerUser: normalizeInteger(formData.usageLimitPerUser),
     usedCount: normalizeInteger(formData.usedCount),
     isActive:
       formData.isActive === ""

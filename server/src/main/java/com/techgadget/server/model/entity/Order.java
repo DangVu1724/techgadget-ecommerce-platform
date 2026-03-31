@@ -42,6 +42,8 @@ public class Order {
 
     private BigDecimal discountAmount;
 
+    private BigDecimal finalAmount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

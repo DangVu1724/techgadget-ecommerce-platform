@@ -1,6 +1,7 @@
 import { categoryApi } from "/modules/customer/core/api/category.api.js";
 import { brandApi } from "/modules/customer/core/api/brand.api.js";
 import { productApi } from "/modules/customer/core/api/product.api.js";
+import { popupApi } from "/modules/customer/core/api/popup.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
 const categoryImages = {
@@ -151,6 +152,7 @@ async function initHome() {
       loadNewProducts(),
       loadBestSellingProducts(),
     ]);
+    await loadPromotionPopup();
   } catch (error) {
     console.error("Home initialization failed:", error);
     showToast("Some homepage sections could not be loaded.", "warning");
@@ -162,6 +164,77 @@ function formatPrice(value) {
     style: "currency",
     currency: "USD",
   }).format(value);
+}
+
+async function loadPromotionPopup() {
+  try {
+    const popup = await popupApi.getActive();
+    if (!popup) return;
+    const delaySeconds = Number(popup.displayDelay || 0);
+    const delayMs = Math.max(0, delaySeconds) * 1000;
+    setTimeout(() => renderPromotionPopup(popup), delayMs);
+  } catch (error) {
+    console.error("Failed to load promotion popup:", error);
+  }
+}
+
+function renderPromotionPopup(popup) {
+  if (!popup) return;
+
+  const existing = document.querySelector(".promo-popup-overlay");
+  if (existing) existing.remove();
+
+  const overlay = document.createElement("div");
+  overlay.className = "promo-popup-overlay";
+
+  const couponCode = popup.couponCode || "";
+  const shopLink = couponCode
+    ? `/modules/customer/features/shop/shop.html?coupon=${encodeURIComponent(couponCode)}`
+    : "/modules/customer/features/shop/shop.html";
+  const imageUrl = resolvePopupImage(popup.imageUrl);
+
+  const targetLink = popup.productId
+    ? `/products/${popup.productId}`
+    : "/shop";
+
+  overlay.innerHTML = `
+    <div class="promo-popup">
+      <button class="promo-popup-close" aria-label="Close">x</button>
+      <a class="promo-popup-link" href="${targetLink}">
+        <div class="promo-popup-media">
+          <img src="${imageUrl}" alt="${popup.title}">
+        </div>
+      </a>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = "hidden";
+
+  const closePopup = () => {
+    overlay.remove();
+    document.body.style.overflow = "";
+  };
+
+  overlay.querySelector(".promo-popup-close")?.addEventListener("click", closePopup);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) {
+      closePopup();
+    }
+  });
+
+}
+
+function resolvePopupImage(imageUrl) {
+  if (imageUrl && /^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  if (imageUrl && imageUrl.startsWith("/")) {
+    return `http://localhost:8080${imageUrl}`;
+  }
+
+  return imageUrl || "/modules/customer/assets/images/banner1.png";
 }
 
 document.addEventListener("DOMContentLoaded", initHome);

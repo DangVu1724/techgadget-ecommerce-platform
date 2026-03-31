@@ -194,6 +194,7 @@ class OrderDetailManager {
     const paymentMethod = document.getElementById("paymentMethod");
     const paymentStatus = document.getElementById("paymentStatus");
     const subtotalElement = document.getElementById("subtotal");
+    const discountElement = document.getElementById("discountAmount");
     const shippingFeeElement = document.getElementById("shippingFee");
     const totalAmountElement = document.getElementById("totalAmount");
 
@@ -209,12 +210,17 @@ class OrderDetailManager {
       );
     }
 
-    const subtotal = this.orderDetail.amount;
+    const subtotal = Number(this.orderDetail.amount || 0);
+    const discount = Number(this.orderDetail.discountAmount || 0);
     const shippingFee = 0;
-    const total = subtotal + shippingFee;
+    const total = Number(this.orderDetail.finalAmount ?? subtotal - discount) + shippingFee;
 
     if (subtotalElement) {
       subtotalElement.textContent = this.formatCurrency(subtotal);
+    }
+
+    if (discountElement) {
+      discountElement.textContent = this.formatCurrency(discount);
     }
 
     if (shippingFeeElement) {

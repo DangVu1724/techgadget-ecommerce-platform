@@ -1,8 +1,12 @@
 import { request } from "./base.api.js";
 
 export const couponAPI = {
-  getActive() {
-    return request("/coupons/active");
+  getCheckoutList(orderAmount) {
+    const params = new URLSearchParams();
+    if (orderAmount !== undefined && orderAmount !== null) {
+      params.set("orderAmount", String(orderAmount));
+    }
+    return request(`/coupons/checkout?${params.toString()}`);
   },
 
   validate(code, orderAmount) {
