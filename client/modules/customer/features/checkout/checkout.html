@@ -165,10 +165,41 @@
                   <span>Shipping</span>
                   <span id="summary-shipping">$0.00</span>
                 </div>
+                <div class="total-row" id="summary-discount-row" style="display: none">
+                  <span>Discount</span>
+                  <span id="summary-discount">-$0.00</span>
+                </div>
                 <div class="total-row main-total">
                   <span>Total</span>
                   <span id="summary-total">$0.00</span>
                 </div>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="coupon-section">
+                <div class="coupon-header">
+                  <h4 class="coupon-title">COUPON &amp; VOUCHERS</h4>
+                  <button type="button" id="coupon-list-toggle" class="coupon-list-toggle" aria-expanded="false">
+                    <span class="coupon-hint">Apply a code or choose a voucher</span>
+                    <span class="coupon-toggle-icon">^</span>
+                  </button>
+                </div>
+                <div class="coupon-input-row">
+                  <div class="coupon-input-wrap">
+                    <i class="fa-solid fa-ticket"></i>
+                    <input
+                      type="text"
+                      id="coupon-code"
+                      placeholder="Enter coupon code"
+                    />
+                  </div>
+                  <button type="button" id="apply-coupon-btn" class="coupon-apply-btn">
+                    Apply
+                  </button>
+                </div>
+                <p id="coupon-message" class="coupon-message"></p>
+                <div id="coupon-list" class="coupon-list is-collapsed"></div>
               </div>
 
               <!-- Return to Cart -->

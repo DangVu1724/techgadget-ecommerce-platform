@@ -27,6 +27,8 @@ export class Sidebar {
           <a href="${ADMIN_BASE}/brands" class="nav-link">Brands</a>
           <a href="${ADMIN_BASE}/attributes" class="nav-link">Attributes</a>
           <a href="${ADMIN_BASE}/products" class="nav-link">Products</a>
+          <a href="${ADMIN_BASE}/popups" class="nav-link">Popups</a>
+          <a href="${ADMIN_BASE}/discounts" class="nav-link">Vouchers</a>
           <a href="${ADMIN_BASE}/order" class="nav-link">Orders</a>
           <a href="${ADMIN_BASE}/users" class="nav-link">Users</a>
         </nav>

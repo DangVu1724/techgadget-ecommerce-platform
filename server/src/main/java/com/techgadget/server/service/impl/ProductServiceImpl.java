@@ -249,11 +249,12 @@ public class ProductServiceImpl implements ProductService {
             throw new NotFoundException("Current product id is required.");
         }
 
+        Pageable pageable = PageRequest.of(0, 5);
         return productRepository.findRelatedProductsByPriority(
                 currentProductId,
                 categoryId,
                 brandId,
-                PageRequest.of(0, 5)
+                pageable
         );
     }
 

@@ -74,6 +74,14 @@
       "destination": "/modules/admin/features/products/products.html"
     },
     {
+      "source": "/admin/popups",
+      "destination": "/modules/admin/features/popups/popups.html"
+    },
+    {
+      "source": "/admin/discounts",
+      "destination": "/modules/admin/features/discounts/discounts.html"
+    },
+    {
       "source": "/admin/order",
       "destination": "/modules/admin/features/order/orders.html"
     },

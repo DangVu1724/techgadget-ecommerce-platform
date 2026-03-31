@@ -38,6 +38,12 @@ public class Order {
 
     private Long orderCode;
 
+    private String couponCode;
+
+    private BigDecimal discountAmount;
+
+    private BigDecimal finalAmount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

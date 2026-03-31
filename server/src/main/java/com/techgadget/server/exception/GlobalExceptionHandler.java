@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -82,6 +84,15 @@ public class GlobalExceptionHandler {
                 ex.getValue(),
                 ex.getName()
         );
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request, null);
+    }
+
+    @ExceptionHandler({MultipartException.class, MaxUploadSizeExceededException.class})
+    public ResponseEntity<ApiResponse<Map<String, Object>>> handleMultipartException(
+            Exception ex, HttpServletRequest request) {
+        String message = ex instanceof MaxUploadSizeExceededException
+                ? "Uploaded file is too large."
+                : "Invalid multipart request.";
         return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request, null);
     }
 

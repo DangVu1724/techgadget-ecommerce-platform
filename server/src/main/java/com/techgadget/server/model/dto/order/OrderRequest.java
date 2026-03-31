@@ -17,4 +17,10 @@ public class OrderRequest {
 
     private PaymentMethod paymentMethod; // COD | QR
     private List<OrderItemRequest> items;
+
+    private String couponCode;
+
+    private java.math.BigDecimal amount;
+    private java.math.BigDecimal discountAmount;
+    private java.math.BigDecimal finalAmount;
 }
