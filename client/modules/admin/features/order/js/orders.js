@@ -152,7 +152,7 @@ class OrderManager {
     if (tbody) {
       tbody.innerHTML = `
         <tr class="loading">
-          <td colspan="7">
+          <td colspan="9">
             <i class="fas fa-spinner fa-spin"></i>
             Đang tải dữ liệu...
           </td>
@@ -168,7 +168,7 @@ class OrderManager {
     if (orders.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="7" style="text-align: center; padding: 40px;">
+          <td colspan="9" style="text-align: center; padding: 40px;">
             <i class="fas fa-box-open" style="font-size: 48px; color: #9ca3af; margin-bottom: 16px;"></i>
             <p style="color: #6b7280;">Không có đơn hàng nào</p>
           </td>
@@ -192,6 +192,8 @@ class OrderManager {
         <td>${order.customerName || "Khách hàng"}</td>
         <td>${this.formatDate(order.orderDate)}</td>
         <td class="amount">${this.formatCurrency(order.amount)}</td>
+        <td class="amount">${this.formatCurrency(order.discountAmount || 0)}</td>
+        <td class="amount">${this.formatCurrency(order.finalAmount ?? order.amount)}</td>
         <td>
           <span class="status-badge ${this.getStatusColorClass(order.orderStatus)}">
             ${this.getStatusText(order.orderStatus)}

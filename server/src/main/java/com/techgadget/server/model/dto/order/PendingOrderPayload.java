@@ -16,6 +16,9 @@ public class PendingOrderPayload {
     private String phoneNumber;
     private String orderEmail;
     private BigDecimal amount;
+    private String couponCode;
+    private BigDecimal discountAmount;
+    private BigDecimal finalAmount;
     private List<PendingOrderItemPayload> items;
 
     @Data

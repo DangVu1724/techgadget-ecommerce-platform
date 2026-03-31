@@ -12,6 +12,8 @@ public class OrderResponse {
     private Long id;
     private Long orderCode;
     private BigDecimal amount;
+    private BigDecimal discountAmount;
+    private BigDecimal finalAmount;
     private LocalDateTime orderDate;
     private String orderStatus;
     private String paymentMethod;

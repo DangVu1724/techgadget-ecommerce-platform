@@ -205,7 +205,7 @@ const renderOrderList = () => {
           <div class="order-footer">
             <div class="total-row">
               <span>Tổng tiền:</span>
-              <span class="total-price">${escapeHtml(formatCurrency(order.amount))}</span>
+              <span class="total-price">${escapeHtml(formatCurrency(order.finalAmount ?? order.amount))}</span>
             </div>
             <div class="order-actions">
               <a class="btn-main" href="/modules/customer/features/order_detail/order_detail.html?id=${order.id}">Xem chi tiết</a>

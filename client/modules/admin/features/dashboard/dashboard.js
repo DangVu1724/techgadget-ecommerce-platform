@@ -34,7 +34,11 @@ function formatDateTime(value) {
 function getPaidRevenue(orders) {
   return orders
     .filter((order) => (order.paymentStatus || "").toUpperCase() === "PAID")
-    .reduce((sum, order) => sum + Number(order.amount || 0), 0);
+    .reduce(
+      (sum, order) =>
+        sum + Number(order.finalAmount ?? order.amount ?? 0),
+      0,
+    );
 }
 
 function getStatusCount(orders, statuses) {
@@ -95,7 +99,7 @@ function getChartBuckets(orders, period) {
     const orderDate = new Date(order.orderDate);
     const paidRevenue =
       (order.paymentStatus || "").toUpperCase() === "PAID"
-        ? Number(order.amount || 0)
+        ? Number(order.finalAmount ?? order.amount ?? 0)
         : 0;
 
     if (period === "week") {
@@ -347,7 +351,7 @@ function renderRecentOrders(orders) {
       (order) => `
       <tr>
         <td>#${order.orderCode || order.id}</td>
-        <td>${formatCurrency(order.amount)}</td>
+        <td>${formatCurrency(order.finalAmount ?? order.amount)}</td>
         <td><span class="status-badge ${getStatusBadgeClass(order.orderStatus)}">${order.orderStatus || "-"}</span></td>
         <td>${order.paymentStatus || "-"}</td>
         <td>${formatDateTime(order.orderDate)}</td>
