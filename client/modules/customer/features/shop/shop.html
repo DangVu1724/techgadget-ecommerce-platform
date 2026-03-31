@@ -16,20 +16,18 @@
   </head>
   <body>
     <div class="container">
-      <!-- Breadcrumb -->
       <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb">
-        <a href="/" aria-label="Trang chủ">
+        <a href="/" aria-label="Trang chá»§">
           <i class="fas fa-home"></i>
         </a>
       </nav>
 
-      <!-- Shop Search Bar -->
       <div class="shop-search-box">
         <form id="shop-search-form">
           <input
             type="text"
             id="shop-search-input"
-            placeholder="Tìm kiếm sản phẩm..."
+            placeholder="TÃ¬m kiáº¿m sáº£n pháº©m..."
             autocomplete="off"
           />
           <button type="submit" class="search-btn" aria-label="Search">
@@ -38,7 +36,6 @@
         </form>
       </div>
 
-      <!-- Promo Banner -->
       <div class="shop-promo-banner">
         <div class="promo-badge">
           <i class="fas fa-lightning-bolt"></i>
@@ -50,119 +47,11 @@
         <button class="promo-cta">Xem ngay</button>
       </div>
 
-      <!-- Category Brands Section -->
       <div class="category-brands-wrapper" id="categoryBrandsWrapper">
         <h3>Thương hiệu</h3>
         <div id="categoryBrandList" class="brand-list"></div>
       </div>
 
-      <!-- Advanced Filters Panel -->
-      <div class="advanced-filters" id="advancedFilters">
-        <div class="filter-section">
-          <h4>Khoảng giá</h4>
-          <div class="filter-content">
-            <div class="price-inputs">
-              <input
-                type="number"
-                id="minPrice"
-                placeholder="Giá tối thiểu"
-                min="0"
-                class="price-input"
-              />
-              <span>-</span>
-              <input
-                type="number"
-                id="maxPrice"
-                placeholder="Giá tối đa"
-                min="0"
-                class="price-input"
-              />
-            </div>
-            <div class="price-presets">
-              <button class="price-preset" data-min="0" data-max="100">
-                Dưới $100
-              </button>
-              <button class="price-preset" data-min="100" data-max="500">
-                $100 - $500
-              </button>
-              <button class="price-preset" data-min="500" data-max="1000">
-                $500 - $1000
-              </button>
-              <button class="price-preset" data-min="1000" data-max="99999">
-                Trên $1000
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>RAM</h4>
-          <div class="filter-content">
-            <label class="checkbox-label">
-              <input type="checkbox" value="4" class="ram-filter" /> 4GB
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="8" class="ram-filter" /> 8GB
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="16" class="ram-filter" /> 16GB
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="32" class="ram-filter" /> 32GB+
-            </label>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>Bộ nhớ</h4>
-          <div class="filter-content">
-            <label class="checkbox-label">
-              <input type="checkbox" value="64" class="storage-filter" /> 64GB
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="128" class="storage-filter" /> 128GB
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="256" class="storage-filter" /> 256GB
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="512" class="storage-filter" />
-              512GB+
-            </label>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>Đánh giá</h4>
-          <div class="filter-content">
-            <label class="checkbox-label">
-              <input type="checkbox" value="5" class="rating-filter" /> 5
-              <i class="fas fa-star star-rating"></i>
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="4" class="rating-filter" /> 4+
-              <i class="fas fa-star star-rating"></i>
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" value="3" class="rating-filter" /> 3+
-              <i class="fas fa-star star-rating"></i>
-            </label>
-          </div>
-        </div>
-
-        <div class="filter-actions">
-          <button id="clearFilters" class="clear-filters">Xóa bộ lọc</button>
-          <button id="applyFilters" class="apply-filters">Áp dụng</button>
-        </div>
-      </div>
-
-      <!-- Toggle Advanced Filters -->
-      <button class="toggle-filters" id="toggleFilters">
-        <i class="fas fa-sliders-h"></i> Bộ lọc nâng cao
-        <i class="fas fa-chevron-down"></i>
-      </button>
-
-      <!-- Sort Bar -->
       <div class="filter-bar">
         <div class="filter-left">
           <span class="filter-label">
@@ -171,11 +60,107 @@
           </span>
         </div>
         <div class="filter-right">
+          <div class="filter-dropdown" id="filterDropdown">
+            <button
+              class="toggle-filters"
+              id="toggleFilters"
+              type="button"
+              aria-expanded="false"
+              aria-controls="advancedFilters"
+            >
+              <span class="toggle-filters-text">
+                <i class="fas fa-sliders-h"></i>
+                <span>Advanced filters</span>
+              </span>
+              <span class="filter-badge" id="filterBadge">0</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+
+            <div class="advanced-filters" id="advancedFilters">
+              <div class="filter-dropdown-header">
+                <div>
+                  <h3>Filters</h3>
+                  <p id="filterSummary">No filters selected</p>
+                </div>
+              </div>
+
+              <div class="filter-panel-body">
+                <div class="filter-section">
+                  <h4>Price range <i class="fas fa-chevron-down"></i></h4>
+                  <div class="filter-content">
+                    <div class="price-inputs">
+                      <input
+                        type="number"
+                        id="minPrice"
+                        placeholder="Min price"
+                        min="0"
+                        class="price-input"
+                      />
+                      <span>-</span>
+                      <input
+                        type="number"
+                        id="maxPrice"
+                        placeholder="Max price"
+                        min="0"
+                        class="price-input"
+                      />
+                    </div>
+                    <div class="price-presets">
+                      <button
+                        type="button"
+                        class="price-preset"
+                        data-min="0"
+                        data-max="100"
+                      >
+                        Under $100
+                      </button>
+                      <button
+                        type="button"
+                        class="price-preset"
+                        data-min="100"
+                        data-max="500"
+                      >
+                        $100 - $500
+                      </button>
+                      <button
+                        type="button"
+                        class="price-preset"
+                        data-min="500"
+                        data-max="1000"
+                      >
+                        $500 - $1000
+                      </button>
+                      <button
+                        type="button"
+                        class="price-preset"
+                        data-min="1000"
+                        data-max="99999"
+                      >
+                        Over $1000
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="dynamicFilterSections"></div>
+              </div>
+
+              <div class="filter-actions">
+                <button id="clearFilters" type="button" class="clear-filters">
+                  Clear
+                </button>
+                <button id="applyFilters" type="button" class="apply-filters">
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div class="sort-dropdown">
             <select
               id="sortSelect"
               class="sort-select"
-              aria-label="Sắp xếp sản phẩm"
+              aria-label="Sáº¯p xáº¿p sáº£n pháº©m"
             >
               <option value="default">Sắp xếp: Mặc định</option>
               <option value="price-asc">Giá: Thấp đến cao</option>
@@ -188,23 +173,20 @@
         </div>
       </div>
 
-      <!-- Product List -->
       <div id="productList" class="grid-5"></div>
 
-      <!-- Empty Message -->
       <p id="emptyMessage" class="empty-message">
         <i class="fas fa-search"></i> Không tìm thấy sản phẩm phù hợp.
       </p>
 
-      <!-- Pagination -->
       <div id="pagination" class="pagination"></div>
     </div>
 
     <script
       type="module"
-      src="/modules/customer/features/shop/shop.js"
+      src="/modules/customer/features/shop/js/shop.js"
     ></script>
-     <script type="module" src="/modules/customer/assets/js/header.js"></script>
+    <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
   </body>
 </html>

@@ -7,7 +7,7 @@ export const productApi = {
       keywordOrParams !== null &&
       !Array.isArray(keywordOrParams);
 
-    const keyword = isKeywordOnlyObject ? (keywordOrParams.keyword || "") : String(keywordOrParams || "");
+    const keyword = isKeywordOnlyObject ? "" : String(keywordOrParams || "");
     const finalParams = isKeywordOnlyObject ? keywordOrParams : params;
 
     const query = new URLSearchParams({
@@ -15,7 +15,7 @@ export const productApi = {
       size: finalParams.size ?? 20,
     });
 
-    if (keyword) query.append("keyword", keyword);
+    if (keyword) query.append("name", keyword);
 
     if (finalParams.brandId) query.append("brandId", finalParams.brandId);
     if (finalParams.categoryId)
@@ -26,8 +26,33 @@ export const productApi = {
       query.append("maxPrice", finalParams.maxPrice);
     if (finalParams.ram) query.append("ram", finalParams.ram);
     if (finalParams.storage) query.append("storage", finalParams.storage);
+    if (
+      finalParams.attributeFilters &&
+      Object.keys(finalParams.attributeFilters).length
+    ) {
+      query.append(
+        "attributeFilters",
+        JSON.stringify(finalParams.attributeFilters),
+      );
+    }
+
+    if (finalParams.sortBy) {
+      query.append(
+        "sort",
+        `${finalParams.sortBy},${finalParams.sortDir || "asc"}`,
+      );
+    }
 
     return request(`/products?${query.toString()}`);
+  },
+
+  getFilters({ categoryId, brandId } = {}) {
+    const query = new URLSearchParams();
+
+    if (categoryId) query.append("categoryId", categoryId);
+    if (brandId) query.append("brandId", brandId);
+
+    return request(`/products/filters?${query.toString()}`);
   },
 
   search(keyword, params = {}) {
@@ -41,20 +66,11 @@ export const productApi = {
   },
 
   searchSuggestions(keyword, limit = 5) {
-    // Use the main filterProducts endpoint with keyword for smart search
-    return this.filterProducts({
-      keyword: keyword,
-      page: 0,
-      size: limit
-    });
+    return this.search(keyword, { page: 0, size: limit });
   },
 
   getById(id) {
     return request(`/products/${id}`);
-  },
-
-  getRelated(id, limit = 5) {
-    return request(`/products/${id}/related?limit=${limit}`);
   },
 
   getByCategory(categoryId, params = {}) {

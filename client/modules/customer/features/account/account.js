@@ -137,6 +137,22 @@ const renderUserInfo = () => {
   renderProfileDetails(user);
 };
 
+const initLogoutAction = () => {
+  const logoutButton = document.getElementById("accountLogoutBtn");
+  if (!logoutButton) return;
+
+  logoutButton.addEventListener("click", () => {
+    const confirmed = window.confirm("Ban co chac muon dang xuat khong?");
+    if (!confirmed) {
+      return;
+    }
+
+    authAPI.logout();
+    showToast("Dang xuat thanh cong.", "success");
+    window.location.href = "/login";
+  });
+};
+
 const renderOrderList = () => {
   const container = document.getElementById("order-list-content");
   if (!container) return;
@@ -277,6 +293,7 @@ const initOrderFilters = () => {
 document.addEventListener("DOMContentLoaded", () => {
   if (!checkLogin()) return;
   renderUserInfo();
+  initLogoutAction();
   initMainTabNavigation();
   initOrderFilters();
 });
