@@ -1,19 +1,19 @@
 import { productApi } from "../../core/api/product.api.js";
-import { categoryApi } from "../../core/api/category.api.js";
-import { brandApi } from "../../core/api/brand.api.js";
+
+const SORT_CONFIG = {
+  relevance: null,
+  "price-asc": { sortBy: "minPrice", sortDir: "asc" },
+  "price-desc": { sortBy: "minPrice", sortDir: "desc" },
+  newest: { sortBy: "createdAt", sortDir: "desc" },
+  popular: null,
+};
 
 const state = {
   keyword: "",
   currentPage: 0,
   pageSize: 12,
-  allMatchedProducts: [],
-  minPrice: null,
-  maxPrice: null,
-  categoryId: null,
-  brandId: null,
-  ram: null,
-  sortBy: "relevance",
   totalResults: 0,
+  sortBy: "relevance",
 };
 
 const elements = {
@@ -26,11 +26,6 @@ const elements = {
   loading: document.getElementById("loading"),
   emptyState: document.getElementById("emptyState"),
   sortSelect: document.getElementById("sort-select"),
-  categoryList: document.getElementById("categoryList"),
-  brandList: document.getElementById("brandList"),
-  minPrice: document.getElementById("minPrice"),
-  maxPrice: document.getElementById("maxPrice"),
-  clearFilters: document.getElementById("clearFilters"),
 };
 
 async function init() {
@@ -38,7 +33,6 @@ async function init() {
   state.keyword = params.get("q") || "";
 
   attachEventListeners();
-  updatePricePresetState();
 
   if (!state.keyword) {
     elements.searchKeyword.textContent = "";
@@ -49,54 +43,44 @@ async function init() {
 
   elements.searchKeyword.textContent = state.keyword;
   elements.searchInput.value = state.keyword;
-  syncPriceInputs();
-
-  await Promise.all([loadCategories(), loadBrands()]);
   await loadProducts();
 }
 
 async function loadProducts() {
+  if (!state.keyword) {
+    elements.productGrid.innerHTML = "";
+    elements.pagination.innerHTML = "";
+    elements.resultsCount.textContent = "0";
+    elements.emptyState.style.display = "flex";
+    return;
+  }
+
   try {
     elements.loading.style.display = "flex";
     elements.productGrid.innerHTML = "";
     elements.emptyState.style.display = "none";
 
-    // Truyền TOÀN BỘ thông tin (trang, keyword, filter) xuống backend
+    const sortConfig = SORT_CONFIG[state.sortBy] || null;
     const response = await productApi.filterProducts({
       page: state.currentPage,
       size: state.pageSize,
-      keyword: state.keyword, // Bây giờ backend đã nhận keyword chung với filter
-      categoryId: state.categoryId,
-      brandId: state.brandId,
-      minPrice: state.minPrice,
-      maxPrice: state.maxPrice,
-      ram: state.ram,
-      sortBy: state.sortBy // Backend cũng nên hỗ trợ sort, nếu backend chưa có bạn báo lại để mình viết thêm nhé
+      keyword: state.keyword,
+      sortBy: sortConfig?.sortBy,
+      sortDir: sortConfig?.sortDir,
     });
 
-    // Backend trả về: ApiResponse.success(message, Page<ProductSummaryResponse>)
-    // Request.js return: payload?.data = Page<ProductSummaryResponse>
-    // Page object có: content, totalElements, totalPages, NOT data
-    const pageData = response; // response là Page object
-    const products = pageData?.content || []; 
-    
-    // Server trả về sẵn totalElements và totalPages
-    state.totalResults = pageData?.totalElements || products.length;
-    const totalPages = pageData?.totalPages || 1;
-
+    const products = response?.content || [];
+    state.totalResults = response?.totalElements || products.length;
     elements.resultsCount.textContent = String(state.totalResults);
 
-    if (state.totalResults === 0 || products.length === 0) {
+    if (!products.length) {
       elements.emptyState.style.display = "flex";
       elements.pagination.innerHTML = "";
       return;
     }
 
-    // Sort tạm ở client nếu backend chưa làm (Tốt nhất nên đem sort xuống JPA backend luôn)
-    const sortedProducts = sortProducts(products); 
-
-    renderProducts(sortedProducts);
-    renderPagination(totalPages); // Trực tiếp dùng totalPages từ Server
+    renderProducts(sortProducts(products));
+    renderPagination(response?.totalPages || 1);
   } catch (error) {
     console.error("Error loading search products:", error);
     showErrorMessage("Lỗi khi tải sản phẩm. Vui lòng thử lại.");
@@ -107,18 +91,10 @@ async function loadProducts() {
 
 function sortProducts(products) {
   const sorted = [...products];
-  switch (state.sortBy) {
-    case "price-asc":
-      return sorted.sort((a, b) => (a.minPrice || 0) - (b.minPrice || 0));
-    case "price-desc":
-      return sorted.sort((a, b) => (b.minPrice || 0) - (a.minPrice || 0));
-    case "popular":
-      return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    case "newest":
-      return sorted.reverse();
-    default:
-      return sorted;
+  if (state.sortBy === "popular") {
+    return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   }
+  return sorted;
 }
 
 function renderProducts(products) {
@@ -156,17 +132,17 @@ function renderProducts(products) {
     .join("");
 
   elements.productGrid.querySelectorAll(".btn-quick-view").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const productId = e.currentTarget.dataset.productId;
+    btn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const productId = event.currentTarget.dataset.productId;
       window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
     });
   });
 
   elements.productGrid.querySelectorAll(".btn-add-cart").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const productId = e.currentTarget.dataset.productId;
+    btn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const productId = event.currentTarget.dataset.productId;
       window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
     });
   });
@@ -183,8 +159,8 @@ function renderPagination(totalPages) {
       ? `<button class="pagination-btn" data-page="${state.currentPage - 1}">Trang trước</button>`
       : "";
 
-  for (let i = 0; i < totalPages; i += 1) {
-    html += `<button class="pagination-btn ${i === state.currentPage ? "active" : ""}" data-page="${i}">${i + 1}</button>`;
+  for (let page = 0; page < totalPages; page += 1) {
+    html += `<button class="pagination-btn ${page === state.currentPage ? "active" : ""}" data-page="${page}">${page + 1}</button>`;
   }
 
   html +=
@@ -193,182 +169,37 @@ function renderPagination(totalPages) {
       : "";
 
   elements.pagination.innerHTML = html;
-
   elements.pagination.querySelectorAll(".pagination-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", (event) => {
       state.currentPage =
-        Number.parseInt(e.currentTarget.dataset.page, 10) || 0;
+        Number.parseInt(event.currentTarget.dataset.page, 10) || 0;
       loadProducts();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
 }
 
-async function loadCategories() {
-  try {
-    const categories = await categoryApi.getAll();
-    elements.categoryList.innerHTML = (categories || [])
-      .map(
-        (cat) => `
-        <label class="checkbox-label">
-          <input type="checkbox" value="${cat.id}" class="category-filter" />
-          ${escapeHtml(cat.name)}
-        </label>
-      `,
-      )
-      .join("");
-
-    elements.categoryList
-      .querySelectorAll(".category-filter")
-      .forEach((checkbox) => {
-        checkbox.addEventListener("change", (e) => {
-          state.categoryId = e.target.checked ? e.target.value : null;
-          state.currentPage = 0;
-          enforceSingleChecked(".category-filter", e.target);
-          loadProducts();
-        });
-      });
-  } catch (error) {
-    console.error("Error loading categories:", error);
-  }
-}
-
-async function loadBrands() {
-  try {
-    const brands = await brandApi.getAll();
-    elements.brandList.innerHTML = (brands || [])
-      .map(
-        (brand) => `
-        <label class="checkbox-label">
-          <input type="checkbox" value="${brand.brandId}" class="brand-filter" />
-          ${escapeHtml(brand.brandName)}
-        </label>
-      `,
-      )
-      .join("");
-
-    elements.brandList.querySelectorAll(".brand-filter").forEach((checkbox) => {
-      checkbox.addEventListener("change", (e) => {
-        state.brandId = e.target.checked ? e.target.value : null;
-        state.currentPage = 0;
-        enforceSingleChecked(".brand-filter", e.target);
-        loadProducts();
-      });
-    });
-  } catch (error) {
-    console.error("Error loading brands:", error);
-  }
-}
-
 function attachEventListeners() {
-  elements.searchForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
+  elements.searchForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
     const keyword = elements.searchInput.value.trim();
     if (!keyword) return;
 
     state.keyword = keyword;
     state.currentPage = 0;
     elements.searchKeyword.textContent = keyword;
-    const nextUrl = `/search?q=${encodeURIComponent(keyword)}`;
-    window.history.replaceState({}, "", nextUrl);
-    loadProducts();
+    window.history.replaceState(
+      {},
+      "",
+      `/search?q=${encodeURIComponent(keyword)}`,
+    );
+    await loadProducts();
   });
 
-  elements.sortSelect?.addEventListener("change", (e) => {
-    state.sortBy = e.target.value;
-    loadProducts();
-  });
-
-  elements.minPrice?.addEventListener("change", (e) => {
-    state.minPrice = e.target.value ? Number(e.target.value) : null;
-    normalizePriceRange();
-    syncPriceInputs();
-    updatePricePresetState();
+  elements.sortSelect?.addEventListener("change", async (event) => {
+    state.sortBy = event.target.value;
     state.currentPage = 0;
-    loadProducts();
-  });
-
-  elements.maxPrice?.addEventListener("change", (e) => {
-    state.maxPrice = e.target.value ? Number(e.target.value) : null;
-    normalizePriceRange();
-    syncPriceInputs();
-    updatePricePresetState();
-    state.currentPage = 0;
-    loadProducts();
-  });
-
-  document.querySelectorAll(".price-preset").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const min = Number(e.currentTarget.dataset.min);
-      const max = Number(e.currentTarget.dataset.max);
-      state.minPrice = min;
-      state.maxPrice = max;
-      syncPriceInputs();
-      updatePricePresetState();
-      state.currentPage = 0;
-      loadProducts();
-    });
-  });
-
-  document.querySelectorAll(".ram-filter").forEach((checkbox) => {
-    checkbox.addEventListener("change", (e) => {
-      state.ram = e.target.checked ? e.target.value : null;
-      state.currentPage = 0;
-      enforceSingleChecked(".ram-filter", e.target);
-      loadProducts();
-    });
-  });
-
-  elements.clearFilters?.addEventListener("click", () => {
-    state.minPrice = null;
-    state.maxPrice = null;
-    state.categoryId = null;
-    state.brandId = null;
-    state.ram = null;
-    state.currentPage = 0;
-    syncPriceInputs();
-    updatePricePresetState();
-
-    document.querySelectorAll(".checkbox-label input").forEach((input) => {
-      input.checked = false;
-    });
-    loadProducts();
-  });
-}
-
-function syncPriceInputs() {
-  if (elements.minPrice) {
-    elements.minPrice.value =
-      state.minPrice != null ? String(state.minPrice) : "";
-  }
-  if (elements.maxPrice) {
-    elements.maxPrice.value =
-      state.maxPrice != null ? String(state.maxPrice) : "";
-  }
-}
-
-function normalizePriceRange() {
-  if (state.minPrice == null || state.maxPrice == null) return;
-  if (state.minPrice <= state.maxPrice) return;
-
-  const nextMin = state.maxPrice;
-  state.maxPrice = state.minPrice;
-  state.minPrice = nextMin;
-}
-
-function updatePricePresetState() {
-  document.querySelectorAll(".price-preset").forEach((btn) => {
-    const min = Number(btn.dataset.min);
-    const max = Number(btn.dataset.max);
-    const isActive = state.minPrice === min && state.maxPrice === max;
-    btn.classList.toggle("active", isActive);
-  });
-}
-
-function enforceSingleChecked(selector, currentInput) {
-  if (!currentInput.checked) return;
-  document.querySelectorAll(selector).forEach((input) => {
-    if (input !== currentInput) input.checked = false;
+    await loadProducts();
   });
 }
 
@@ -391,23 +222,10 @@ function getProductDescription(product) {
   return "Sản phẩm công nghệ chính hãng, bảo hành tốt.";
 }
 
-function filterProductsByKeyword(products, keyword) {
-  const normalizedKeyword = normalizeText(keyword);
-  if (!normalizedKeyword) return products || [];
-
-  return (products || []).filter((product) =>
-    normalizeText(product?.name).includes(normalizedKeyword),
-  );
-}
-
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
-}
-
-function normalizeText(text) {
-  return String(text || "").toLowerCase();
 }
 
 function showErrorMessage(message) {

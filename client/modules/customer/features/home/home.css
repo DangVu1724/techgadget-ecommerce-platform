@@ -864,6 +864,122 @@ cursor:pointer;
     color:#888;
 }
 
+.promo-video {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.promo-video iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+.modern-banner {
+  padding: 40px 0;
+}
+
+.banner-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+/* Banner lớn */
+.banner-main {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.banner-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.banner-main:hover img {
+  transform: scale(1.05);
+}
+
+/* Overlay */
+.banner-overlay {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  color: #fff;
+  max-width: 60%;
+  z-index: 2;
+}
+
+.banner-overlay .tag {
+  background: #ff4d4f;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.banner-overlay h2 {
+  font-size: 28px;
+  margin: 10px 0;
+}
+
+.banner-overlay p {
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Side banners */
+.banner-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.banner-item {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.banner-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-item .overlay {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  color: white;
+  font-weight: 500;
+  z-index: 2;
+}
+
+/* Gradient overlay */
+.banner-main::after,
+.banner-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    z-index: 1;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .promo-video {
+    height: 400px;
+  }
+}
+
 /* RESPONSIVE */
 
 @media(max-width:768px){

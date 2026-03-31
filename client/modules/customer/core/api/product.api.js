@@ -15,7 +15,8 @@ export const productApi = {
       size: finalParams.size ?? 20,
     });
 
-    if (keyword) query.append("name", keyword);
+    const resolvedKeyword = finalParams.keyword ?? keyword;
+    if (resolvedKeyword) query.append("keyword", resolvedKeyword);
 
     if (finalParams.brandId) query.append("brandId", finalParams.brandId);
     if (finalParams.categoryId)
