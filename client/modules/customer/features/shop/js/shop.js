@@ -22,12 +22,24 @@ const state = {
   },
 };
 
+const SORT_CONFIG = {
+  default: null,
+  "price-asc": { sortBy: "minPrice", sortDir: "asc" },
+  "price-desc": { sortBy: "minPrice", sortDir: "desc" },
+  "name-asc": { sortBy: "name", sortDir: "asc" },
+  "name-desc": { sortBy: "name", sortDir: "desc" },
+  newest: { sortBy: "createdAt", sortDir: "desc" },
+};
+
 const elements = {
   productList: null,
   emptyMessage: null,
   pagination: null,
   advancedFilters: null,
   toggleFilters: null,
+  filterDropdown: null,
+  filterBadge: null,
+  filterSummary: null,
   breadcrumb: null,
   categoryBrandsWrapper: null,
   categoryBrandList: null,
@@ -42,7 +54,7 @@ const elements = {
 
 const HIDDEN_FILTERS = {
   smartphone: new Set(["color", "os", "screen_size"]),
-  laptop: new Set(["opsys", "cpu_frequency_ghz","os"]),
+  laptop: new Set(["opsys", "cpu_frequency_ghz", "os"]),
 };
 
 const LABEL_MAP = {
@@ -84,6 +96,9 @@ const initElements = () => {
   elements.pagination = document.getElementById("pagination");
   elements.advancedFilters = document.getElementById("advancedFilters");
   elements.toggleFilters = document.getElementById("toggleFilters");
+  elements.filterDropdown = document.getElementById("filterDropdown");
+  elements.filterBadge = document.getElementById("filterBadge");
+  elements.filterSummary = document.getElementById("filterSummary");
   elements.breadcrumb = document.getElementById("breadcrumb");
   elements.categoryBrandsWrapper = document.getElementById(
     "categoryBrandsWrapper",
@@ -108,6 +123,7 @@ const getQueryParams = () => {
     brandId: params.get("brandId"),
     brandName: params.get("brandName"),
     page: params.get("page"),
+    sort: params.get("sort") || "default",
   };
 };
 
@@ -149,7 +165,12 @@ const updateQueryParamsInUrl = (updates = {}) => {
   window.history.replaceState({}, "", url);
 };
 
-const normalizeCategoryKey = (value) => String(value || "").trim().toLowerCase();
+const getSortParams = (sortValue) => SORT_CONFIG[sortValue] || null;
+
+const normalizeCategoryKey = (value) =>
+  String(value || "")
+    .trim()
+    .toLowerCase();
 
 const formatTitle = (value) =>
   String(value || "")
@@ -367,7 +388,9 @@ const formatOptionValue = (filterName, value) => {
     return formatter(value);
   }
 
-  return String(value || "").replaceAll("_", " ").trim();
+  return String(value || "")
+    .replaceAll("_", " ")
+    .trim();
 };
 
 const toWeightBucket = (weight) => {
@@ -475,31 +498,33 @@ const getFilterValues = () => {
   const attributeFilters = {};
   const uiSelections = {};
 
-  document.querySelectorAll(".dynamic-filter-input:checked").forEach((input) => {
-    const key = input.dataset.filterName;
-    if (!key) return;
+  document
+    .querySelectorAll(".dynamic-filter-input:checked")
+    .forEach((input) => {
+      const key = input.dataset.filterName;
+      if (!key) return;
 
-    const optionId = input.value;
-    const payloadValues = JSON.parse(input.dataset.payloadValues || "[]");
+      const optionId = input.value;
+      const payloadValues = JSON.parse(input.dataset.payloadValues || "[]");
 
-    if (!uiSelections[key]) {
-      uiSelections[key] = [];
-    }
-    if (!attributeFilters[key]) {
-      attributeFilters[key] = [];
-    }
-
-    uiSelections[key].push(optionId);
-    payloadValues.forEach((value) => {
-      if (
-        !attributeFilters[key].some(
-          (existing) => String(existing) === String(value),
-        )
-      ) {
-        attributeFilters[key].push(value);
+      if (!uiSelections[key]) {
+        uiSelections[key] = [];
       }
+      if (!attributeFilters[key]) {
+        attributeFilters[key] = [];
+      }
+
+      uiSelections[key].push(optionId);
+      payloadValues.forEach((value) => {
+        if (
+          !attributeFilters[key].some(
+            (existing) => String(existing) === String(value),
+          )
+        ) {
+          attributeFilters[key].push(value);
+        }
+      });
     });
-  });
 
   return {
     minPrice,
@@ -507,6 +532,67 @@ const getFilterValues = () => {
     attributeFilters,
     uiSelections,
   };
+};
+
+const getActiveFilterCount = (filters = state.filters) => {
+  const priceCount =
+    filters.minPrice != null || filters.maxPrice != null ? 1 : 0;
+  const attributeCount = Object.values(filters.uiSelections || {}).reduce(
+    (total, selections) => total + selections.length,
+    0,
+  );
+
+  return priceCount + attributeCount;
+};
+
+const updateFilterSummary = () => {
+  const count = getActiveFilterCount();
+
+  if (elements.filterBadge) {
+    elements.filterBadge.textContent = String(count);
+    elements.filterBadge.style.display = count ? "inline-flex" : "none";
+  }
+
+  if (!elements.filterSummary) {
+    return;
+  }
+
+  if (!count) {
+    elements.filterSummary.textContent = "No filters selected";
+    return;
+  }
+
+  const summaryParts = [];
+
+  if (state.filters.minPrice != null || state.filters.maxPrice != null) {
+    const min = state.filters.minPrice ?? 0;
+    const max = state.filters.maxPrice ?? "any";
+    summaryParts.push(`Price ${min} - ${max}`);
+  }
+
+  Object.entries(state.filters.uiSelections || {}).forEach(
+    ([filterName, selections]) => {
+      if (!selections.length) return;
+
+      const filter = state.dynamicFilters.find(
+        (item) => item.name === filterName,
+      );
+      if (!filter) return;
+
+      summaryParts.push(`${filter.label}: ${selections.length}`);
+    },
+  );
+
+  elements.filterSummary.textContent = summaryParts.join(" • ");
+};
+
+const setFilterDropdownState = (isOpen) => {
+  if (!elements.advancedFilters || !elements.toggleFilters) {
+    return;
+  }
+
+  elements.advancedFilters.classList.toggle("show", isOpen);
+  elements.toggleFilters.setAttribute("aria-expanded", String(isOpen));
 };
 
 const renderDynamicFilters = () => {
@@ -518,7 +604,7 @@ const renderDynamicFilters = () => {
     const section = document.createElement("div");
     section.className = "filter-section";
     section.innerHTML = `
-      <h4>${filter.label}</h4>
+      <h4>${filter.label}<i class="fas fa-chevron-down"></i></h4>
       <div class="filter-content dynamic-filter-list"></div>
     `;
 
@@ -546,6 +632,7 @@ const renderDynamicFilters = () => {
   });
 
   bindFilterSectionToggles();
+  updateFilterSummary();
 };
 
 const bindFilterSectionToggles = () => {
@@ -570,6 +657,8 @@ const syncFilterInputs = () => {
     const selectedValues = state.filters.uiSelections?.[key] || [];
     input.checked = selectedValues.includes(input.value);
   });
+
+  updateFilterSummary();
 };
 
 const resetFilters = () => {
@@ -619,23 +708,25 @@ const loadDynamicFilters = async () => {
 
 const setupFilters = () => {
   if (elements.toggleFilters && elements.advancedFilters) {
-    elements.toggleFilters.addEventListener("click", () => {
-      elements.advancedFilters.classList.toggle("show");
-      const icon = elements.toggleFilters.querySelector("i:last-child");
-      if (icon) {
-        icon.style.transform = elements.advancedFilters.classList.contains(
-          "show",
-        )
-          ? "rotate(180deg)"
-          : "rotate(0)";
-      }
+    elements.toggleFilters.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setFilterDropdownState(
+        !elements.advancedFilters.classList.contains("show"),
+      );
     });
   }
+
+  document.addEventListener("click", (event) => {
+    if (!elements.filterDropdown?.contains(event.target)) {
+      setFilterDropdownState(false);
+    }
+  });
 
   if (elements.applyFilters) {
     elements.applyFilters.addEventListener("click", () => {
       state.currentPage = 1;
       updatePageInUrl(1);
+      setFilterDropdownState(false);
       loadShopProducts();
     });
   }
@@ -656,27 +747,65 @@ const setupFilters = () => {
       if (minInput && maxInput) {
         minInput.value = btn.dataset.min;
         maxInput.value = btn.dataset.max;
+        state.filters = getFilterValues();
+        updateFilterSummary();
       }
     });
   });
 
+  elements.minPrice?.addEventListener("input", () => {
+    state.filters = getFilterValues();
+    updateFilterSummary();
+  });
+
+  elements.maxPrice?.addEventListener("input", () => {
+    state.filters = getFilterValues();
+    updateFilterSummary();
+  });
+
+  document.addEventListener("change", (event) => {
+    if (
+      event.target instanceof Element &&
+      event.target.matches(".dynamic-filter-input")
+    ) {
+      state.filters = getFilterValues();
+      updateFilterSummary();
+    }
+  });
+
   if (elements.sortSelect) {
-    elements.sortSelect.addEventListener("change", () => {});
+    elements.sortSelect.addEventListener("change", () => {
+      state.currentPage = 1;
+      updateQueryParamsInUrl({
+        sort:
+          elements.sortSelect.value && elements.sortSelect.value !== "default"
+            ? elements.sortSelect.value
+            : null,
+        page: null,
+      });
+      loadShopProducts();
+    });
   }
 
   bindFilterSectionToggles();
+  updateFilterSummary();
 };
 
 const loadShopProducts = async () => {
   state.queryParams = getQueryParams();
   state.currentPage = getPageFromQuery();
   const pageZero = state.currentPage - 1;
+  const sortConfig = getSortParams(state.queryParams.sort);
 
   try {
     await ensureCategoryContext();
     state.filters = getFilterValues();
     await loadDynamicFilters();
     state.filters = getFilterValues();
+
+    if (elements.sortSelect) {
+      elements.sortSelect.value = state.queryParams.sort || "default";
+    }
 
     const res = await productApi.filterProducts({
       page: pageZero,
@@ -686,6 +815,8 @@ const loadShopProducts = async () => {
       minPrice: state.filters.minPrice,
       maxPrice: state.filters.maxPrice,
       attributeFilters: state.filters.attributeFilters,
+      sortBy: sortConfig?.sortBy,
+      sortDir: sortConfig?.sortDir,
     });
 
     state.currentProducts = res.content || [];
