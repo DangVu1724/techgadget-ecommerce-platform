@@ -29,6 +29,7 @@ const state = {
 
 const elements = {
   productList: null,
+  shopSkeleton: null,
   emptyMessage: null,
   pagination: null,
   breadcrumb: null,
@@ -52,6 +53,7 @@ let advancedFilterPanel;
 
 const initElements = () => {
   elements.productList = document.getElementById("productList");
+  elements.shopSkeleton = document.getElementById("shopSkeleton");
   elements.emptyMessage = document.getElementById("emptyMessage");
   elements.pagination = document.getElementById("pagination");
   elements.breadcrumb = document.getElementById("breadcrumb");
@@ -158,6 +160,19 @@ const renderBreadcrumb = (categoryName, brandName) => {
     .join('<span class="breadcrumb-separator">/</span>');
 };
 
+const showSkeleton = () => {
+  elements.shopSkeleton?.classList.remove("hidden");
+  elements.productList?.classList.add("hidden");
+  elements.emptyMessage?.classList.remove("show");
+  elements.pagination?.classList.add("hidden");
+};
+
+const hideSkeleton = () => {
+  elements.shopSkeleton?.classList.add("hidden");
+  elements.productList?.classList.remove("hidden");
+  elements.pagination?.classList.remove("hidden");
+};
+
 const renderPagination = (currentPage, totalPages) => {
   if (!elements.pagination || totalPages <= 1) {
     if (elements.pagination) elements.pagination.innerHTML = "";
@@ -194,7 +209,12 @@ const renderPagination = (currentPage, totalPages) => {
   }
 
   elements.pagination.appendChild(
-    createBtn("▶", Math.min(totalPages, currentPage + 1), false, currentPage === totalPages),
+    createBtn(
+      "▶",
+      Math.min(totalPages, currentPage + 1),
+      false,
+      currentPage === totalPages,
+    ),
   );
 
   elements.pagination.querySelectorAll(".page-btn").forEach((btn) => {
@@ -373,6 +393,7 @@ const loadShopProducts = async () => {
   state.currentPage = getPageFromQuery();
 
   try {
+    showSkeleton();
     await ensureCategoryContext();
     await loadDynamicFilters();
     syncFilterLabel();
@@ -413,20 +434,9 @@ const loadShopProducts = async () => {
     }
   } catch (error) {
     console.error("Error loading shop products:", error);
+  } finally {
+    hideSkeleton();
   }
-};
-
-const setupShopSearch = () => {
-  const searchForm = document.getElementById("shop-search-form");
-  const searchInput = document.getElementById("shop-search-input");
-
-  searchForm?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const keyword = searchInput.value.trim();
-    if (keyword) {
-      window.location.href = `/search?q=${encodeURIComponent(keyword)}`;
-    }
-  });
 };
 
 const setupSort = () => {
@@ -475,6 +485,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   setupSort();
-  setupShopSearch();
   loadShopProducts();
 });

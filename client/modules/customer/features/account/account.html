@@ -3,10 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tài khoản của tôi | TechGadget</title>
-
+    <title>Tai khoan cua toi | TechGadget</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -19,94 +18,158 @@
     />
   </head>
   <body>
-    <div class="container section-padding">
-      <div class="profile-layout">
-        <aside class="profile-sidebar">
-          <div class="user-brief">
-            <div class="avatar-sm avatar-fallback">
+    <main class="account-page">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span>/</span>
+          <span class="breadcrumb-current">Account</span>
+        </nav>
+
+        <section class="account-hero">
+          <div class="account-hero-copy">
+            <p class="eyebrow">TechGadget Account</p>
+            <h1>Your account overview</h1>
+            <p class="hero-text">
+              Manage your profile details and review order activity in one
+              consistent customer dashboard.
+            </p>
+          </div>
+          <div class="account-hero-summary">
+            <div class="hero-avatar">
               <span class="profile-avatar-initial">T</span>
             </div>
-            <div class="user-brief-info">
-              <span class="username">Tài khoản</span>
-              <span class="text-muted profile-subtitle"
-                >Thông tin được đồng bộ từ hệ thống</span
+            <div>
+              <h2 class="profile-display-name">Tai khoan</h2>
+              <p class="profile-email"></p>
+            </div>
+          </div>
+        </section>
+
+        <div class="account-shell">
+          <aside class="account-sidebar">
+            <div class="sidebar-card">
+              <div class="user-brief">
+                <div class="avatar-sm">
+                  <span class="profile-avatar-initial">T</span>
+                </div>
+                <div class="user-brief-info">
+                  <span class="username">Tai khoan</span>
+                  <span class="profile-subtitle"
+                    >Synced profile information</span
+                  >
+                </div>
+              </div>
+
+              <nav class="profile-menu">
+                <button
+                  type="button"
+                  class="menu-item active"
+                  data-tab="tab-hoso"
+                >
+                  <i class="far fa-user"></i>
+                  <span>Profile</span>
+                </button>
+                <button type="button" class="menu-item" data-tab="tab-donmua">
+                  <i class="fas fa-box"></i>
+                  <span>Orders</span>
+                </button>
+              </nav>
+
+              <button
+                type="button"
+                class="profile-logout-btn"
+                id="accountLogoutBtn"
               >
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Log out</span>
+              </button>
             </div>
-          </div>
+          </aside>
 
-          <nav class="profile-menu">
-            <div class="menu-item active" data-tab="tab-hoso">
-              <i class="far fa-user"></i>
-              <span class="v-label">Hồ sơ</span>
-            </div>
-            <div class="menu-item" data-tab="tab-donmua">
-              <i class="fas fa-file-alt"></i>
-              <span class="v-label">Đơn mua</span>
-            </div>
-          </nav>
+          <section class="account-main">
+            <div id="tab-hoso" class="tab-content active">
+              <div class="panel-card panel-card-highlight">
+                <div class="panel-head">
+                  <div>
+                    <p class="panel-kicker">Profile details</p>
+                    <h2>My profile</h2>
+                  </div>
+                  <span class="panel-badge">Verified</span>
+                </div>
 
-          <button
-            type="button"
-            class="profile-logout-btn"
-            id="accountLogoutBtn"
-          >
-            <i class="fas fa-right-from-bracket"></i>
-            <span>Logout</span>
-          </button>
-        </aside>
-
-        <main class="profile-main">
-          <div id="tab-hoso" class="tab-content active">
-            <div class="profile-header">
-              <h2 class="section-title-slanted">Hồ sơ của tôi</h2>
-            </div>
-
-            <section class="profile-summary-card">
-              <div class="profile-summary-avatar">
-                <span class="profile-avatar-initial">T</span>
+                <div id="profileDetails" class="profile-details-grid"></div>
+                <div
+                  id="profileEmpty"
+                  class="empty-state"
+                  style="display: none"
+                >
+                  <i class="fas fa-circle-info"></i>
+                  <p>No extra profile information is available yet.</p>
+                </div>
               </div>
-              <div class="profile-summary-copy">
-                <h3 class="profile-display-name">Tài khoản</h3>
-                <p class="profile-email text-muted"></p>
+            </div>
+
+            <div id="tab-donmua" class="tab-content">
+              <div class="panel-card">
+                <div class="panel-head panel-head-stack">
+                  <div>
+                    <p class="panel-kicker">Order center</p>
+                    <h2>Orders</h2>
+                    <p class="panel-description">
+                      Review order history, payment details, and the current
+                      fulfillment state for every order.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="order-toolbar">
+                  <div class="order-tabs-container">
+                    <button
+                      type="button"
+                      class="ot-item active"
+                      data-order="all"
+                    >
+                      All
+                    </button>
+                    <button type="button" class="ot-item" data-order="pending">
+                      Pending
+                    </button>
+                    <button type="button" class="ot-item" data-order="shipping">
+                      In progress
+                    </button>
+                    <button
+                      type="button"
+                      class="ot-item"
+                      data-order="completed"
+                    >
+                      Completed
+                    </button>
+                    <button
+                      type="button"
+                      class="ot-item"
+                      data-order="cancelled"
+                    >
+                      Cancelled
+                    </button>
+                  </div>
+
+                  <label class="order-search-bar">
+                    <i class="fas fa-search"></i>
+                    <input
+                      type="text"
+                      placeholder="Search by order code or status"
+                    />
+                  </label>
+                </div>
+
+                <div id="order-list-content" class="order-list-content"></div>
               </div>
-            </section>
-
-            <section class="profile-details-section">
-              <div id="profileDetails" class="profile-details-grid"></div>
-              <div id="profileEmpty" class="empty-state" style="display: none">
-                <i class="fas fa-circle-info"></i>
-                <p>Hiện chưa có thêm thông tin hồ sơ để hiển thị.</p>
-              </div>
-            </section>
-          </div>
-
-          <div id="tab-donmua" class="tab-content">
-            <div class="profile-header">
-              <h2 class="section-title-slanted">Đơn mua</h2>
-              <p>Theo dõi các đơn hàng đã tạo trên tài khoản của bạn.</p>
             </div>
-
-            <div class="order-tabs-container">
-              <div class="ot-item active" data-order="all">Tất cả</div>
-              <div class="ot-item" data-order="pending">Chờ thanh toán</div>
-              <div class="ot-item" data-order="shipping">Đang xử lý</div>
-              <div class="ot-item" data-order="completed">Hoàn thành</div>
-              <div class="ot-item" data-order="cancelled">Đã hủy</div>
-            </div>
-
-            <div class="order-search-bar">
-              <i class="fas fa-search"></i>
-              <input
-                type="text"
-                placeholder="Tìm theo mã đơn, trạng thái hoặc nội dung liên quan"
-              />
-            </div>
-
-            <div id="order-list-content"></div>
-          </div>
-        </main>
+          </section>
+        </div>
       </div>
-    </div>
+    </main>
 
     <script
       type="module"

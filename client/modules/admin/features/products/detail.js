@@ -263,7 +263,8 @@ window.saveVariant = async () => {
         return;
       }
 
-      await variantApi.updateVariant(currentVariant.id, changedFields);
+      // PUT update expects a complete valid payload, so send the full current form data.
+      await variantApi.updateVariant(currentVariant.id, variantData);
       showToast("Variant updated successfully.", "success");
     } else {
       await variantApi.createVariant(variantData);

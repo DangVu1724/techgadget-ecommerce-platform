@@ -25,7 +25,7 @@ public class ProductVariant {
     private String name;
 
     @NotBlank(message = "SKU không được để trống")
-    @Size(min = 6, max = 50, message = "SKU phải từ 6-50 ký tự")
+    @Size(min = 2, max = 50, message = "SKU phải từ 2-50 ký tự")
     @Pattern(regexp = "^[A-Z0-9_-]+$", message = "SKU chỉ được chứa chữ hoa, số, gạch ngang và gạch dưới")
     @Column(nullable = false, length = 50, unique = true,columnDefinition = "TEXT")
     private String sku;
@@ -38,6 +38,8 @@ public class ProductVariant {
 
     @Column(nullable = false)
     private Integer reservedStock = 0;
+
+    private Integer soldCount = 0;
 
     @Column(columnDefinition = "TEXT")
     private String description;

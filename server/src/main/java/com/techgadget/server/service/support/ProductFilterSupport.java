@@ -81,6 +81,7 @@ public class ProductFilterSupport {
                 root.get("image"),
                 cb.min(variantJoin.get("price")),
                 cb.sumAsLong(variantJoin.get("stock")),
+                root.get("totalSold"),
                 categoryJoin.get("name"),
                 brandJoin.get("brandName"),
                 root.get("createdAt")
@@ -92,6 +93,7 @@ public class ProductFilterSupport {
                 root.get("id"),
                 root.get("name"),
                 root.get("image"),
+                root.get("totalSold"),
                 categoryJoin.get("name"),
                 brandJoin.get("brandName"),
                 root.get("createdAt")

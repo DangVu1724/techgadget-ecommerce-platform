@@ -354,215 +354,371 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
     color: var(--accent);
 }
 
-/* COUPON SECTION */
+/* Coupon Section */
 .coupon-section {
-    margin-top: 10px;
-    padding: 16px;
-    border: 1px solid var(--border-grey);
-    border-radius: 10px;
-    background: #fff8f4;
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
 }
 
 .coupon-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  cursor: pointer;
 }
 
 .coupon-title {
-    font-family: var(--font-heading);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coupon-title i {
+    color: var(--accent);
 }
 
 .coupon-list-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--text-light);
-    font-size: 12px;
-    font-family: var(--font-main);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  color: #666;
+}
+
+.coupon-list-toggle:hover {
+  background: #f0f0f0;
+    color: var(--accent);
 }
 
 .coupon-hint {
-    font-size: 12px;
-    color: inherit;
+  font-size: 13px;
+  color: #999;
 }
 
 .coupon-toggle-icon {
-    display: inline-flex;
-    width: 18px;
-    height: 18px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: 1px solid #ffd8cb;
-    color: var(--accent);
-    font-size: 12px;
-    transform: rotate(180deg);
-    transition: transform 0.2s ease;
+  font-size: 12px;
+  transition: transform 0.3s ease;
 }
 
 .coupon-list-toggle.is-expanded .coupon-toggle-icon {
-    transform: rotate(0deg);
+  transform: rotate(180deg);
 }
 
 .coupon-input-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .coupon-input-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border: 1px solid #ffd8cb;
-    border-radius: 10px;
-    background: var(--white);
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0 12px;
+  transition: all 0.3s ease;
+}
+
+.coupon-input-wrap:focus-within {
+    color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
 }
 
 .coupon-input-wrap i {
-    color: var(--accent);
-    font-size: 14px;
+  color: #999;
+  font-size: 16px;
 }
 
 .coupon-input-wrap input {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 14px;
-    font-family: var(--font-main);
-    background: transparent;
+  flex: 1;
+  border: none;
+  padding: 12px 8px;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
 }
 
 .coupon-apply-btn {
-    height: 42px;
-    padding: 0 18px;
-    border-radius: 10px;
-    border: none;
-    background: var(--accent);
-    color: var(--white);
-    font-family: var(--font-heading);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.2s;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
-.coupon-apply-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+.coupon-apply-btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.coupon-apply-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .coupon-message {
-    margin: 8px 0 0;
-    font-size: 0.9rem;
-    color: var(--text-light);
+  font-size: 12px;
+  margin: 8px 0 0 0;
+  padding: 0;
 }
 
-.coupon-list {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* View Vouchers Button */
+.view-vouchers-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: white;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.coupon-list.is-collapsed {
-    display: none;
+.view-vouchers-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* Voucher Modal */
+.voucher-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voucher-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.voucher-modal-container {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.voucher-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+  border-radius: 16px 16px 0 0;
+  color: white;
+}
+
+.voucher-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.voucher-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.voucher-modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.voucher-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Coupon Cards in Modal */
+.voucher-modal-body .coupon-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.voucher-modal-body .coupon-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1);
+  transform: translateY(-2px);
+}
+
+.voucher-modal-body .coupon-card--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.voucher-modal-body .coupon-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.voucher-modal-body .coupon-card__code {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: monospace;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.voucher-modal-body .coupon-card__meta {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.voucher-modal-body .coupon-card__status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: #f5f5f5;
+}
+
+.voucher-modal-body .coupon-card__details {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  display: none;
+}
+
+.voucher-modal-body .coupon-card__details > div {
+  margin-bottom: 4px;
+}
+
+.voucher-modal-body .coupon-card__details > div:last-child {
+  margin-bottom: 0;
+}
+
+.voucher-modal-body .coupon-card__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.voucher-modal-body .coupon-card__btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 13px;
+}
+
+.voucher-modal-body .coupon-card__btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.voucher-modal-body .coupon-card__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .coupon-empty {
-    color: var(--text-light);
-    font-size: 0.9rem;
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  font-size: 14px;
 }
 
-.coupon-card {
-    border: 1px solid #f1f1f1;
-    border-radius: 12px;
+/* Responsive */
+@media (max-width: 768px) {
+  .coupon-input-row {
+    flex-direction: column;
+  }
+  
+  .coupon-apply-btn {
     padding: 12px;
-    background: var(--white);
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.coupon-card:hover {
-    border-color: #ffd8cb;
-    box-shadow: 0 8px 18px rgba(255, 111, 66, 0.08);
-}
-
-.coupon-card--disabled {
-    background: #fafafa;
-    cursor: not-allowed;
-}
-
-.coupon-card__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.coupon-card__code {
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.5px;
-}
-
-.coupon-card__meta {
-    font-size: 0.85rem;
-    color: #666;
-}
-
-.coupon-card__status {
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.coupon-card__details {
-    display: none;
-    margin-top: 8px;
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.4;
-}
-
-.coupon-card__actions {
-    margin-top: 10px;
-}
-
-.coupon-card__btn {
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 8px;
-    border: none;
-    background: var(--accent);
-    color: var(--white);
-    font-family: var(--font-heading);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    cursor: pointer;
-}
-
-.coupon-card__btn:disabled {
-    background: #e5e7eb;
-    color: #6b7280;
-    cursor: not-allowed;
+  }
+  
+  .voucher-modal-container {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .voucher-modal-header h3 {
+    font-size: 18px;
+  }
 }
 
 /* RESPONSIVE */

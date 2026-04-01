@@ -31,6 +31,7 @@ public class ProductMapper {
                         .filter(Objects::nonNull)
                         .mapToLong(Integer::longValue)
                         .sum())
+                .totalSold(product.getTotalSold())
                 .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
                 .createdAt(product.getCreatedAt())

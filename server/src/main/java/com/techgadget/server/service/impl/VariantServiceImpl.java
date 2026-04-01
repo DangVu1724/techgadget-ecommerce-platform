@@ -13,6 +13,8 @@ import com.techgadget.server.repository.AttributeRepository;
 import com.techgadget.server.repository.ProductRepository;
 import com.techgadget.server.repository.VariantRepository;
 import com.techgadget.server.service.VariantService;
+import jakarta.transaction.Transactional;
+import jdk.jfr.TransitionTo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,9 +54,11 @@ public class VariantServiceImpl implements VariantService {
         variant.setStock(request.getStock());
         variant.setDescription(request.getDescription());
         variant.setProduct(product);
-        variant.setAttributeValues(buildAttributeValues(variant, request.getAttributes()));
 
-        String sku = generateSku(product, request.getAttributes());
+        List<VariantAttributeRequest> normalizedAttributes = normalizeAttributes(request.getAttributes());
+        variant.setAttributeValues(buildAttributeValues(variant, normalizedAttributes));
+
+        String sku = generateSku(product, normalizedAttributes);
         variant.setSku(sku);
 
         ProductVariant saved = variantRepository.save(variant);
@@ -62,6 +66,7 @@ public class VariantServiceImpl implements VariantService {
     }
 
     @Override
+    @Transactional
     public VariantResponse updateVariant(Long id, VariantRequest request) {
         ProductVariant variant = variantRepository.findDetailById(id)
                 .orElseThrow(() -> new NotFoundException("Variant not found with id: " + id));
@@ -83,11 +88,41 @@ public class VariantServiceImpl implements VariantService {
         }
 
         if (request.getAttributes() != null) {
-            variant.getAttributeValues().clear();
-            variant.getAttributeValues().addAll(buildAttributeValues(variant, request.getAttributes()));
-            variant.setSku(generateSku(variant.getProduct(), request.getAttributes()));
-        }
+            List<VariantAttributeRequest> normalizedRequests = normalizeAttributes(request.getAttributes());
 
+            // 1. Map các giá trị hiện có trong DB (Key là attributeId)
+            Map<Long, VariantAttributeValue> existingMap = variant.getAttributeValues().stream()
+                    .collect(Collectors.toMap(av -> av.getAttribute().getAttributeId(), av -> av));
+
+            // 2. Tạo Set mới để chứa các giá trị sau khi xử lý
+            Set<VariantAttributeValue> finalValues = new HashSet<>();
+
+            for (VariantAttributeRequest req : normalizedRequests) {
+                if (existingMap.containsKey(req.getAttributeId())) {
+                    // NẾU ĐÃ CÓ: Lấy bản ghi cũ và chỉ cập nhật giá trị mới (Tránh lỗi Unique)
+                    VariantAttributeValue existingValue = existingMap.get(req.getAttributeId());
+                    existingValue.setValue(req.getValue());
+                    finalValues.add(existingValue);
+                } else {
+                    // NẾU CHƯA CÓ: Tạo mới hoàn toàn
+                    Attribute attribute = attributeRepository.findById(req.getAttributeId())
+                            .orElseThrow(() -> new NotFoundException("Attribute not found: " + req.getAttributeId()));
+
+                    VariantAttributeValue newValue = new VariantAttributeValue();
+                    newValue.setVariant(variant);
+                    newValue.setAttribute(attribute);
+                    newValue.setValue(req.getValue());
+                    finalValues.add(newValue);
+                }
+            }
+
+            // 3. Cập nhật lại danh sách (orphanRemoval sẽ tự xóa những cái không có trong finalValues)
+            variant.getAttributeValues().clear();
+            variant.getAttributeValues().addAll(finalValues);
+
+            variant.setSku(generateSku(variant.getProduct(), normalizedRequests));
+        }
+        System.out.println(">>> DEBUG SKU CREATED: " + variant.getSku() + " (Length: " + variant.getSku().length() + ")");
         ProductVariant updated = variantRepository.save(variant);
         return mapToResponse(updated);
     }
@@ -99,7 +134,8 @@ public class VariantServiceImpl implements VariantService {
         variantRepository.delete(variant);
     }
 
-    private Set<VariantAttributeValue> buildAttributeValues(ProductVariant variant, List<VariantAttributeRequest> attributes) {
+    private Set<VariantAttributeValue> buildAttributeValues(ProductVariant variant,
+            List<VariantAttributeRequest> attributes) {
         Set<VariantAttributeValue> attributeValues = new HashSet<>();
         for (VariantAttributeRequest attr : attributes) {
             Attribute attribute = attributeRepository.findById(attr.getAttributeId())
@@ -114,6 +150,23 @@ public class VariantServiceImpl implements VariantService {
         return attributeValues;
     }
 
+    private List<VariantAttributeRequest> normalizeAttributes(List<VariantAttributeRequest> attributes) {
+        if (attributes == null || attributes.isEmpty()) {
+            return List.of();
+        }
+
+        return attributes.stream()
+                .filter(attr -> attr != null && attr.getAttributeId() != null && attr.getValue() != null
+                        && !attr.getValue().isBlank())
+                .collect(Collectors.toMap(
+                        VariantAttributeRequest::getAttributeId,
+                        Function.identity(),
+                        (first, second) -> second))
+                .values()
+                .stream()
+                .toList();
+    }
+
     private VariantResponse mapToResponse(ProductVariant variant) {
         VariantResponse response = new VariantResponse();
         response.setId(variant.getId());
@@ -121,6 +174,7 @@ public class VariantServiceImpl implements VariantService {
         response.setSku(variant.getSku());
         response.setPrice(variant.getPrice());
         response.setStock(variant.getStock());
+        response.setSold(variant.getSoldCount());
         response.setDescription(variant.getDescription());
         response.setAttributes(variant.getAttributeValues().stream()
                 .map(av -> VariantAttributeResponse.builder()
@@ -158,7 +212,7 @@ public class VariantServiceImpl implements VariantService {
             case "STORAGE" -> 2;
             case "CAPACITY" -> 3;
             case "SIZE" -> 4;
-            default -> 10;
+            default -> 99;
         };
     }
 
@@ -245,26 +299,32 @@ public class VariantServiceImpl implements VariantService {
         }
 
         Map<Long, Attribute> attributeMap = attributeRepository.findAllById(
-                attributes.stream()
-                        .map(VariantAttributeRequest::getAttributeId)
-                        .filter(Objects::nonNull)
-                        .toList()
-        ).stream().collect(Collectors.toMap(Attribute::getAttributeId, Function.identity()));
+                        attributes.stream()
+                                .map(VariantAttributeRequest::getAttributeId)
+                                .filter(Objects::nonNull)
+                                .toList())
+                .stream().collect(Collectors.toMap(Attribute::getAttributeId, Function.identity()));
 
         String attributeCode = attributes.stream()
-                .filter(attribute -> attribute.getAttributeId() != null && attribute.getValue() != null && !attribute.getValue().isBlank())
-                .sorted(Comparator
-                        .comparingInt((VariantAttributeRequest attribute) ->
-                                getAttributePriority(attributeMap.get(attribute.getAttributeId()) != null
-                                        ? attributeMap.get(attribute.getAttributeId()).getAttributeName()
-                                        : ""))
-                        .thenComparing(attribute -> {
-                            Attribute attributeEntity = attributeMap.get(attribute.getAttributeId());
-                            return attributeEntity != null ? attributeEntity.getAttributeName() : "";
-                        }, String.CASE_INSENSITIVE_ORDER))
-                .map(attribute -> encodeAttributeValue(attribute.getValue()))
+                .filter(attr -> {
+                    // Lấy tên attribute từ map
+                    Attribute entity = attributeMap.get(attr.getAttributeId());
+                    if (entity == null) return false;
+                    // CHỈ LẤY những attribute quan trọng (Priority < 10)
+                    return getAttributePriority(entity.getAttributeName()) < 10;
+                })
+                .sorted(Comparator.comparingInt(attr -> getAttributePriority(attributeMap.get(attr.getAttributeId()).getAttributeName())))
+                .map(attr -> encodeAttributeValue(attr.getValue()))
                 .collect(Collectors.joining("-"));
 
-        return attributeCode.isBlank() ? modelCode : modelCode + "-" + attributeCode;
+        String finalSku = attributeCode.isBlank() ? modelCode : modelCode + "-" + attributeCode;
+
+        // Fix lỗi validation: Nếu SKU vẫn ngắn hơn 6 ký tự, thêm ID sản phẩm vào sau
+        if (finalSku.length() < 6) {
+            finalSku = finalSku + "-" + product.getId();
+        }
+
+        // Cắt ngắn nếu vượt quá 50 ký tự (giới hạn của DB ông đặt)
+        return finalSku.length() > 50 ? finalSku.substring(0, 50) : finalSku;
     }
 }
