@@ -1,4 +1,5 @@
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
+import { cartAPI } from "/modules/customer/core/api/cart.api.js";
 import { orderApi } from "/modules/customer/core/api/order.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
@@ -236,13 +237,63 @@ function renderOrderList() {
               <a class="btn-main" href="/modules/customer/features/order_detail/order_detail.html?id=${encodeURIComponent(order.id)}">
                 View details
               </a>
-              <a class="btn-secondary" href="/cart">Buy again</a>
+              <button type="button" class="btn-secondary buy-again-button" data-order-id="${escapeHtml(order.id)}">
+                Buy again
+              </button>
             </div>
           </div>
         </article>
       `,
     )
     .join("");
+
+  setupBuyAgainButtons();
+}
+
+async function handleBuyAgain(orderId, button) {
+  if (!orderId) return;
+
+  const originalLabel = button.textContent;
+  button.disabled = true;
+  button.textContent = "Adding...";
+
+  try {
+    const orderDetail = await orderApi.getOrderById(orderId);
+    const items = orderDetail?.items || [];
+
+    if (!items.length) {
+      showToast("No items found in this order to add to cart.", "warning");
+      return;
+    }
+
+    for (const item of items) {
+      if (!item?.variantId || !item?.quantity) continue;
+      await cartAPI.addToCart(item.variantId, item.quantity);
+    }
+
+    showToast("Order items added to cart successfully.", "success");
+    window.location.href = "/modules/customer/features/cart/cart.html";
+  } catch (error) {
+    console.error("Buy again failed:", error);
+    showToast("Unable to add items to cart. Please try again.", "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = originalLabel;
+  }
+}
+
+function setupBuyAgainButtons() {
+  document.querySelectorAll(".buy-again-button").forEach((button) => {
+    button.removeEventListener("click", button.__buyAgainListener);
+
+    const listener = async () => {
+      const orderId = button.dataset.orderId;
+      await handleBuyAgain(orderId, button);
+    };
+
+    button.__buyAgainListener = listener;
+    button.addEventListener("click", listener);
+  });
 }
 
 async function loadOrderHistory() {

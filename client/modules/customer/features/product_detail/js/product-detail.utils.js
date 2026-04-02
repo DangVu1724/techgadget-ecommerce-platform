@@ -53,6 +53,70 @@ export const isSmartphoneCategory = (category) => {
   return smartphoneKeywords.some((keyword) => categoryName.includes(keyword));
 };
 
+export const getPrimaryProductImage = (product) => {
+  if (product?.image) return product.image;
+  if (Array.isArray(product?.images) && product.images.length)
+    return product.images[0];
+
+  return "/modules/customer/assets/images/macbook.png";
+};
+
+export const buildGalleryImages = (product) => {
+  const primaryImage = product?.image || getPrimaryProductImage(product);
+  const categoryName = (product?.category?.name || "").toLowerCase();
+
+  const categoryAssets = {
+    phone: [
+      "/modules/customer/assets/images/categories/phone.jpg",
+      "/modules/customer/assets/images/ip17.png",
+    ],
+    laptop: [
+      "/modules/customer/assets/images/mb_air.png",
+      "/modules/customer/assets/images/laptop_mb.png",
+    ],
+    tablet: [
+      "/modules/customer/assets/images/categories/tablet.png",
+      "/modules/customer/assets/images/categories/phone.jpg",
+    ],
+    headphone: [
+      "/modules/customer/assets/images/categories/headphone.png",
+      "/modules/customer/assets/images/categories/default.png",
+    ],
+    default: [
+      "/modules/customer/assets/images/categories/default.png",
+      "/modules/customer/assets/images/categories/phone.jpg",
+    ],
+  };
+
+  let assetImages = categoryAssets.default;
+
+  if (
+    categoryName.includes("phone") ||
+    categoryName.includes("smartphone") ||
+    categoryName.includes("điện thoại")
+  ) {
+    assetImages = categoryAssets.phone;
+  } else if (
+    categoryName.includes("macbook") ||
+    categoryName.includes("laptop") ||
+    categoryName.includes("notebook") ||
+    categoryName.includes("máy tính") ||
+    categoryName.includes("computer")
+  ) {
+    assetImages = categoryAssets.laptop;
+  } else if (categoryName.includes("tablet")) {
+    assetImages = categoryAssets.tablet;
+  } else if (
+    categoryName.includes("headphone") ||
+    categoryName.includes("audio") ||
+    categoryName.includes("tai nghe")
+  ) {
+    assetImages = categoryAssets.headphone;
+  }
+
+  return [primaryImage, ...assetImages.slice(0, 2)];
+};
+
 // ==================== VARIANT HANDLING FOR SMARTPHONES ====================
 export const getSmartphoneVariantKey = (variant) => {
   const ram = getRamFromVariant(variant) || "";
