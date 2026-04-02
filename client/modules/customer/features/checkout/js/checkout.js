@@ -12,7 +12,9 @@ let checkoutCoupons = [];
 const PENDING_QR_KEY = "pendingQrTransactionId";
 const BUY_NOW_KEY = "buyNowCheckoutItem";
 const checkoutMode =
-  new URLSearchParams(window.location.search).get("mode") === "buy-now" ? "buy-now" : "cart";
+  new URLSearchParams(window.location.search).get("mode") === "buy-now"
+    ? "buy-now"
+    : "cart";
 
 const loadCartData = async () => {
   if (checkoutMode === "buy-now") {
@@ -96,7 +98,9 @@ const renderOrderSummary = () => {
   if (!cartData?.items?.length) {
     container.innerHTML = `
       <div style="padding: 20px; text-align: center; color: #999;">
+        <i class="fa-solid fa-shopping-cart" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
         <p>Your cart is empty.</p>
+        <a href="/shop" style="color: #ff6b6b; text-decoration: none;">Continue Shopping →</a>
       </div>
     `;
     updateSummaryTotals(0);
@@ -104,16 +108,25 @@ const renderOrderSummary = () => {
   }
 
   container.innerHTML = cartData.items
-    .map((item) => `
+    .map(
+      (item) => `
       <div class="summary-item">
-        <span class="item-name">${item.productName}${item.variantName ? ` - ${item.variantName}` : ""}</span>
+        <span class="item-name">${escapeHtml(item.productName)}${item.variantName ? ` - ${escapeHtml(item.variantName)}` : ""}</span>
         <span class="item-qty">x${item.quantity}</span>
         <span class="item-price">$${(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
       </div>
-    `)
+    `,
+    )
     .join("");
 
   updateSummaryTotals();
+};
+
+const escapeHtml = (text) => {
+  if (!text) return "";
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 };
 
 const calculateSubtotal = () =>
@@ -127,11 +140,14 @@ const calculateShipping = (subtotal) => (subtotal > 99 ? 0 : 10);
 const updateSummaryTotals = () => {
   const subtotal = calculateSubtotal();
   const shippingCost = calculateShipping(subtotal);
-  const discountAmount = appliedCoupon?.discountAmount ? Number(appliedCoupon.discountAmount) : 0;
+  const discountAmount = appliedCoupon?.discountAmount
+    ? Number(appliedCoupon.discountAmount)
+    : 0;
   const discountedSubtotal = Math.max(subtotal - discountAmount, 0);
   const total = discountedSubtotal + shippingCost;
 
-  document.getElementById("summary-subtotal").textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById("summary-subtotal").textContent =
+    `$${subtotal.toFixed(2)}`;
   document.getElementById("summary-shipping").textContent =
     shippingCost === 0 ? "FREE" : `$${shippingCost.toFixed(2)}`;
 
@@ -211,10 +227,14 @@ const submitCheckout = async (orderRequest) => {
     sessionStorage.removeItem(BUY_NOW_KEY);
     window.dispatchEvent(new Event("cartUpdated", { bubbles: true }));
 
-    showToast("Order placed successfully.", "success");
-    window.location.href = result?.id ? "/home" : "/home";
+    showToast(
+      "Order placed successfully. Thank you for shopping with us!",
+      "success",
+    );
+    window.location.href = "/home";
   } catch (error) {
     console.error("Checkout failed:", error);
+    showToast(error?.message || "Checkout failed. Please try again.", "error");
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -246,6 +266,7 @@ const handleQrPayment = async (orderRequest) => {
     window.location.href = payment.paymentUrl;
   } catch (error) {
     console.error("QR payment failed:", error);
+    showToast(error?.message || "Unable to initialize QR payment.", "error");
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -272,7 +293,7 @@ const handleApplyCoupon = async () => {
   const subtotal = calculateSubtotal();
   if (subtotal <= 0) {
     if (message) {
-      message.textContent = "Your cart is empty.";
+      message.textContent = "Your cart is empty. Add items to apply coupon.";
       message.style.color = "#d9534f";
     }
     return;
@@ -283,18 +304,31 @@ const handleApplyCoupon = async () => {
     appliedCoupon = {
       code: result.code,
       discountAmount: Number(result.discountAmount || 0),
+      type: result.type,
+      value: result.value,
     };
 
     updateSummaryTotals();
     if (message) {
-      message.textContent = `Applied coupon ${result.code}.`;
+      const discountText =
+        appliedCoupon.type === "PERCENT"
+          ? `${appliedCoupon.value}%`
+          : `$${appliedCoupon.discountAmount.toFixed(2)}`;
+      message.innerHTML = `<i class="fa-solid fa-check-circle"></i> Coupon "${result.code}" applied! You saved ${discountText}.`;
       message.style.color = "#28a745";
     }
+
+    // Clear message after 3 seconds
+    setTimeout(() => {
+      if (message && message.innerHTML.includes("applied")) {
+        message.innerHTML = "";
+      }
+    }, 3000);
   } catch (error) {
     appliedCoupon = null;
     updateSummaryTotals();
     if (message) {
-      message.textContent = error?.message || "Unable to apply coupon.";
+      message.innerHTML = `<i class="fa-solid fa-exclamation-circle"></i> ${error?.message || "Unable to apply coupon. Please check the code and try again."}`;
       message.style.color = "#d9534f";
     }
   }
@@ -319,78 +353,139 @@ const renderCheckoutCoupons = () => {
   if (!list) return;
 
   if (!checkoutCoupons?.length) {
-    list.innerHTML = "<p class=\"coupon-empty\">No coupons available.</p>";
+    list.innerHTML = "";
     return;
   }
 
-  const visibleCoupons = checkoutCoupons.filter((coupon) => coupon?.isActive !== false);
+  const visibleCoupons = checkoutCoupons.filter(
+    (coupon) => coupon?.isActive !== false,
+  );
 
   if (!visibleCoupons.length) {
-    list.innerHTML = "<p class=\"coupon-empty\">No coupons available.</p>";
+    list.innerHTML = "";
     return;
   }
 
-  const sortedCoupons = [...visibleCoupons].sort((a, b) => {
+  // Add "View Vouchers" button instead of displaying all coupons
+  list.innerHTML = `
+    <button type="button" id="view-vouchers-btn" class="view-vouchers-btn">
+      <i class="fa-solid fa-ticket"></i>
+      View Available Vouchers (${visibleCoupons.length})
+    </button>
+  `;
+
+  const viewBtn = document.getElementById("view-vouchers-btn");
+  if (viewBtn) {
+    viewBtn.addEventListener("click", () => {
+      showVoucherModal(visibleCoupons);
+    });
+  }
+};
+
+const showVoucherModal = (coupons) => {
+  const modal = document.getElementById("voucher-modal");
+  const modalBody = document.getElementById("voucher-modal-body");
+
+  if (!modal || !modalBody) return;
+
+  // Sort coupons: valid ones first
+  const sortedCoupons = [...coupons].sort((a, b) => {
     const aValid = a?.valid ? 1 : 0;
     const bValid = b?.valid ? 1 : 0;
     return bValid - aValid;
   });
 
-  list.innerHTML = sortedCoupons
-    .map((coupon) => renderCouponCard(coupon))
+  modalBody.innerHTML = sortedCoupons
+    .map((coupon) => renderModalCouponCard(coupon))
     .join("");
 
-  list.querySelectorAll("[data-coupon-apply]").forEach((btn) => {
-    btn.addEventListener("click", () => {
+  // Add event listeners for apply buttons in modal
+  modalBody.querySelectorAll("[data-coupon-apply]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const code = btn.getAttribute("data-code");
       const input = document.getElementById("coupon-code");
       if (input && code) {
         input.value = code;
         handleApplyCoupon();
+        closeVoucherModal();
+        showToast(`Applied coupon ${code} successfully!`, "success");
       }
     });
   });
 
-  list.querySelectorAll("[data-coupon-card]").forEach((card) => {
+  // Add click handlers for coupon cards to show details
+  modalBody.querySelectorAll("[data-coupon-card]").forEach((card) => {
     card.addEventListener("click", (event) => {
       const target = event.target;
-      if (target && target.closest("[data-coupon-apply]")) {
+      if (
+        target &&
+        (target.closest("[data-coupon-apply]") ||
+          target.closest(".coupon-card__btn"))
+      ) {
         return;
       }
       const details = card.querySelector("[data-coupon-details]");
       if (!details) return;
-      details.style.display = details.style.display === "none" ? "block" : "none";
+      const isVisible = details.style.display === "block";
+      details.style.display = isVisible ? "none" : "block";
     });
   });
+
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+
+  // Close modal when clicking overlay or close button
+  const overlay = modal.querySelector(".voucher-modal-overlay");
+  const closeBtn = modal.querySelector("#voucher-modal-close");
+
+  const closeModal = () => {
+    closeVoucherModal();
+  };
+
+  overlay?.addEventListener("click", closeModal);
+  closeBtn?.addEventListener("click", closeModal);
 };
 
-const formatCouponSummary = (coupon) => {
-  if (coupon.type === "PERCENT") {
-    return `${Number(coupon.value)}% off`;
+const closeVoucherModal = () => {
+  const modal = document.getElementById("voucher-modal");
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
   }
-  const fixed = Number(coupon.value || 0).toFixed(2);
-  return `$${fixed} off`;
 };
 
-const renderCouponCard = (coupon) => {
+const renderModalCouponCard = (coupon) => {
   const isValid = Boolean(coupon.valid);
-  const statusText = isValid ? "Available" : coupon.invalidReason || "Not available";
+  const statusText = isValid
+    ? "✓ Available"
+    : "✗ " + (coupon.invalidReason || "Not available");
   const statusColor = isValid ? "#16a34a" : "#dc2626";
   const btnDisabled = isValid ? "" : "disabled";
-  const btnText = "Apply";
+  const btnText = isValid ? "Apply Now" : "Not Available";
   const remainingUses = getRemainingUses(coupon);
+
+  // Format discount text
+  let discountText = "";
+  if (coupon.type === "PERCENT") {
+    discountText = `${Number(coupon.value)}% OFF`;
+  } else {
+    discountText = `$${Number(coupon.value || 0).toFixed(2)} OFF`;
+  }
 
   return `
     <div data-coupon-card="1" class="coupon-card ${isValid ? "" : "coupon-card--disabled"}">
       <div class="coupon-card__head">
         <div>
-          <div class="coupon-card__code">${coupon.code}</div>
-          <div class="coupon-card__meta">${formatCouponSummary(coupon)}</div>
+          <div class="coupon-card__code">${escapeHtml(coupon.code)}</div>
+          <div class="coupon-card__meta">${discountText}</div>
         </div>
-        <span class="coupon-card__status" style="color: ${statusColor};">${statusText}</span>
+        <span class="coupon-card__status" style="color: ${statusColor}; background: ${isValid ? "#e8f5e9" : "#ffebee"}">
+          ${statusText}
+        </span>
       </div>
-      <div data-coupon-details="1" class="coupon-card__details">
-        ${renderCouponDetails(coupon, remainingUses)}
+      <div data-coupon-details="1" class="coupon-card__details" style="display: none;">
+        ${renderModalCouponDetails(coupon, remainingUses)}
       </div>
       <div class="coupon-card__actions">
         <button type="button" data-coupon-apply="1" data-code="${coupon.code}" class="coupon-card__btn" ${btnDisabled}>
@@ -401,37 +496,46 @@ const renderCouponCard = (coupon) => {
   `;
 };
 
-const renderCouponDetails = (coupon, remainingUses) => {
+const renderModalCouponDetails = (coupon, remainingUses) => {
   const lines = [];
-  if (coupon.minOrderAmount) {
-    lines.push(`Min order: ${formatUsd(coupon.minOrderAmount)}`);
+
+  // Discount details
+  if (coupon.type === "PERCENT") {
+    lines.push(`🎯 ${coupon.value}% discount on your order`);
+  } else {
+    lines.push(`💰 Save $${Number(coupon.value).toFixed(2)} on your order`);
   }
-  if (coupon.maxDiscountAmount) {
-    lines.push(`Max discount: ${formatUsd(coupon.maxDiscountAmount)}`);
+
+  // Min order requirement
+  if (coupon.minOrderAmount && coupon.minOrderAmount > 0) {
+    lines.push(`📦 Minimum order: ${formatUsd(coupon.minOrderAmount)}`);
   }
+
+  // Max discount
+  if (coupon.maxDiscountAmount && coupon.maxDiscountAmount > 0) {
+    lines.push(`🏷️ Maximum discount: ${formatUsd(coupon.maxDiscountAmount)}`);
+  }
+
+  // Valid until
   const endDate = coupon.endAt ? formatDateTime(coupon.endAt) : null;
   if (endDate) {
-    lines.push(`Valid until: ${endDate}`);
+    lines.push(`⏰ Valid until: ${endDate}`);
   }
+
+  // Usage limit
   if (remainingUses !== null) {
     if (Number(remainingUses) <= 0) {
-      lines.push("You have no remaining uses for this voucher");
+      lines.push(`⚠️ You have no remaining uses for this voucher`);
     } else {
-      lines.push(`Your remaining uses: ${remainingUses}`);
+      lines.push(`✨ You have ${remainingUses} use(s) remaining`);
     }
   }
-  if (!lines.length) {
-    return "No additional conditions.";
-  }
-  return lines.map((line) => `<div>${line}</div>`).join("");
-};
 
-const formatDateRange = (startAt, endAt) => {
-  if (!startAt && !endAt) return null;
-  const start = startAt ? formatDateOnly(startAt) : "";
-  const end = endAt ? formatDateOnly(endAt) : "";
-  if (start && end) return `${start} - ${end}`;
-  return start || end;
+  if (!lines.length) {
+    return "<div>No additional conditions.</div>";
+  }
+
+  return lines.map((line) => `<div>${line}</div>`).join("");
 };
 
 const formatDateOnly = (value) => {
@@ -446,16 +550,16 @@ const formatDateOnly = (value) => {
 const formatDateTime = (value) => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  const time = date.toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-  return `${time} ${formatDateOnly(date)}`;
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes} ${formatDateOnly(date)}`;
 };
 
 const getRemainingUses = (coupon) => {
-  if (coupon.userRemainingUses !== null && coupon.userRemainingUses !== undefined) {
+  if (
+    coupon.userRemainingUses !== null &&
+    coupon.userRemainingUses !== undefined
+  ) {
     return coupon.userRemainingUses;
   }
   if (
@@ -464,7 +568,10 @@ const getRemainingUses = (coupon) => {
     coupon.userUsedCount !== null &&
     coupon.userUsedCount !== undefined
   ) {
-    return Math.max(Number(coupon.usageLimitPerUser) - Number(coupon.userUsedCount), 0);
+    return Math.max(
+      Number(coupon.usageLimitPerUser) - Number(coupon.userUsedCount),
+      0,
+    );
   }
   return null;
 };
@@ -474,10 +581,37 @@ const formatUsd = (value) => {
   return `$${numeric.toFixed(2)}`;
 };
 
+// Close modal with Escape key
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeVoucherModal();
+  }
+});
+
+// Close modal when clicking outside
+document.addEventListener("click", (event) => {
+  const modal = document.getElementById("voucher-modal");
+  if (modal && modal.style.display === "flex") {
+    const container = modal.querySelector(".voucher-modal-container");
+    if (
+      container &&
+      !container.contains(event.target) &&
+      !event.target.closest("#view-vouchers-btn")
+    ) {
+      closeVoucherModal();
+    }
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   loadCartData();
-  document.getElementById("checkout-form")?.addEventListener("submit", handleCheckoutSubmit);
-  document.getElementById("apply-coupon-btn")?.addEventListener("click", handleApplyCoupon);
+  document
+    .getElementById("checkout-form")
+    ?.addEventListener("submit", handleCheckoutSubmit);
+  document
+    .getElementById("apply-coupon-btn")
+    ?.addEventListener("click", handleApplyCoupon);
+
   const couponToggle = document.getElementById("coupon-list-toggle");
   const couponList = document.getElementById("coupon-list");
   if (couponToggle && couponList) {

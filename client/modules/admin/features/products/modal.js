@@ -168,12 +168,16 @@ export async function loadAttributes(categoryId, selectedAttributes = []) {
     const attributes = await categoryApi.getById(categoryId);
     const container = document.getElementById("variantAttributes");
     if (!container) return;
-    const selectedMap = new Map(
-      selectedAttributes.map((attribute) => [
-        String(attribute.attributeId),
-        attribute.value || "",
-      ]),
-    );
+    const selectedMap = new Map();
+    selectedAttributes.forEach((attribute) => {
+      const value = attribute?.value || "";
+      if (attribute?.attributeId != null) {
+        selectedMap.set(String(attribute.attributeId), value);
+      }
+      if (attribute?.id != null) {
+        selectedMap.set(String(attribute.id), value);
+      }
+    });
 
     if (!attributes?.length) {
       container.innerHTML =
@@ -210,14 +214,20 @@ window.validateAttributeInput = function validateAttributeInput(input) {
 
 export function collectAttributes() {
   const attributes = [];
-  document.querySelectorAll(".attribute-value").forEach((input) => {
-    if (input.value.trim()) {
+  const seenIds = new Set();
+  document
+    .querySelectorAll("#variantAttributes .attribute-value")
+    .forEach((input) => {
+      const attributeId = parseInt(input.dataset.attributeId, 10);
+      const value = String(input.value || "").trim();
+      if (!attributeId || !value) return;
+      if (seenIds.has(attributeId)) return;
+      seenIds.add(attributeId);
       attributes.push({
-        attributeId: parseInt(input.dataset.attributeId, 10),
-        value: input.value.trim(),
+        attributeId,
+        value,
       });
-    }
-  });
+    });
   return attributes;
 }
 

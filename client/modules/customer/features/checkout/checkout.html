@@ -165,7 +165,11 @@
                   <span>Shipping</span>
                   <span id="summary-shipping">$0.00</span>
                 </div>
-                <div class="total-row" id="summary-discount-row" style="display: none">
+                <div
+                  class="total-row"
+                  id="summary-discount-row"
+                  style="display: none"
+                >
                   <span>Discount</span>
                   <span id="summary-discount">-$0.00</span>
                 </div>
@@ -179,13 +183,12 @@
 
               <div class="coupon-section">
                 <div class="coupon-header">
-                  <h4 class="coupon-title">COUPON &amp; VOUCHERS</h4>
-                  <button type="button" id="coupon-list-toggle" class="coupon-list-toggle" aria-expanded="false">
-                    <span class="coupon-hint">Apply a code or choose a voucher</span>
-                    <span class="coupon-toggle-icon">^</span>
-                  </button>
+                  <h4 class="coupon-title">
+                    <i class="fa-solid fa-ticket"></i>
+                    COUPON &amp; VOUCHERS
+                  </h4>
                 </div>
-                <div class="coupon-input-row">
+                <div class="coupon-input-row" id="coupon-input-row">
                   <div class="coupon-input-wrap">
                     <i class="fa-solid fa-ticket"></i>
                     <input
@@ -194,7 +197,11 @@
                       placeholder="Enter coupon code"
                     />
                   </div>
-                  <button type="button" id="apply-coupon-btn" class="coupon-apply-btn">
+                  <button
+                    type="button"
+                    id="apply-coupon-btn"
+                    class="coupon-apply-btn"
+                  >
                     Apply
                   </button>
                 </div>
@@ -206,6 +213,22 @@
               <a href="/cart" class="btn-back-to-cart">← Back to Cart</a>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Vouchers -->
+    <div id="voucher-modal" class="voucher-modal" style="display: none">
+      <div class="voucher-modal-overlay"></div>
+      <div class="voucher-modal-container">
+        <div class="voucher-modal-header">
+          <h3><i class="fa-solid fa-gift"></i> AVAILABLE VOUCHERS</h3>
+          <button class="voucher-modal-close" id="voucher-modal-close">
+            &times;
+          </button>
+        </div>
+        <div class="voucher-modal-body" id="voucher-modal-body">
+          <!-- Vouchers will be loaded here -->
         </div>
       </div>
     </div>

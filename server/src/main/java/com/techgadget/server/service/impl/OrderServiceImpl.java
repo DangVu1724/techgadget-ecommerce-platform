@@ -18,11 +18,7 @@ import com.techgadget.server.model.enums.CheckoutType;
 import com.techgadget.server.model.enums.OrderStatus;
 import com.techgadget.server.model.enums.PaymentMethod;
 import com.techgadget.server.model.enums.PaymentStatus;
-import com.techgadget.server.repository.CartRepository;
-import com.techgadget.server.repository.CouponRepository;
-import com.techgadget.server.repository.OrderRepository;
-import com.techgadget.server.repository.UserRepository;
-import com.techgadget.server.repository.VariantRepository;
+import com.techgadget.server.repository.*;
 import com.techgadget.server.service.CouponService;
 import com.techgadget.server.service.OrderService;
 import com.techgadget.server.service.PaymentService;
@@ -45,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final VariantRepository variantRepository;
+    private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final PaymentService paymentService;
@@ -80,23 +77,33 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
 
-        validateStatusTransition(order.getOrderStatus(), newStatus);
+        OrderStatus oldStatus = order.getOrderStatus(); // Lưu lại trạng thái cũ
+        validateStatusTransition(oldStatus, newStatus);
 
-        if (newStatus == OrderStatus.CANCELLED
-                && (order.getOrderStatus() == OrderStatus.PENDING || order.getOrderStatus() == OrderStatus.CONFIRMED)) {
+        // FIX: Chỉ giải phóng kho khi trạng thái cũ là PENDING/CONFIRMED (đã được giữ chỗ)
+        if (newStatus == OrderStatus.CANCELLED && (oldStatus == OrderStatus.PENDING || oldStatus == OrderStatus.CONFIRMED)) {
             for (OrderDetail item : order.getOrderDetails()) {
                 variantRepository.releaseStock(item.getVariant().getId(), item.getQuantity());
             }
         }
 
-        if (newStatus == OrderStatus.PROCESSING) {
+        // FIX: Chỉ confirm kho khi trạng thái cũ là CONFIRMED (để tránh trừ kho 2 lần)
+        if (newStatus == OrderStatus.PROCESSING && oldStatus == OrderStatus.CONFIRMED) {
             for (OrderDetail item : order.getOrderDetails()) {
-                variantRepository.confirmStock(item.getVariant().getId(), item.getQuantity());
+                int updated = variantRepository.confirmStock(item.getVariant().getId(), item.getQuantity());
+                if (updated == 0) throw new BadRequestException("Kho không đủ hoặc đã được xử lý.");
             }
         }
 
-        if (newStatus == OrderStatus.DELIVERED && order.getPaymentMethod() == PaymentMethod.COD) {
-            order.setPaymentStatus(PaymentStatus.PAID);
+        // Logic Tăng lượt bán (Giữ nguyên debug của ông nhưng check trạng thái)
+        if (newStatus == OrderStatus.DELIVERED && oldStatus != OrderStatus.DELIVERED) {
+            for (OrderDetail item : order.getOrderDetails()) {
+                variantRepository.incrementSoldCount(item.getVariant().getId(), item.getQuantity());
+                productRepository.incrementTotalSold(item.getVariant().getId(), item.getQuantity());
+            }
+            if (order.getPaymentMethod() == PaymentMethod.COD) {
+                order.setPaymentStatus(PaymentStatus.PAID);
+            }
         }
 
         order.setOrderStatus(newStatus);
@@ -309,7 +316,7 @@ public class OrderServiceImpl implements OrderService {
     private void reserveStock(Long variantId, int quantity) {
         int updated = variantRepository.reserveStock(variantId, quantity);
         if (updated == 0) {
-            throw new BadRequestException("Product is out of stock.");
+          throw new BadRequestException("Sản phẩm ID " + variantId + " hiện đã hết hàng hoặc không đủ số lượng.");
         }
     }
 

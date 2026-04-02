@@ -6,10 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +23,7 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.image,
     MIN(v.price),
     SUM(v.stock),
+    p.totalSold,
     c.name,
     b.brandName,
     p.createdAt
@@ -45,6 +43,7 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.image,
     MIN(v.price),
     SUM(v.stock),
+    p.totalSold,
     c.name,
     b.brandName,
     p.createdAt
@@ -76,6 +75,7 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.image,
     MIN(v.price),
     COALESCE(SUM(v.stock), 0),
+    p.totalSold,
     c.name,
     b.brandName,
     p.createdAt
@@ -87,11 +87,17 @@ LEFT JOIN p.brand b
 WHERE p.id <> :currentProductId
 GROUP BY p.id, p.name, p.image, c.name, b.brandName, p.createdAt, c.id, b.brandId
 HAVING COALESCE(SUM(v.stock), 0) > 0
-ORDER BY CASE
-    WHEN :categoryId IS NOT NULL AND :brandId IS NOT NULL AND c.id = :categoryId AND b.brandId = :brandId THEN 1
+ORDER BY 
+
+CASE
+    WHEN :categoryId IS NOT NULL AND :brandId IS NOT NULL 
+         AND c.id = :categoryId AND b.brandId = :brandId THEN 1
     WHEN :categoryId IS NOT NULL AND c.id = :categoryId THEN 2
     ELSE 3
 END ASC,
+
+COALESCE(SUM(v.stock), 0) DESC,
+
 p.createdAt DESC
 """)
     List<ProductSummaryResponse> findRelatedProductsByPriority(
@@ -123,6 +129,10 @@ AND a.attributeId IN :attributeIds
     @Override
     @EntityGraph(attributePaths = {"category", "brand", "variants"})
     Page<Product> findAll(Specification<Product> spec, Pageable pageable);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Product p SET p.totalSold = p.totalSold + :qty WHERE p.id = (SELECT v.product.id FROM ProductVariant v WHERE v.id = :variantId)")
+    void incrementTotalSold(@Param("variantId") Long variantId, @Param("qty") int qty);
 
     boolean existsByName(@NotBlank(message = "Tên sản phẩm không được để trống") String name);
 }

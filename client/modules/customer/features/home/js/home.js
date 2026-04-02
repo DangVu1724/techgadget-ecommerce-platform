@@ -22,7 +22,9 @@ async function loadCategories() {
 
     categories.forEach((category) => {
       const key = (category.name || "").toLowerCase();
-      const image = categoryImages[key] || "/modules/customer/assets/images/categories/default.png";
+      const image =
+        categoryImages[key] ||
+        "/modules/customer/assets/images/categories/default.png";
 
       const card = document.createElement("div");
       card.className = "cat-card";
@@ -76,9 +78,15 @@ async function loadNewProducts() {
       const card = document.createElement("div");
       card.className = "home-product-card";
 
-      const image = product.image || "/modules/customer/assets/images/macbook.png";
+      const image =
+        product.image || "/modules/customer/assets/images/macbook.png";
       const price = formatPrice(product.minPrice);
-      const promos = ["Save 5% today", "Bonus $20 voucher", "Free shipping nationwide", "Weekend deal"];
+      const promos = [
+        "Save 5% today",
+        "Bonus $20 voucher",
+        "Free shipping nationwide",
+        "Weekend deal",
+      ];
       const promoText = promos[Math.floor(Math.random() * promos.length)];
 
       card.innerHTML = `
@@ -117,7 +125,8 @@ async function loadBestSellingProducts() {
     products.forEach((product) => {
       const card = document.createElement("div");
       card.className = "home-product-card";
-      const image = product.image || "/modules/customer/assets/images/macbook.png";
+      const image =
+        product.image || "/modules/customer/assets/images/macbook.png";
       const price = formatPrice(product.minPrice);
 
       card.innerHTML = `
@@ -166,13 +175,41 @@ function formatPrice(value) {
   }).format(value);
 }
 
+function canShowPromotionPopup() {
+  const lastShownTime = localStorage.getItem('lastPopupShownTime');
+  if (!lastShownTime) {
+    return true; 
+  }
+  
+  const fifteenMinutesInMs = 15 * 60 * 1000; 
+  const currentTime = Date.now();
+  const timeSinceLastShown = currentTime - parseInt(lastShownTime);
+  
+  return timeSinceLastShown >= fifteenMinutesInMs;
+}
+
+function savePopupShownTime() {
+  localStorage.setItem('lastPopupShownTime', Date.now().toString());
+}
+
+// Sửa lại hàm loadPromotionPopup
 async function loadPromotionPopup() {
   try {
+    if (!canShowPromotionPopup()) {
+      console.log('Popup will show after 15 minutes from last display');
+      return;
+    }
+    
     const popup = await popupApi.getActive();
     if (!popup) return;
+    
     const delaySeconds = Number(popup.displayDelay || 0);
     const delayMs = Math.max(0, delaySeconds) * 1000;
-    setTimeout(() => renderPromotionPopup(popup), delayMs);
+    
+    setTimeout(() => {
+      renderPromotionPopup(popup);
+      savePopupShownTime();
+    }, delayMs);
   } catch (error) {
     console.error("Failed to load promotion popup:", error);
   }
@@ -193,9 +230,7 @@ function renderPromotionPopup(popup) {
     : "/modules/customer/features/shop/shop.html";
   const imageUrl = resolvePopupImage(popup.imageUrl);
 
-  const targetLink = popup.productId
-    ? `/products/${popup.productId}`
-    : "/shop";
+  const targetLink = popup.productId ? `/products/${popup.productId}` : "/shop";
 
   overlay.innerHTML = `
     <div class="promo-popup">
@@ -216,13 +251,14 @@ function renderPromotionPopup(popup) {
     document.body.style.overflow = "";
   };
 
-  overlay.querySelector(".promo-popup-close")?.addEventListener("click", closePopup);
+  overlay
+    .querySelector(".promo-popup-close")
+    ?.addEventListener("click", closePopup);
   overlay.addEventListener("click", (event) => {
     if (event.target === overlay) {
       closePopup();
     }
   });
-
 }
 
 function resolvePopupImage(imageUrl) {
@@ -263,8 +299,12 @@ document.addEventListener("DOMContentLoaded", () => {
       this.startAutoPlay();
 
       const sliderContainer = document.querySelector(".slider-container");
-      sliderContainer?.addEventListener("mouseenter", () => this.pauseAutoPlay());
-      sliderContainer?.addEventListener("mouseleave", () => this.startAutoPlay());
+      sliderContainer?.addEventListener("mouseenter", () =>
+        this.pauseAutoPlay(),
+      );
+      sliderContainer?.addEventListener("mouseleave", () =>
+        this.startAutoPlay(),
+      );
       this.setupTouchEvents();
     },
 
@@ -279,9 +319,15 @@ document.addEventListener("DOMContentLoaded", () => {
       this.currentIndex = index;
     },
 
-    nextSlide() { this.showSlide(this.currentIndex + 1); },
-    prevSlide() { this.showSlide(this.currentIndex - 1); },
-    goToSlide(index) { this.showSlide(index); },
+    nextSlide() {
+      this.showSlide(this.currentIndex + 1);
+    },
+    prevSlide() {
+      this.showSlide(this.currentIndex - 1);
+    },
+    goToSlide(index) {
+      this.showSlide(index);
+    },
 
     startAutoPlay() {
       if (this.autoPlayInterval) return;

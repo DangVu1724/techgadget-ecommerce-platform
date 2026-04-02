@@ -9,6 +9,7 @@ import {
   setText,
   formatPrice,
   formatStock,
+  buildGalleryImages,
 } from "./product-detail.utils.js";
 import {
   renderSmartphoneGroups,
@@ -31,7 +32,8 @@ const renderRelatedProducts = (products = []) => {
 
   const relatedItems = products.slice(0, 5);
   if (!relatedItems.length) {
-    container.innerHTML = '<p class="related-empty">No related products available.</p>';
+    container.innerHTML =
+      '<p class="related-empty">No related products available.</p>';
     return;
   }
 
@@ -59,7 +61,7 @@ const loadProductFromDb = async () => {
   try {
     // Extract product ID from URL path (/products/:id) or query string (?id=123)
     let productId = null;
-    
+
     // Try URL path first: /products/123
     const pathMatch = window.location.pathname.match(/\/products\/(\d+)/);
     if (pathMatch && pathMatch[1]) {
@@ -69,7 +71,7 @@ const loadProductFromDb = async () => {
       const params = new URLSearchParams(window.location.search);
       productId = params.get("id");
     }
-    
+
     if (!productId) return;
 
     const product = await productApi.getById(productId);
@@ -81,8 +83,14 @@ const loadProductFromDb = async () => {
     setText("#productTitle", productName);
     setText("#breadcrumbName", productName);
     document.title = `${productName} | TechGadget`;
-    setText("#productDescription", product.description || "No description available.");
-    setText("#descriptionText", product.description || "No description available.");
+    setText(
+      "#productDescription",
+      product.description || "No description available.",
+    );
+    setText(
+      "#descriptionText",
+      product.description || "No description available.",
+    );
     setText("#productCategory", product.category?.name || "Unknown");
     setText("#productStars", "★★★★★");
     try {
@@ -93,14 +101,14 @@ const loadProductFromDb = async () => {
       renderRelatedProducts(product.relatedProducts || []);
     }
 
-    const images = product.images?.length
-      ? product.images
-      : [product.image || "/modules/customer/assets/images/macbook.png"];
+    const images = buildGalleryImages(product);
 
     updateThumbnails(images);
 
     const isSmartphone = isSmartphoneCategory(product.category);
-    const colorVariation = document.querySelector(".p-variation:has(#colorOptions)");
+    const colorVariation = document.querySelector(
+      ".p-variation:has(#colorOptions)",
+    );
     const colorLabel = colorVariation?.querySelector(".v-label");
     if (colorLabel) {
       colorLabel.style.display = isSmartphone ? "block" : "none";
@@ -169,7 +177,9 @@ const setupWishlist = () => {
     const icon = this.querySelector("i");
     icon?.classList.toggle("fas");
     icon?.classList.toggle("far");
-    this.style.backgroundColor = icon?.classList.contains("fas") ? "#FF6F42" : "";
+    this.style.backgroundColor = icon?.classList.contains("fas")
+      ? "#FF6F42"
+      : "";
   });
 };
 
@@ -185,7 +195,9 @@ const setupTabs = () => {
     tab.addEventListener("click", () => {
       tabs.forEach((item) => item.classList.remove("active"));
       tab.classList.add("active");
-      Object.values(panes).forEach((pane) => pane && (pane.style.display = "none"));
+      Object.values(panes).forEach(
+        (pane) => pane && (pane.style.display = "none"),
+      );
       const tabId = tab.dataset.tab;
       if (panes[tabId]) {
         panes[tabId].style.display = "block";
@@ -223,7 +235,10 @@ const setupAddToCart = () => {
       return;
     }
 
-    const quantity = parseInt(document.getElementById("quantity")?.value || "1", 10);
+    const quantity = parseInt(
+      document.getElementById("quantity")?.value || "1",
+      10,
+    );
 
     try {
       await cartAPI.addToCart(selectedVariant.id, quantity);
@@ -253,7 +268,10 @@ const setupOrderNow = () => {
       return;
     }
 
-    const quantity = parseInt(document.getElementById("quantity")?.value || "1", 10);
+    const quantity = parseInt(
+      document.getElementById("quantity")?.value || "1",
+      10,
+    );
     if (quantity < 1) {
       showToast("Invalid quantity.", "warning");
       return;

@@ -1,4 +1,5 @@
 import { authAPI } from "/modules/customer/core/api/auth.api.js";
+import { cartAPI } from "/modules/customer/core/api/cart.api.js";
 import { orderApi } from "/modules/customer/core/api/order.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
@@ -8,83 +9,98 @@ const state = {
   searchKeyword: "",
 };
 
-const checkLogin = () => {
+const STATUS_LABELS = {
+  PENDING: "Pending payment",
+  CONFIRMED: "Confirmed",
+  PROCESSING: "Processing",
+  SHIPPING: "Shipping",
+  DELIVERED: "Delivered",
+  CANCELLED: "Cancelled",
+  FAILED: "Failed",
+};
+
+function checkLogin() {
   if (!authAPI.isLoggedIn()) {
-    showToast("Vui lòng đăng nhập trước.", "warning");
+    showToast("Please sign in first.", "warning");
     window.location.href = "/login";
     return false;
   }
   return true;
-};
+}
 
-const normalizeText = (value) => String(value || "").toLowerCase().trim();
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim();
+}
 
-const formatCurrency = (value) => {
+function escapeHtml(value) {
+  const div = document.createElement("div");
+  div.textContent = String(value || "");
+  return div.innerHTML;
+}
+
+function formatCurrency(value) {
   const amount = Number(value || 0);
-  return `${amount.toLocaleString("vi-VN")}đ`;
-};
+  return `${amount.toLocaleString("en-US")} VND`;
+}
 
-const formatDate = (value) => {
+function formatDate(value) {
   if (!value) return "-";
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleString("vi-VN");
-};
+  return Number.isNaN(date.getTime())
+    ? String(value)
+    : date.toLocaleString("en-GB");
+}
 
-const formatOrderStatus = (status) => {
-  const map = {
-    PENDING: "Chờ thanh toán",
-    CONFIRMED: "Đã xác nhận",
-    PROCESSING: "Đang xử lý",
-    SHIPPING: "Đang vận chuyển",
-    DELIVERED: "Hoàn thành",
-    CANCELLED: "Đã hủy",
-  };
-  return map[status] || status || "Không xác định";
-};
+function getAvatarText(user) {
+  return String(user?.fullName || user?.email || "T")
+    .charAt(0)
+    .toUpperCase();
+}
 
-const mapStatusToOrderTab = (status) => {
+function getStatusLabel(status) {
+  return STATUS_LABELS[status] || status || "Unknown";
+}
+
+function getStatusClass(status) {
+  const tab = mapStatusToOrderTab(status);
+  return `status-${tab}`;
+}
+
+function mapStatusToOrderTab(status) {
   switch (status) {
     case "PENDING":
       return "pending";
-    case "SHIPPING":
-    case "PROCESSING":
     case "CONFIRMED":
+    case "PROCESSING":
+    case "SHIPPING":
       return "shipping";
     case "DELIVERED":
       return "completed";
     case "CANCELLED":
+    case "FAILED":
       return "cancelled";
     default:
       return "all";
   }
-};
+}
 
-const escapeHtml = (value) => {
-  const div = document.createElement("div");
-  div.textContent = String(value || "");
-  return div.innerHTML;
-};
-
-const getAvatarText = (user) => {
-  const source = user?.fullName || user?.email || "T";
-  return source.charAt(0).toUpperCase();
-};
-
-const renderProfileDetails = (user) => {
+function renderProfileDetails(user) {
   const detailsContainer = document.getElementById("profileDetails");
   const emptyState = document.getElementById("profileEmpty");
   if (!detailsContainer || !emptyState) return;
 
   const fields = [
-    { label: "Họ và tên", value: user?.fullName },
+    { label: "Full name", value: user?.fullName },
     { label: "Email", value: user?.email },
-    { label: "Số điện thoại", value: user?.phone },
-    { label: "Địa chỉ", value: user?.address },
+    { label: "Phone number", value: user?.phone },
+    { label: "Address", value: user?.address },
   ].filter((item) => normalizeText(item.value));
 
   if (!fields.length) {
     detailsContainer.innerHTML = "";
-    emptyState.style.display = "flex";
+    emptyState.style.display = "grid";
     return;
   }
 
@@ -99,61 +115,50 @@ const renderProfileDetails = (user) => {
       `,
     )
     .join("");
-};
+}
 
-const renderUserInfo = () => {
+function renderUserInfo() {
   const user = authAPI.getUser();
-  console.log("User data from authAPI:", user); // Debug log
-  
-  if (!user) {
-    console.warn("No user data found");
-    return;
-  }
+  if (!user) return;
 
-  const name = user.fullName || user.email || "Tài khoản";
-  const email = user.email || "Chưa có email";
+  const name = user.fullName || user.email || "Tai khoan";
+  const email = user.email || "No email available";
   const avatarText = getAvatarText(user);
-
-  console.log("Rendering user info:", { name, email, avatarText }); // Debug log
 
   document.querySelectorAll(".username").forEach((element) => {
     element.textContent = name;
   });
 
-  const profileDisplayName = document.querySelector(".profile-display-name");
-  if (profileDisplayName) {
-    profileDisplayName.textContent = name;
-  }
+  document.querySelectorAll(".profile-display-name").forEach((element) => {
+    element.textContent = name;
+  });
 
-  const profileEmail = document.querySelector(".profile-email");
-  if (profileEmail) {
-    profileEmail.textContent = email;
-  }
+  document.querySelectorAll(".profile-email").forEach((element) => {
+    element.textContent = email;
+  });
 
   document.querySelectorAll(".profile-avatar-initial").forEach((element) => {
     element.textContent = avatarText;
   });
 
   renderProfileDetails(user);
-};
+}
 
-const initLogoutAction = () => {
+function initLogoutAction() {
   const logoutButton = document.getElementById("accountLogoutBtn");
   if (!logoutButton) return;
 
   logoutButton.addEventListener("click", () => {
-    const confirmed = window.confirm("Ban co chac muon dang xuat khong?");
-    if (!confirmed) {
-      return;
-    }
+    const confirmed = window.confirm("Are you sure you want to log out?");
+    if (!confirmed) return;
 
     authAPI.logout();
-    showToast("Dang xuat thanh cong.", "success");
+    showToast("Logged out successfully.", "success");
     window.location.href = "/login";
   });
-};
+}
 
-const renderOrderList = () => {
+function renderOrderList() {
   const container = document.getElementById("order-list-content");
   if (!container) return;
 
@@ -167,7 +172,8 @@ const renderOrderList = () => {
       !keyword ||
       normalizeText(order.orderCode).includes(keyword) ||
       normalizeText(order.id).includes(keyword) ||
-      normalizeText(formatOrderStatus(order.orderStatus)).includes(keyword);
+      normalizeText(getStatusLabel(order.orderStatus)).includes(keyword);
+
     return tabMatch && keywordMatch;
   });
 
@@ -175,7 +181,7 @@ const renderOrderList = () => {
     container.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-box-open"></i>
-        <p>Chưa có đơn hàng phù hợp.</p>
+        <p>No orders match the current filters.</p>
       </div>
     `;
     return;
@@ -184,45 +190,120 @@ const renderOrderList = () => {
   container.innerHTML = filteredOrders
     .map(
       (order) => `
-        <div class="order-card">
-          <div class="order-shop-header">
-            <div class="shop-info">
-              <span class="badge-mall">Mall</span>
-              <span class="shop-name">TechGadget Official</span>
+        <article class="order-card">
+          <div class="order-card-top">
+            <div class="order-card-meta">
+              <span class="order-code">Order #${escapeHtml(order.orderCode || order.id || "-")}</span>
+              <span class="order-date">Placed at ${escapeHtml(formatDate(order.orderDate))}</span>
             </div>
-            <div class="order-status">${escapeHtml(formatOrderStatus(order.orderStatus))}</div>
+            <span class="status-chip ${getStatusClass(order.orderStatus)}">
+              <i class="fas fa-circle"></i>
+              ${escapeHtml(getStatusLabel(order.orderStatus))}
+            </span>
           </div>
 
-          <div class="order-body">
-            <img src="/modules/customer/assets/images/tech_item.png" alt="Order item" />
-            <div class="product-info">
-              <h4 class="product-name">Đơn hàng #${escapeHtml(order.orderCode || order.id || "-")}</h4>
-              <p class="product-variant">Ngày đặt: ${escapeHtml(formatDate(order.orderDate))}</p>
-              <p class="product-variant">Thanh toán: ${escapeHtml(order.paymentMethod || "-")}</p>
+          <div class="order-card-body">
+            <img
+              class="order-card-thumb"
+              src="/modules/customer/assets/images/tech_item.png"
+              alt="Order item"
+            />
+            <div>
+              <h3 class="order-card-title">TechGadget Official</h3>
+              <div class="order-card-grid">
+                <div class="order-card-cell">
+                  <span class="order-card-label">Payment method</span>
+                  <span class="order-card-value">${escapeHtml(order.paymentMethod || "-")}</span>
+                </div>
+                <div class="order-card-cell">
+                  <span class="order-card-label">Payment status</span>
+                  <span class="order-card-value">${escapeHtml(order.paymentStatus || "-")}</span>
+                </div>
+                <div class="order-card-cell">
+                  <span class="order-card-label">Internal ID</span>
+                  <span class="order-card-value">#${escapeHtml(order.id || "-")}</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="order-footer">
-            <div class="total-row">
-              <span>Tổng tiền:</span>
-              <span class="total-price">${escapeHtml(formatCurrency(order.finalAmount ?? order.amount))}</span>
+          <div class="order-card-bottom">
+            <div class="order-total">
+              <span class="order-total-label">Total amount</span>
+              <strong class="order-total-value">${escapeHtml(formatCurrency(order.amount))}</strong>
             </div>
+
             <div class="order-actions">
-              <a class="btn-main" href="/modules/customer/features/order_detail/order_detail.html?id=${order.id}">Xem chi tiết</a>
-              <a class="btn-secondary" href="/cart">Mua lại</a>
+              <a class="btn-main" href="/modules/customer/features/order_detail/order_detail.html?id=${encodeURIComponent(order.id)}">
+                View details
+              </a>
+              <button type="button" class="btn-secondary buy-again-button" data-order-id="${escapeHtml(order.id)}">
+                Buy again
+              </button>
             </div>
           </div>
-        </div>
+        </article>
       `,
     )
     .join("");
-};
 
-const loadOrderHistory = async () => {
+  setupBuyAgainButtons();
+}
+
+async function handleBuyAgain(orderId, button) {
+  if (!orderId) return;
+
+  const originalLabel = button.textContent;
+  button.disabled = true;
+  button.textContent = "Adding...";
+
+  try {
+    const orderDetail = await orderApi.getOrderById(orderId);
+    const items = orderDetail?.items || [];
+
+    if (!items.length) {
+      showToast("No items found in this order to add to cart.", "warning");
+      return;
+    }
+
+    for (const item of items) {
+      if (!item?.variantId || !item?.quantity) continue;
+      await cartAPI.addToCart(item.variantId, item.quantity);
+    }
+
+    showToast("Order items added to cart successfully.", "success");
+    window.location.href = "/modules/customer/features/cart/cart.html";
+  } catch (error) {
+    console.error("Buy again failed:", error);
+    showToast("Unable to add items to cart. Please try again.", "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = originalLabel;
+  }
+}
+
+function setupBuyAgainButtons() {
+  document.querySelectorAll(".buy-again-button").forEach((button) => {
+    button.removeEventListener("click", button.__buyAgainListener);
+
+    const listener = async () => {
+      const orderId = button.dataset.orderId;
+      await handleBuyAgain(orderId, button);
+    };
+
+    button.__buyAgainListener = listener;
+    button.addEventListener("click", listener);
+  });
+}
+
+async function loadOrderHistory() {
   const container = document.getElementById("order-list-content");
   if (container) {
-    container.innerHTML =
-      '<div class="empty-state"><p>Đang tải lịch sử đơn hàng...</p></div>';
+    container.innerHTML = `
+      <div class="empty-state">
+        <p>Loading order history...</p>
+      </div>
+    `;
   }
 
   try {
@@ -232,13 +313,17 @@ const loadOrderHistory = async () => {
   } catch (error) {
     console.error("Load order history failed:", error);
     if (container) {
-      container.innerHTML =
-        '<div class="empty-state"><p>Không thể tải lịch sử đơn hàng. Vui lòng thử lại.</p></div>';
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-circle-exclamation"></i>
+          <p>Unable to load order history. Please try again.</p>
+        </div>
+      `;
     }
   }
-};
+}
 
-const activateTab = (tabId) => {
+function activateTab(tabId) {
   const targetTab = document.getElementById(tabId);
   if (!targetTab) return;
 
@@ -250,31 +335,32 @@ const activateTab = (tabId) => {
   document.querySelectorAll(".menu-item").forEach((item) => {
     item.classList.remove("active");
   });
-
-  const menuItem = document.querySelector(`.menu-item[data-tab="${tabId}"]`);
-  menuItem?.classList.add("active");
+  document
+    .querySelector(`.menu-item[data-tab="${tabId}"]`)
+    ?.classList.add("active");
 
   if (tabId === "tab-donmua") {
     loadOrderHistory();
   }
-};
+}
 
-const initMainTabNavigation = () => {
+function initMainTabNavigation() {
   document.querySelectorAll(".menu-item[data-tab]").forEach((item) => {
     item.addEventListener("click", () => {
       const tabId = item.getAttribute("data-tab");
-      if (!tabId) return;
-      activateTab(tabId);
+      if (tabId) {
+        activateTab(tabId);
+      }
     });
   });
-};
+}
 
-const initOrderFilters = () => {
+function initOrderFilters() {
   document.querySelectorAll(".ot-item").forEach((item) => {
     item.addEventListener("click", () => {
-      document
-        .querySelectorAll(".ot-item")
-        .forEach((element) => element.classList.remove("active"));
+      document.querySelectorAll(".ot-item").forEach((element) => {
+        element.classList.remove("active");
+      });
       item.classList.add("active");
       state.activeOrderTab = item.dataset.order || "all";
       renderOrderList();
@@ -288,10 +374,11 @@ const initOrderFilters = () => {
       renderOrderList();
     });
   }
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!checkLogin()) return;
+
   renderUserInfo();
   initLogoutAction();
   initMainTabNavigation();

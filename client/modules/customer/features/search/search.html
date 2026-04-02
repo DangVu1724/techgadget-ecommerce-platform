@@ -12,7 +12,10 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="/modules/customer/features/search/search.css" />
+    <link
+      rel="stylesheet"
+      href="/modules/customer/features/search/search.css"
+    />
   </head>
   <body>
     <div id="relatedProductsModal" class="modal-overlay" style="display: none">
@@ -27,156 +30,121 @@
       </div>
     </div>
 
-    <div class="search-page-container container">
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="/">
-          <i class="fas fa-home"></i>
-        </a>
-        <span>/</span>
-        <span>Tìm kiếm: <strong id="search-keyword"></strong></span>
-      </nav>
+    <div class="search-page-container">
+      <div class="container-inner">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">
+            <i class="fas fa-home"></i>
+          </a>
+          <span>/</span>
+          <span>Tìm kiếm: <strong id="search-keyword"></strong></span>
+        </nav>
 
-      <div class="search-header">
-        <h1>Kết quả tìm kiếm</h1>
-        <div class="search-info">
-          <p>Tìm thấy <strong id="results-count">0</strong> sản phẩm</p>
-          <div class="search-box">
-            <form id="search-form">
-              <input
-                type="text"
-                id="search-input"
-                placeholder="Tìm kiếm sản phẩm..."
-                autocomplete="off"
-              />
-              <button type="submit" class="search-btn">
-                <i class="fas fa-search"></i>
-              </button>
-            </form>
+        <div class="search-header">
+          <h1>Kết quả tìm kiếm</h1>
+          <div class="search-info">
+            <p>Tìm thấy <strong id="results-count">0</strong> sản phẩm</p>
+            <div class="search-box">
+              <form id="search-form">
+                <input
+                  type="text"
+                  id="search-input"
+                  placeholder="Tìm kiếm sản phẩm..."
+                  autocomplete="off"
+                />
+                <button type="submit" class="search-btn">
+                  <i class="fas fa-search"></i>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="search-layout search-container">
-        <aside class="filter-sidebar">
-          <div class="filter-section">
-            <h3>Khoảng giá</h3>
-            <div class="filter-content">
-              <div class="price-inputs">
-                <label class="price-field" for="minPrice">
-                  <span class="price-field-label">Từ</span>
-                  <div class="price-input-wrap">
-                    <span class="price-currency">$</span>
-                    <input
-                      type="number"
-                      id="minPrice"
-                      placeholder="0"
-                      min="0"
-                      class="price-input"
-                    />
-                  </div>
-                </label>
-                <div class="price-divider" aria-hidden="true">
-                  <span></span>
-                </div>
-                <label class="price-field" for="maxPrice">
-                  <span class="price-field-label">Đến</span>
-                  <div class="price-input-wrap">
-                    <span class="price-currency">$</span>
-                    <input
-                      type="number"
-                      id="maxPrice"
-                      placeholder="0"
-                      min="0"
-                      class="price-input"
-                    />
-                  </div>
-                </label>
-              </div>
-
-              <p class="price-hint">Chọn khoảng giá hoặc dùng mức có sẵn bên dưới.</p>
-
-              <div class="price-presets" role="group" aria-label="Mức giá nhanh">
-                <button type="button" class="price-preset" data-min="0" data-max="100">
-                  Dưới $100
-                </button>
-                <button type="button" class="price-preset" data-min="100" data-max="500">
-                  $100 - $500
-                </button>
-                <button type="button" class="price-preset" data-min="500" data-max="1000">
-                  $500 - $1000
-                </button>
-                <button type="button" class="price-preset" data-min="1000" data-max="99999">
-                  Trên $1000
-                </button>
-              </div>
+      <!-- Layout Full Width - Banner cố định 2 bên mép -->
+      <div class="search-layout">
+        <!-- Banner quảng cáo bên trái - fixed mép trái -->
+        <div class="ad-banner-left">
+          <div class="ad-banner left" id="bannerLeft">
+            <button class="banner-toggle" onclick="toggleBanner('left')">
+              ×
+            </button>
+            <img
+              src="https://picsum.photos/240/400?random=1"
+              alt="Flash Sale"
+            />
+            <div class="ad-content">
+              <h4>FLASH SALE</h4>
+              <div class="discount">-50%</div>
+              <p>Giảm giá sốc</p>
+              <a href="/flash-sale" class="btn-shop">Mua ngay →</a>
             </div>
           </div>
+        </div>
 
-          <div class="filter-section">
-            <h3>Danh mục</h3>
-            <div id="categoryList" class="filter-content category-list"></div>
-          </div>
-
-          <div class="filter-section">
-            <h3>Thương hiệu</h3>
-            <div id="brandList" class="filter-content brand-list"></div>
-          </div>
-
-          <div class="filter-section">
-            <h3>RAM</h3>
-            <div class="filter-content">
-              <label class="checkbox-label">
-                <input type="checkbox" value="4" class="ram-filter" /> 4GB
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="8" class="ram-filter" /> 8GB
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="16" class="ram-filter" /> 16GB
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="32" class="ram-filter" /> 32GB+
-              </label>
+        <!-- Banner quảng cáo bên phải - fixed mép phải -->
+        <div class="ad-banner-right">
+          <div class="ad-banner right" id="bannerRight">
+            <button class="banner-toggle" onclick="toggleBanner('right')">
+              ×
+            </button>
+            <img src="https://picsum.photos/240/400?random=2" alt="Free Ship" />
+            <div class="ad-content">
+              <h4>FREE SHIP</h4>
+              <p>Đơn hàng từ 500k</p>
+              <p>Áp dụng toàn quốc</p>
+              <a href="/shipping" class="btn-shop">Xem chi tiết →</a>
             </div>
           </div>
+        </div>
 
-          <button id="clearFilters" class="btn-clear-filters">
-            <i class="fas fa-redo"></i> Xóa bộ lọc
-          </button>
-        </aside>
+        <!-- Nội dung chính -->
+        <div class="main-content">
+          <main class="search-results">
+            <div class="sort-options">
+              <label for="sort-select">Sắp xếp:</label>
+              <select id="sort-select">
+                <option value="relevance">Liên quan nhất</option>
+                <option value="price-asc">Giá: Thấp → Cao</option>
+                <option value="price-desc">Giá: Cao → Thấp</option>
+                <option value="newest">Mới nhất</option>
+                <option value="popular">Phổ biến nhất</option>
+              </select>
+            </div>
 
-        <main class="search-results">
-          <div class="sort-options">
-            <label for="sort-select">Sắp xếp:</label>
-            <select id="sort-select">
-              <option value="relevance">Liên quan nhất</option>
-              <option value="price-asc">Giá: Thấp → Cao</option>
-              <option value="price-desc">Giá: Cao → Thấp</option>
-              <option value="newest">Mới nhất</option>
-              <option value="popular">Phổ biến nhất</option>
-            </select>
-          </div>
+            <div id="productGrid" class="product-grid"></div>
 
-          <div id="productGrid" class="product-grid"></div>
+            <div id="loading" class="loading" style="display: none">
+              <i class="fas fa-spinner"></i>
+              <p>Đang tải...</p>
+            </div>
 
-          <div id="loading" class="loading" style="display: none">
-            <i class="fas fa-spinner"></i>
-            <p>Đang tải...</p>
-          </div>
+            <div id="emptyState" class="empty-state" style="display: none">
+              <i class="fas fa-search"></i>
+              <h3>Không tìm thấy sản phẩm</h3>
+              <p>Hãy thử từ khóa khác hoặc thay đổi cách sắp xếp.</p>
+              <a href="/shop" class="btn-back">Quay lại cửa hàng</a>
+            </div>
 
-          <div id="emptyState" class="empty-state" style="display: none">
-            <i class="fas fa-search"></i>
-            <h3>Không tìm thấy sản phẩm</h3>
-            <p>Hãy thử từ khóa khác hoặc điều chỉnh bộ lọc của bạn</p>
-            <a href="/shop" class="btn-back">Quay lại cửa hàng</a>
-          </div>
-
-          <div id="pagination" class="pagination"></div>
-        </main>
+            <div id="pagination" class="pagination"></div>
+          </main>
+        </div>
       </div>
     </div>
 
-    <script type="module" src="/modules/customer/features/search/search.js"></script>
+    <script>
+      // Toggle banner
+      function toggleBanner(side) {
+        const banner = document.getElementById(
+          `banner${side === "left" ? "Left" : "Right"}`,
+        );
+        banner.classList.toggle("closed");
+      }
+    </script>
+    <script
+      type="module"
+      src="/modules/customer/features/search/search.js"
+    ></script>
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
   </body>

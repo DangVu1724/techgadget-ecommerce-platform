@@ -15,6 +15,7 @@ public class ProductSummaryResponse {
     private String image;
     private BigDecimal minPrice;
     private Long totalStock;
+    private Integer totalSold;
     private String categoryName;
     private String brandName;
     private LocalDateTime createdAt;
