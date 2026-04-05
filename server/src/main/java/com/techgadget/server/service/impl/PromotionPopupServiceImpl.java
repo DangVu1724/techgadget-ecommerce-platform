@@ -78,7 +78,6 @@ public class PromotionPopupServiceImpl implements PromotionPopupService {
         popup.setStartDate(request.getStartDate());
         popup.setEndDate(request.getEndDate());
         popup.setProductId(request.getProductId());
-        popup.setDisplayDelay(request.getDisplayDelay());
 
         Long couponId = request.getCouponId();
         if (couponId == null) {
@@ -106,7 +105,6 @@ public class PromotionPopupServiceImpl implements PromotionPopupService {
                 .couponId(popup.getCouponId())
                 .couponCode(coupon != null ? coupon.getCode() : null)
                 .productId(popup.getProductId())
-                .displayDelay(popup.getDisplayDelay())
                 .description(popup.getDescription())
                 .isActive(popup.getIsActive())
                 .startDate(popup.getStartDate())

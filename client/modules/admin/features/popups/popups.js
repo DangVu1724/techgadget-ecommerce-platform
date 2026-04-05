@@ -28,7 +28,6 @@ function initTable() {
       { key: "id", label: "ID" },
       { key: "title", label: "Title" },
       { key: "couponCode", label: "Coupon" },
-      { key: "displayDelay", label: "Delay (s)" },
       { key: "startDate", label: "Start Date" },
       { key: "endDate", label: "End Date" },
       { key: "isActive", label: "Active" },
@@ -38,7 +37,6 @@ function initTable() {
       startDate: (value) => formatDateTime(value),
       endDate: (value) => formatDateTime(value),
       couponCode: (value) => value || "-",
-      displayDelay: (value) => (value === null || value === undefined ? "-" : value),
       isActive: (value, item) =>
         renderActiveSwitch(Boolean(value), item?.id),
     },
@@ -102,12 +100,6 @@ async function openPopupModal(popup = null) {
           label: "Target Product ID",
           type: "number",
           placeholder: "Enter product ID for redirect",
-        },
-        {
-          name: "displayDelay",
-          label: "Display Delay (seconds)",
-          type: "number",
-          placeholder: "Delay before showing popup",
         },
         {
           name: "couponId",
@@ -205,7 +197,6 @@ function viewPopup(popup) {
     `ID: ${popup.id}`,
     `Title: ${popup.title}`,
     `Coupon: ${popup.couponCode || "-"}`,
-    `Delay: ${popup.displayDelay ?? 0}s`,
     `Start Date: ${formatDateTime(popup.startDate)}`,
     `End Date: ${formatDateTime(popup.endDate)}`,
     `Active: ${popup.isActive ? "Yes" : "No"}`,
@@ -245,7 +236,6 @@ function buildModalData(popup) {
     couponId: popup.couponId ?? "",
     startDate: toDateTimeInputValue(popup.startDate),
     endDate: toDateTimeInputValue(popup.endDate),
-    displayDelay: popup.displayDelay ?? "",
     isActive:
       popup.isActive === true ? "true" : popup.isActive === false ? "false" : "",
   };
@@ -257,7 +247,6 @@ function normalizePopupPayload(formData) {
     imageUrl: null,
     couponId: formData.couponId ? Number(formData.couponId) : null,
     productId: formData.productId ? Number(formData.productId) : null,
-    displayDelay: normalizeInteger(formData.displayDelay),
     description: formData.description?.trim() || null,
     startDate: normalizeDateTime(formData.startDate),
     endDate: normalizeDateTime(formData.endDate),
@@ -274,7 +263,6 @@ function buildPopupPayload(popup, overrides = {}) {
     imageUrl: popup.imageUrl || null,
     couponId: popup.couponId ?? null,
     productId: popup.productId ?? null,
-    displayDelay: popup.displayDelay ?? null,
     description: popup.description || null,
     startDate: popup.startDate || null,
     endDate: popup.endDate || null,
