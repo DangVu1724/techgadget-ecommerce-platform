@@ -52,7 +52,7 @@ if (searchInput) {
         // Show history if empty
         const history = getSearchHistory();
         if (history.length > 0) {
-          let html = '<div class="history-header" style="font-family: \'Poppins\', sans-serif;">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+          let html = '<div class="history-header">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
           suggestionsDiv.innerHTML = html;
           suggestionsDiv.classList.add("active");
         } else {

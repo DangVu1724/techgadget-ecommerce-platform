@@ -33,9 +33,6 @@ public class PromotionPopup {
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "display_delay")
-    private Integer displayDelay;
-
     @Column(columnDefinition = "TEXT")
     private String description;
 

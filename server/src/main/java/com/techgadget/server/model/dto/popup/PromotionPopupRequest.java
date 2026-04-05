@@ -23,8 +23,6 @@ public class PromotionPopupRequest {
 
     private Long productId;
 
-    private Integer displayDelay;
-
     private String description;
 
     private Boolean isActive;

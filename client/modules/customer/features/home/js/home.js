@@ -174,20 +174,11 @@ function formatPrice(value) {
 }
 // Kết quả: 150.000 VNĐ
 function canShowPromotionPopup() {
-  const lastShownTime = localStorage.getItem('lastPopupShownTime');
-  if (!lastShownTime) {
-    return true; 
-  }
-  
-  const fifteenMinutesInMs = 15 * 60 * 1000; 
-  const currentTime = Date.now();
-  const timeSinceLastShown = currentTime - parseInt(lastShownTime);
-  
-  return timeSinceLastShown >= fifteenMinutesInMs;
+  return !sessionStorage.getItem('popupShown');
 }
 
 function savePopupShownTime() {
-  localStorage.setItem('lastPopupShownTime', Date.now().toString());
+  sessionStorage.setItem('popupShown', '1');
 }
 
 // Sửa lại hàm loadPromotionPopup

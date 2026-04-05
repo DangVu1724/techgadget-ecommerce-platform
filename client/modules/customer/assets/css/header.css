@@ -386,3 +386,25 @@ header {
 .cart-action:active {
     animation: bounce 0.3s ease;
 }
+
+/* Chỉnh font cho tiêu đề "Lịch sử tìm kiếm" */
+.history-header {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    padding: 10px;
+     margin-left: 8px;
+}
+
+/* Chỉnh font cho từng dòng kết quả lịch sử */
+.history-item {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+/* Chỉnh riêng cho phần chữ bên trong item để không ảnh hưởng đến icon */
+.history-item span {
+    font-family: 'Poppins', sans-serif;
+    margin-left: 8px;
+}

@@ -19,7 +19,6 @@ public class PromotionPopupResponse {
     private Long couponId;
     private String couponCode;
     private Long productId;
-    private Integer displayDelay;
     private String description;
     private Boolean isActive;
     private LocalDateTime startDate;

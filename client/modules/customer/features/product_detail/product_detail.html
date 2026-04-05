@@ -171,7 +171,7 @@
           <span class="tab-link" data-tab="information"
             >ADDITIONAL INFORMATION</span
           >
-          <span class="tab-link" data-tab="reviews">REVIEWS (2)</span>
+          <span class="tab-link" data-tab="reviews">REVIEWS (<span id="reviewCount">0</span>)</span>
         </div>
 
         <!-- Tab Content -->
@@ -275,96 +275,65 @@
           <!-- Reviews Tab -->
           <div class="tab-pane" id="tab-reviews" style="display: none">
             <div class="reviews-wrapper">
+              <!-- Review List Section -->
               <div class="existing-reviews">
-                <div class="review-item">
-                  <img
-                    src="/modules/customer/assets/images/avatar1.png"
-                    class="avatar-circle"
-                    alt="Emma Chamberlin"
-                  />
-                  <div class="review-body">
-                    <div class="stars">★★★★★</div>
-                    <p class="review-meta">
-                      <strong>Emma Chamberlin</strong> – November 22, 2025
-                    </p>
-                    <p class="review-text">
-                      Vitae tortor condimentum lacinia quis vel eros donec ac.
-                      Nam at lectus urna duis convallis convallis.
-                    </p>
-                  </div>
+                <!-- Star Filter -->
+                <div class="review-filter" id="reviewFilter">
+                  <button class="filter-btn active" data-rating="all">All</button>
+                  <button class="filter-btn" data-rating="5">5 ★</button>
+                  <button class="filter-btn" data-rating="4">4 ★</button>
+                  <button class="filter-btn" data-rating="3">3 ★</button>
+                  <button class="filter-btn" data-rating="2">2 ★</button>
+                  <button class="filter-btn" data-rating="1">1 ★</button>
                 </div>
 
-                <div class="review-item">
-                  <img
-                    src="/modules/customer/assets/images/avatar2.png"
-                    class="avatar-circle"
-                    alt="Thompson J."
-                  />
-                  <div class="review-body">
-                    <div class="stars">★★★★★</div>
-                    <p class="review-meta">
-                      <strong>Thompson J.</strong> – November 22, 2025
-                    </p>
-                    <p class="review-text">
-                      Vitae tortor condimentum lacinia quis vel eros donec ac.
-                      Nam at lectus urna duis convallis convallis.
-                    </p>
-                  </div>
+                <!-- Dynamic Review List -->
+                <div id="reviewList">
+                  <p class="review-empty">Loading reviews...</p>
                 </div>
               </div>
 
+              <!-- Add Review Section -->
               <div class="add-review-section">
                 <h3 class="section-title-slanted">ADD A REVIEW</h3>
-                <p class="form-note">
-                  Your email address will not be published. Required fields are
-                  marked *
-                </p>
 
-                <form class="review-form" id="reviewForm">
-                  <div class="rating-input">
-                    <span>Your rating *</span>
-                    <div class="stars-input" id="ratingStars">☆☆☆☆☆</div>
-                  </div>
+                <!-- Shown when NOT logged in -->
+                <div id="reviewLoginPrompt" style="display: none">
+                  <p class="form-note">You must be logged in to leave a review.</p>
+                  <a href="/login" class="btn-primary text-uppercase review-login-btn">
+                    Please Login to review this product
+                  </a>
+                </div>
 
-                  <div class="file-input">
-                    <label for="reviewPhoto">Choose your photo</label>
-                    <input type="file" id="reviewPhoto" accept="image/*" />
-                  </div>
+                <!-- Shown when logged in -->
+                <div id="reviewFormWrapper">
+                  <p class="form-note">
+                    Your email address will not be published. Required fields are marked *
+                  </p>
+                  <form class="review-form" id="reviewForm">
+                    <div class="rating-input">
+                      <span>Your rating *</span>
+                      <div class="stars-input" id="ratingStars">
+                        <span class="star-icon" data-value="1">☆</span>
+                        <span class="star-icon" data-value="2">☆</span>
+                        <span class="star-icon" data-value="3">☆</span>
+                        <span class="star-icon" data-value="4">☆</span>
+                        <span class="star-icon" data-value="5">☆</span>
+                      </div>
+                    </div>
 
-                  <textarea
-                    id="reviewText"
-                    placeholder="Write your review here *"
-                    rows="4"
-                    required
-                  ></textarea>
-
-                  <div class="grid-2-cols">
-                    <input
-                      type="text"
-                      id="reviewerName"
-                      placeholder="Write your name here *"
+                    <textarea
+                      id="reviewText"
+                      placeholder="Write your review here *"
+                      rows="4"
                       required
-                    />
-                    <input
-                      type="email"
-                      id="reviewerEmail"
-                      placeholder="Write your email here *"
-                      required
-                    />
-                  </div>
+                    ></textarea>
 
-                  <div class="checkbox-group">
-                    <input type="checkbox" id="save-info" />
-                    <label for="save-info">
-                      Save my name, email, and website in this browser for the
-                      next time.
-                    </label>
-                  </div>
-
-                  <button type="submit" class="btn-primary text-uppercase">
-                    SUBMIT REVIEW
-                  </button>
-                </form>
+                    <button type="submit" class="btn-primary text-uppercase">
+                      SUBMIT REVIEW
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -378,28 +347,6 @@
       </section>
 
       <!-- Customer Reviews Grid -->
-      <section class="section-padding">
-        <h3 class="section-title-slanted">CUSTOMER REVIEWS</h3>
-        <div class="grid-3">
-          <div class="review-card">
-            <p>"Excellent quality and fast shipping. Highly recommend!"</p>
-            <div class="stars">★★★★★</div>
-            <h6>Emma Chamberlin</h6>
-          </div>
-
-          <div class="review-card">
-            <p>"The customer service is outstanding. Will buy again."</p>
-            <div class="stars">★★★★★</div>
-            <h6>Thomas John</h6>
-          </div>
-
-          <div class="review-card">
-            <p>"Best tech website I've ever used. 5 stars."</p>
-            <div class="stars">★★★★★</div>
-            <h6>Kevin Bryan</h6>
-          </div>
-        </div>
-      </section>
     </main>
 
     <!-- Scripts -->
