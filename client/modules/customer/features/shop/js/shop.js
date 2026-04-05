@@ -138,7 +138,7 @@ const capitalize = (str) => {
 const renderBreadcrumb = (categoryName, brandName) => {
   if (!elements.breadcrumb) return;
 
-  const fragments = [{ name: "Trang chủ", href: "/" }];
+  const fragments = [{ name: "Home", href: "/" }];
 
   if (categoryName) {
     fragments.push({
@@ -271,8 +271,8 @@ const renderProducts = (products) => {
           <span class="rating-count">(${Math.floor(Math.random() * 200) + 20})</span>
         </div>
         <div class="product-price">
-          <span class="current-price">$${price.toFixed(2)}</span>
-          <span class="old-price">$${oldPrice.toFixed(2)}</span>
+          <span class="current-price">${formatPrice(price)}</span>
+          ${oldPrice ? `<span class="old-price">${formatPrice(oldPrice)}</span>` : ""}
         </div>
       </a>
     `;
@@ -281,6 +281,13 @@ const renderProducts = (products) => {
   });
 };
 
+const formatPrice = (value) => {
+  if (!value || isNaN(value)) return "";
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
 const renderCategoryBrands = async (categoryId) => {
   if (!elements.categoryBrandsWrapper || !elements.categoryBrandList) return;
 
@@ -384,8 +391,8 @@ const syncFilterLabel = () => {
   }
 
   elements.filterLabel.textContent = parts.length
-    ? `Hiển thị: ${parts.join(" / ")}`
-    : "Hiển thị tất cả sản phẩm";
+    ? `Show: ${parts.join(" / ")}`
+    : "Show all products";
 };
 
 const loadShopProducts = async () => {

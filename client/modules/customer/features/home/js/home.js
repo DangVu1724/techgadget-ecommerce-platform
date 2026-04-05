@@ -169,8 +169,8 @@ async function initHome() {
 }
 
 function formatPrice(value) {
-  if (!value) return "0 VNĐ";
-  return Number(value).toLocaleString("vi-VN") + " VNĐ";
+  if (!value) return "0 ₫";
+  return Number(value).toLocaleString("vi-VN") + " ₫";
 }
 // Kết quả: 150.000 VNĐ
 function canShowPromotionPopup() {

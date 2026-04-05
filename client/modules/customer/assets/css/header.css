@@ -184,6 +184,18 @@ header {
     font-size: 13px;
 }
 
+/* History Header */
+.history-header {
+    padding: 10px 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 5px;
+}
+
 /* Typo Correction Notification */
 .typo-correction {
     padding: 10px 20px;

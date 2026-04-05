@@ -3,6 +3,8 @@ import { productApi } from "../../core/api/product.api.js";
 const searchInput = document.querySelector(".search-input");
 const searchForm = document.querySelector(".search-form");
 const suggestionsDiv = document.querySelector(".search-suggestions");
+const SEARCH_HISTORY_KEY = 'searchHistory';
+
 const formatPrice = (value) => {
   if (!value || isNaN(value)) return "";
   return new Intl.NumberFormat("vi-VN", {
@@ -11,19 +13,56 @@ const formatPrice = (value) => {
   }).format(value);
 };
 
+function getSearchHistory() {
+  return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || '[]');
+}
+
+function saveSearchHistory(keyword) {
+  let history = getSearchHistory();
+  history = history.filter(item => item !== keyword); // remove duplicates
+  history.unshift(keyword); // add to front
+  history = history.slice(0, 10); // limit to 10
+  localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(history));
+}
+
 let searchTimeout;
 
 // Hiển thị suggestions khi gõ
 if (searchInput) {
-  // Khi focus hoặc gõ
+  // Khi focus
+  searchInput.addEventListener("focus", () => {
+    if (searchInput.value.trim() === '') {
+      const history = getSearchHistory();
+      if (history.length > 0) {
+        let html = '<div class="history-header">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+        suggestionsDiv.innerHTML = html;
+        suggestionsDiv.classList.add("active");
+      }
+    }
+  });
+
+  // Khi gõ
   searchInput.addEventListener("input", (e) => {
     const keyword = e.target.value.trim();
 
     clearTimeout(searchTimeout);
 
     if (keyword.length < 2) {
-      suggestionsDiv.innerHTML = "";
-      suggestionsDiv.classList.remove("active");
+      if (keyword === '') {
+        // Show history if empty
+        const history = getSearchHistory();
+        if (history.length > 0) {
+          let html = '<div class="history-header" style="font-family: \'Poppins\', sans-serif;">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+          suggestionsDiv.innerHTML = html;
+          suggestionsDiv.classList.add("active");
+        } else {
+          suggestionsDiv.innerHTML = "";
+          suggestionsDiv.classList.remove("active");
+        }
+      } else {
+        suggestionsDiv.innerHTML = "";
+        suggestionsDiv.classList.remove("active");
+      }
       return;
     }
 
@@ -44,10 +83,16 @@ if (searchInput) {
   suggestionsDiv.addEventListener("click", (e) => {
     const suggestionItem = e.target.closest(".suggestion-item");
     if (suggestionItem) {
-      const productId = suggestionItem.dataset.productId;
-      const productName = suggestionItem.querySelector("span")?.textContent?.trim() || "";
-      searchInput.value = productName;
-      window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
+      if (suggestionItem.classList.contains('history-item')) {
+        const keyword = suggestionItem.dataset.keyword;
+        searchInput.value = keyword;
+        searchForm.dispatchEvent(new Event('submit'));
+      } else {
+        const productId = suggestionItem.dataset.productId;
+        const productName = suggestionItem.querySelector("span")?.textContent?.trim() || "";
+        searchInput.value = productName;
+        window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
+      }
     }
   });
 }
@@ -114,6 +159,7 @@ if (searchForm) {
     e.preventDefault();
     const keyword = searchInput.value.trim();
     if (keyword) {
+      saveSearchHistory(keyword);
       window.location.href = `/modules/customer/features/search/search.html?q=${encodeURIComponent(keyword)}`;
     }
   });
