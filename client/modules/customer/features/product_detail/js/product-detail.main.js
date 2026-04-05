@@ -458,6 +458,15 @@ const setupReviews = () => {
     });
   });
 
+
+    star.addEventListener("click", () => {
+      selectedRating = Number(star.dataset.value);
+      starIcons.forEach((s) => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
+      });
+    });
+  });
+
   // Form submit (create)
   const reviewForm = document.getElementById("reviewForm");
   if (reviewForm) {
