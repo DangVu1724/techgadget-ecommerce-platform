@@ -5,7 +5,12 @@ export const setText = (selector, text) => {
 };
 
 export const formatPrice = (price) => {
-  return price ? `$${Number(price).toFixed(2)}` : "$0.00";
+  if (!price || isNaN(price)) return "0 ₫";
+
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(price);
 };
 
 export const formatStock = (stock) => {

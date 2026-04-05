@@ -3,6 +3,13 @@ import { productApi } from "../../core/api/product.api.js";
 const searchInput = document.querySelector(".search-input");
 const searchForm = document.querySelector(".search-form");
 const suggestionsDiv = document.querySelector(".search-suggestions");
+const formatPrice = (value) => {
+  if (!value || isNaN(value)) return "";
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
 
 let searchTimeout;
 
@@ -75,7 +82,7 @@ async function loadSuggestions(keyword) {
     if (isTypoCorrected) {
       html += `<div class="typo-correction">
         <i class="fas fa-magic"></i>
-        <span>Đang tìm kiếm với từ khóa đã sửa: "${products[0]?.name?.split(' ')[0] || '...'}"</span>
+        <span>Searching with the corrected keyword: "${products[0]?.name?.split(' ')[0] || '...'}"</span>
       </div>`;
     }
 
@@ -86,7 +93,7 @@ async function loadSuggestions(keyword) {
           `<div class="suggestion-item" data-product-id="${product.id}">
             <i class="fas fa-search"></i>
             <span>${escapeHtml(product.name)}</span>
-            ${product.minPrice ? `<span class="price">$${product.minPrice}</span>` : ""}
+            ${product.minPrice ? `<span class="price">${formatPrice(product.minPrice)}</span>` : ""}
           </div>`
       )
       .join("");
