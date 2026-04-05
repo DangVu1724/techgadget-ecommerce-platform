@@ -17,7 +17,7 @@
   <body>
     <div class="container">
       <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb">
-        <a href="/" aria-label="Trang chá»§">
+        <a href="/" aria-label="Home">
           <i class="fas fa-home"></i>
         </a>
       </nav>
@@ -28,13 +28,13 @@
           FLASH SALE
         </div>
         <div class="promo-message">
-          Giảm giá tới <strong>50%</strong> cho sản phẩm được chọn
+          Sales up to: <strong>50%</strong> for selected products. Don't miss out!
         </div>
-        <button class="promo-cta">Xem ngay</button>
+        <button class="promo-cta">Watch now</button>
       </div>
 
       <div class="category-brands-wrapper" id="categoryBrandsWrapper">
-        <h3>Thương hiệu</h3>
+        <h3>Categories</h3>
         <div id="categoryBrandList" class="brand-list"></div>
       </div>
 
@@ -42,7 +42,7 @@
         <div class="filter-left">
           <span class="filter-label">
             <i class="fas fa-list"></i>
-            <span id="filterLabel">Hiển thị tất cả sản phẩm</span>
+            <span id="filterLabel">Show all products</span>
           </span>
         </div>
         <div class="filter-right">
@@ -96,33 +96,37 @@
                         type="button"
                         class="price-preset"
                         data-min="0"
-                        data-max="100"
+                        data-max="2300000"
+                        style="font-family: 'Poppins', sans-serif;"
                       >
-                        Under $100
+                        Under 2.300.000₫
                       </button>
                       <button
                         type="button"
                         class="price-preset"
-                        data-min="100"
-                        data-max="500"
+                        data-min="2300000"
+                        data-max="11500000"
+                         style="font-family: 'Poppins', sans-serif;"
                       >
-                        $100 - $500
+                        2.300.000₫ - 11.500.000₫
                       </button>
                       <button
                         type="button"
                         class="price-preset"
-                        data-min="500"
-                        data-max="1000"
+                        data-min="11500000"
+                        data-max="23000000"
+                         style="font-family: 'Poppins', sans-serif;"
                       >
-                        $500 - $1000
+                        11.500.000₫ - 23.000.000₫
                       </button>
                       <button
                         type="button"
                         class="price-preset"
-                        data-min="1000"
-                        data-max="99999"
+                        data-min="23000000"
+                        data-max="99999999"
+                         style="font-family: 'Poppins', sans-serif;"
                       >
-                        Over $1000
+                        Over 23.000.000₫
                       </button>
                     </div>
                   </div>
@@ -146,14 +150,14 @@
             <select
               id="sortSelect"
               class="sort-select"
-              aria-label="Sáº¯p xáº¿p sáº£n pháº©m"
+              aria-label="Sort products"
             >
-              <option value="default">Sắp xếp: Mặc định</option>
-              <option value="price-asc">Giá: Thấp đến cao</option>
-              <option value="price-desc">Giá: Cao đến thấp</option>
-              <option value="name-asc">Tên: A-Z</option>
-              <option value="name-desc">Tên: Z-A</option>
-              <option value="newest">Mới nhất</option>
+              <option value="default">Sort by: Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A-Z</option>
+              <option value="name-desc">Name: Z-A</option>
+              <option value="newest">Newest</option>
             </select>
           </div>
         </div>
@@ -195,7 +199,7 @@
       <div id="productList" class="grid-5"></div>
 
       <p id="emptyMessage" class="empty-message">
-        <i class="fas fa-search"></i> Không tìm thấy sản phẩm phù hợp.
+        <i class="fas fa-search"></i> No matching products found
       </p>
 
       <div id="pagination" class="pagination"></div>
@@ -207,5 +211,8 @@
     ></script>
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
+    <button id="backToTop" title="Lên đầu trang">
+    <span class="arrow"></span>
+    </button>
   </body>
 </html>

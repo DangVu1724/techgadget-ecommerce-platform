@@ -113,7 +113,7 @@ const renderOrderSummary = () => {
       <div class="summary-item">
         <span class="item-name">${escapeHtml(item.productName)}${item.variantName ? ` - ${escapeHtml(item.variantName)}` : ""}</span>
         <span class="item-qty">x${item.quantity}</span>
-        <span class="item-price">$${(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+        <span class="item-price">${formatPrice(parseFloat(item.price) * item.quantity)}</span>
       </div>
     `,
     )
@@ -146,24 +146,29 @@ const updateSummaryTotals = () => {
   const discountedSubtotal = Math.max(subtotal - discountAmount, 0);
   const total = discountedSubtotal + shippingCost;
 
-  document.getElementById("summary-subtotal").textContent =
-    `$${subtotal.toFixed(2)}`;
-  document.getElementById("summary-shipping").textContent =
-    shippingCost === 0 ? "FREE" : `$${shippingCost.toFixed(2)}`;
+  document.getElementById("summary-subtotal").textContent = formatPrice(subtotal);
+  document.getElementById("summary-shipping").textContent = 
+    shippingCost === 0 ? "FREE" : formatPrice(shippingCost);
 
   const discountRow = document.getElementById("summary-discount-row");
   const discountValue = document.getElementById("summary-discount");
   if (discountRow && discountValue) {
     if (discountAmount > 0) {
       discountRow.style.display = "flex";
-      discountValue.textContent = `-$${discountAmount.toFixed(2)}`;
+      discountValue.textContent = `-${formatPrice(discountAmount)}`;
     } else {
       discountRow.style.display = "none";
-      discountValue.textContent = "-$0.00";
     }
   }
 
-  document.getElementById("summary-total").textContent = `$${total.toFixed(2)}`;
+  document.getElementById("summary-total").textContent = formatPrice(total);
+};
+
+const formatPrice = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
 };
 
 const prefillUserInfo = (overrideUser = null) => {
@@ -466,13 +471,13 @@ const renderModalCouponCard = (coupon) => {
   const remainingUses = getRemainingUses(coupon);
 
   // Format discount text
-  let discountText = "";
-  if (coupon.type === "PERCENT") {
-    discountText = `${Number(coupon.value)}% OFF`;
-  } else {
-    discountText = `$${Number(coupon.value || 0).toFixed(2)} OFF`;
-  }
-
+  // Sửa phần format discountText
+let discountText = "";
+if (coupon.type === "PERCENT") {
+  discountText = `Reduce ${Number(coupon.value)}%`;
+} else {
+  discountText = `Reduce ${formatPrice(coupon.value)}`;
+}
   return `
     <div data-coupon-card="1" class="coupon-card ${isValid ? "" : "coupon-card--disabled"}">
       <div class="coupon-card__head">
@@ -507,15 +512,13 @@ const renderModalCouponDetails = (coupon, remainingUses) => {
   }
 
   // Min order requirement
-  if (coupon.minOrderAmount && coupon.minOrderAmount > 0) {
-    lines.push(`📦 Minimum order: ${formatUsd(coupon.minOrderAmount)}`);
+  // Sửa các dòng hiển thị điều kiện
+  if (coupon.minOrderAmount > 0) {
+    lines.push(`📦 Minimum order: ${formatPrice(coupon.minOrderAmount)}`);
   }
-
-  // Max discount
-  if (coupon.maxDiscountAmount && coupon.maxDiscountAmount > 0) {
-    lines.push(`🏷️ Maximum discount: ${formatUsd(coupon.maxDiscountAmount)}`);
+  if (coupon.maxDiscountAmount > 0) {
+    lines.push(`🏷️ Maximum discount: ${formatPrice(coupon.maxDiscountAmount)}`);
   }
-
   // Valid until
   const endDate = coupon.endAt ? formatDateTime(coupon.endAt) : null;
   if (endDate) {
@@ -623,3 +626,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// Lấy thẻ button
+const backToTopBtn = document.getElementById("backToTop");
+
+// Theo dõi sự kiện cuộn chuột
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    backToTopBtn.style.display = "flex";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// Khi người dùng nhấn vào nút
+backToTopBtn.onclick = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Cuộn mượt mà
+  });
+};

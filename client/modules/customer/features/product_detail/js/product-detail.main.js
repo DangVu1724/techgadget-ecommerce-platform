@@ -458,6 +458,15 @@ const setupReviews = () => {
     });
   });
 
+
+    star.addEventListener("click", () => {
+      selectedRating = Number(star.dataset.value);
+      starIcons.forEach((s) => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
+      });
+    });
+  });
+
   // Form submit (create)
   const reviewForm = document.getElementById("reviewForm");
   if (reviewForm) {
@@ -487,6 +496,30 @@ const setupReviews = () => {
       }
     });
   }
+};
+// Lấy thẻ button
+const backToTopBtn = document.getElementById("backToTop");
+
+// Theo dõi sự kiện cuộn chuột
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    backToTopBtn.style.display = "flex";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// Khi người dùng nhấn vào nút
+backToTopBtn.onclick = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
 
   // Edit / Delete via event delegation on reviewList
   const reviewList = document.getElementById("reviewList");

@@ -266,6 +266,9 @@ body {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  
+  /* THÊM DÒNG NÀY: Để bảng filter căn theo thanh này */
+  position: relative; 
 }
 
 .filter-left {
@@ -300,6 +303,7 @@ body {
 /* Sort Dropdown */
 .sort-dropdown {
   position: relative;
+  width: max-content;
 }
 
 .sort-select {
@@ -371,22 +375,31 @@ body {
 
 /* Advanced Filters Panel */
 .advanced-filters {
-  display: none;
+  display: none; /* Sẽ được JS thêm class .show hoặc style display: block */
   position: absolute;
-  top: calc(100% + 10px);
+  
+  /* Căn lề: Cách đỉnh thanh bar một khoảng (top) và bám sát 2 mép (left/right) */
+  top: calc(100% + 10px); 
+  left: 0;
   right: 0;
-  z-index: 20;
-  width: min(860px, calc(100vw - 32px));
+  
+  /* Độ rộng: Tự động bằng 100% của .filter-bar (tức là bằng khung container) */
+  width: 100%; 
+  
+  z-index: 999;
   background: #fff;
   border-radius: 18px;
-  padding: 18px;
+  padding: 24px;
   border: 1px solid #f1dfd7;
   box-shadow: 0 22px 55px rgba(35, 25, 22, 0.14);
 }
-
 .advanced-filters.show {
   display: grid;
   gap: 16px;
+}
+.filter-right, 
+.filter-dropdown {
+  position: static !important;
 }
 
 .filter-dropdown-header {
@@ -920,4 +933,44 @@ body {
     width: 100%;
     height: auto;
   }
+}
+
+#backToTop {
+  /* Vị trí cố định */
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  
+  /* Hình dáng và kích thước */
+  width: 50px;
+  height: 50px;
+  background-color: #333; /* Màu nền mặc định (xám đậm) */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Tạo hình tròn */
+  cursor: pointer;
+  
+  /* Hiệu ứng chuyển động mượt */
+  transition: background-color 0.3s, opacity 0.3s;
+  display: none; /* Ẩn nút khi đang ở đầu trang */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Hiệu ứng khi di chuột (Hover) */
+#backToTop:hover {
+  background-color: #ff8c00; /* Đổi sang màu cam */
+}
+
+/* Vẽ dấu mũi tên màu trắng */
+.arrow {
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 5px;
+  transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
+  -webkit-transform: rotate(-135deg);
+  margin-top: 5px;
 }

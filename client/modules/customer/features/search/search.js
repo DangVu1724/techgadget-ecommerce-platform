@@ -28,6 +28,14 @@ const elements = {
   sortSelect: document.getElementById("sort-select"),
 };
 
+const formatPrice = (value) => {
+  if (!value || isNaN(value)) return "Liên hệ";
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
+
 async function init() {
   const params = new URLSearchParams(window.location.search);
   state.keyword = params.get("q") || "";
@@ -102,9 +110,7 @@ function renderProducts(products) {
     .map((product) => {
       const image = getProductImage(product);
       const description = getProductDescription(product);
-      const priceHtml = product.minPrice
-        ? `<strong class="price">$${Number(product.minPrice).toLocaleString()}</strong>`
-        : "Liên hệ";
+      const priceHtml = `<strong class="price">${formatPrice(product.minPrice)}</strong>`;
 
       return `
       <div class="product-card" data-product-id="${product.id}">
@@ -221,6 +227,31 @@ function getProductDescription(product) {
   if (product.categoryName) return `Danh mục: ${product.categoryName}`;
   return "Sản phẩm công nghệ chính hãng, bảo hành tốt.";
 }
+
+// Lấy thẻ button
+const backToTopBtn = document.getElementById("backToTop");
+
+// Theo dõi sự kiện cuộn chuột
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    backToTopBtn.style.display = "flex";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// Khi người dùng nhấn vào nút
+backToTopBtn.onclick = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Cuộn mượt mà
+  });
+};
 
 function escapeHtml(text) {
   const div = document.createElement("div");

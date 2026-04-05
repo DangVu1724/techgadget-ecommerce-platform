@@ -169,12 +169,10 @@ async function initHome() {
 }
 
 function formatPrice(value) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(value);
+  if (!value) return "0 ₫";
+  return Number(value).toLocaleString("vi-VN") + " ₫";
 }
-
+// Kết quả: 150.000 VNĐ
 function canShowPromotionPopup() {
   return !sessionStorage.getItem('popupShown');
 }
@@ -352,3 +350,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   slider.init();
 });
+
+// Lấy thẻ button
+const backToTopBtn = document.getElementById("backToTop");
+
+// Theo dõi sự kiện cuộn chuột
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    backToTopBtn.style.display = "flex";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// Khi người dùng nhấn vào nút
+backToTopBtn.onclick = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Cuộn mượt mà
+  });
+};

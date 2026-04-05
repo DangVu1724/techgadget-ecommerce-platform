@@ -38,35 +38,39 @@ const renderCartItems = (items) => {
     const color = attributes.Color || attributes.color || "";
     const ram = attributes.RAM || "";
     const storage = attributes.Storage || "";
-
-    return `
-      <div class="cart-item" data-id="${item.id}" data-variant-id="${item.variantId}" data-price="${item.price}">
-        <div class="product-info-cell">
-          <div class="product-img-box">
-            <img src="${item.image || "/modules/customer/assets/images/macbook.png"}" alt="${item.productName}">
-          </div>
-          <div class="product-detail-cell">
-            <h4>${item.productName}</h4>
-            ${color ? `<p class="attr-color">${color}</p>` : ""}
-            ${ram || storage ? `<p class="attr-config">${[ram, storage].filter(Boolean).join(" • ")}</p>` : ""}
-            <p class="unit-price" data-price="${item.price}" style="margin-top: 5px;">$${parseFloat(item.price).toFixed(2)}</p>
-          </div>
-        </div>
-        <div class="qty-cell">
-          <div class="qty-picker">
-            <button type="button" onclick="window.updateQty(this, -1)">−</button>
-            <input type="text" value="${item.quantity}" readonly class="qty-input">
-            <button type="button" onclick="window.updateQty(this, 1)">+</button>
-          </div>
-        </div>
-        <div class="subtotal-cell">$${subtotal}</div>
-        <div class="remove-cell">
-          <button class="btn-remove-cart" onclick="window.removeItem(this)">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
+return `
+  <div class="cart-item" data-id="${item.id}" data-variant-id="${item.variantId}" data-price="${item.price}">
+    <div class="product-info-cell">
+      <div class="product-img-box">
+        <img src="${item.image || "/modules/customer/assets/images/macbook.png"}" alt="${item.productName}">
       </div>
-    `;
+      <div class="product-detail-cell">
+        <h4>${item.productName}</h4>
+        ${color ? `<p class="attr-color">${color}</p>` : ""}
+        ${ram || storage ? `<p class="attr-config">${[ram, storage].filter(Boolean).join(" • ")}</p>` : ""}
+        
+        <p class="unit-price" data-price="${item.price}" style="margin-top: 5px;">
+          ${formatPrice(item.price)}
+        </p>
+      </div>
+    </div>
+    <div class="qty-cell">
+      <div class="qty-picker">
+        <button type="button" onclick="window.updateQty(this, -1)">−</button>
+        <input type="text" value="${item.quantity}" readonly class="qty-input">
+        <button type="button" onclick="window.updateQty(this, 1)">+</button>
+      </div>
+    </div>
+    
+    <div class="subtotal-cell">${formatPrice(subtotal)}</div>
+    
+    <div class="remove-cell">
+      <button class="btn-remove-cart" onclick="window.removeItem(this)">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+    </div>
+  </div>
+`;
   }).join("");
 
   calculateAndUpdateTotals();
@@ -75,8 +79,9 @@ const renderCartItems = (items) => {
 const calculateAndUpdateTotals = () => {
   let finalTotal = 0;
   document.querySelectorAll(".cart-item").forEach((item) => {
-    const subtotal = parseFloat(item.querySelector(".subtotal-cell")?.innerText.replace("$", "") || "0");
-    finalTotal += subtotal;
+    const price = parseFloat(item.getAttribute("data-price") || "0");
+    const qty = parseInt(item.querySelector(".qty-input")?.value || "0");
+    finalTotal += price * qty;
   });
 
   updateCartTotals(finalTotal, finalTotal);
@@ -89,8 +94,16 @@ const notifyCartUpdate = () => {
 const updateCartTotals = (subtotal, total) => {
   const subtotalEl = document.getElementById("cart-subtotal");
   const totalEl = document.getElementById("cart-total");
-  if (subtotalEl) subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
-  if (totalEl) totalEl.innerText = `$${total.toFixed(2)}`;
+
+  // Sử dụng hàm formatPrice để hiển thị định dạng VNĐ chuẩn
+  if (subtotalEl) subtotalEl.innerText = formatPrice(subtotal);
+  if (totalEl) totalEl.innerText = formatPrice(total);
+};
+const formatPrice = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
 };
 
 const loadCart = async () => {
@@ -161,7 +174,7 @@ window.updateQty = async (btn, change) => {
   try {
     await cartAPI.updateQuantity(variantId, newQty);
     input.value = newQty;
-    subtotalCell.innerText = `$${(newQty * price).toFixed(2)}`;
+    subtotalCell.innerText = formatPrice(newQty * price);
     calculateAndUpdateTotals();
     notifyCartUpdate();
     showToast("Cart updated successfully.", "success");
@@ -237,3 +250,28 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCart().then(notifyCartUpdate);
   setupCartActions();
 });
+
+// Lấy thẻ button
+const backToTopBtn = document.getElementById("backToTop");
+
+// Theo dõi sự kiện cuộn chuột
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    backToTopBtn.style.display = "flex";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// Khi người dùng nhấn vào nút
+backToTopBtn.onclick = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Cuộn mượt mà
+  });
+};

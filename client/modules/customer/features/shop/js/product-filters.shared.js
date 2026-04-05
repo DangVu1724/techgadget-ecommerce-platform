@@ -114,14 +114,14 @@ const buildBooleanOptions = (filter) => {
   if (truthy.length) {
     options.push({
       id: "yes",
-      label: "Có 5G",
+      label: "Have 5G",
       payloadValues: truthy,
     });
   }
   if (falsy.length) {
     options.push({
       id: "no",
-      label: "Không 5G",
+      label: "No 5G",
       payloadValues: falsy,
     });
   }

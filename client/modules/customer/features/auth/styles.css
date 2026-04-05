@@ -1,5 +1,5 @@
 :root {
-    --primary: #0056b3;
+    --primary: #ff7a00;
     --secondary: #ff7a00;
     --bg: #f4f7f9;
 }
@@ -8,7 +8,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -37,6 +37,7 @@ body {
 .card.login {
     width: 900px;
     border: 2px solid var(--primary);
+    
 }
 
 .form-side {
@@ -72,11 +73,13 @@ body {
 h1 {
     font-size: 30px;
     margin-bottom: 10px;
+    
 }
 
 .subtitle {
     color: #666;
     margin-bottom: 25px;
+     font-size: 10px;
 }
 
 /* INPUT */
@@ -154,7 +157,7 @@ input:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .footer-link {

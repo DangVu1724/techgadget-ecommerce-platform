@@ -612,6 +612,7 @@ body {
     font-size: 14px; 
     color: #666; 
     line-height: 1.7; 
+    font-family: 'Poppins', sans-serif;
 }
 
 /* REVIEW FORM */
@@ -983,6 +984,45 @@ body {
     }
 }
 
+#backToTop {
+  /* Vị trí cố định */
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  
+  /* Hình dáng và kích thước */
+  width: 50px;
+  height: 50px;
+  background-color: #333; /* Màu nền mặc định (xám đậm) */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Tạo hình tròn */
+  cursor: pointer;
+  
+  /* Hiệu ứng chuyển động mượt */
+  transition: background-color 0.3s, opacity 0.3s;
+  display: none; /* Ẩn nút khi đang ở đầu trang */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Hiệu ứng khi di chuột (Hover) */
+#backToTop:hover {
+  background-color: #ff8c00; /* Đổi sang màu cam */
+}
+
+/* Vẽ dấu mũi tên màu trắng */
+.arrow {
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 5px;
+  transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
+  -webkit-transform: rotate(-135deg);
+  margin-top: 5px;
+}
 /* ── Letter Avatar ── */
 .letter-avatar {
     width: 70px;
