@@ -275,57 +275,119 @@
           <!-- Reviews Tab -->
           <div class="tab-pane" id="tab-reviews" style="display: none">
             <div class="reviews-wrapper">
-              <!-- Review List Section -->
-              <div class="existing-reviews">
-                <!-- Star Filter -->
-                <div class="review-filter" id="reviewFilter">
-                  <button class="filter-btn active" data-rating="all">All</button>
-                  <button class="filter-btn" data-rating="5">5 ★</button>
-                  <button class="filter-btn" data-rating="4">4 ★</button>
-                  <button class="filter-btn" data-rating="3">3 ★</button>
-                  <button class="filter-btn" data-rating="2">2 ★</button>
-                  <button class="filter-btn" data-rating="1">1 ★</button>
+              <div class="review-top-grid">
+                <div class="review-summary">
+                  <p class="review-score-label">Product Rating</p>
+                  <div class="review-score-card">
+                    <h2 id="averageRating">0.0</h2>
+                    <div class="avg-stars" id="averageStars">★★★★★</div>
+                    <p class="review-total"><span id="reviewTotal">0</span> reviews</p>
+                  </div>
+
+                  <div class="rating-breakdown">
+                    <div class="rating-row">
+                      <span>5 ★</span>
+                      <div class="rating-bar"><div class="rating-bar-fill" id="bar5"></div></div>
+                      <span id="count5">0</span>
+                    </div>
+                    <div class="rating-row">
+                      <span>4 ★</span>
+                      <div class="rating-bar"><div class="rating-bar-fill" id="bar4"></div></div>
+                      <span id="count4">0</span>
+                    </div>
+                    <div class="rating-row">
+                      <span>3 ★</span>
+                      <div class="rating-bar"><div class="rating-bar-fill" id="bar3"></div></div>
+                      <span id="count3">0</span>
+                    </div>
+                    <div class="rating-row">
+                      <span>2 ★</span>
+                      <div class="rating-bar"><div class="rating-bar-fill" id="bar2"></div></div>
+                      <span id="count2">0</span>
+                    </div>
+                    <div class="rating-row">
+                      <span>1 ★</span>
+                      <div class="rating-bar"><div class="rating-bar-fill" id="bar1"></div></div>
+                      <span id="count1">0</span>
+                    </div>
+                  </div>
                 </div>
 
-                <!-- Dynamic Review List -->
-                <div id="reviewList">
-                  <p class="review-empty">Loading reviews...</p>
+                <div class="review-list-panel">
+                  <!-- Star Filter -->
+                  <div class="review-filter" id="reviewFilter">
+                    <button class="filter-btn active" data-rating="all">All</button>
+                    <button class="filter-btn" data-rating="5">5 ★</button>
+                    <button class="filter-btn" data-rating="4">4 ★</button>
+                    <button class="filter-btn" data-rating="3">3 ★</button>
+                    <button class="filter-btn" data-rating="2">2 ★</button>
+                    <button class="filter-btn" data-rating="1">1 ★</button>
+                  </div>
+
+                  <!-- Dynamic Review List -->
+                  <div id="reviewList">
+                    <p class="review-empty">Loading reviews...</p>
+                  </div>
                 </div>
               </div>
 
               <!-- Add Review Section -->
               <div class="add-review-section">
-                <h3 class="section-title-slanted">ADD A REVIEW</h3>
+                <h3 class="section-title-slanted">Write a Review</h3>
 
                 <!-- Shown when NOT logged in -->
                 <div id="reviewLoginPrompt" style="display: none">
-                  <p class="form-note">You must be logged in to leave a review.</p>
+                  <p class="form-note">You must be logged in to submit a review.</p>
                   <a href="/login" class="btn-primary text-uppercase review-login-btn">
-                    Please Login to review this product
+                    Login to review
                   </a>
                 </div>
 
                 <!-- Shown when logged in -->
                 <div id="reviewFormWrapper">
                   <p class="form-note">
-                    Your email address will not be published. Required fields are marked *
+                    Your email address will not be published. Fields marked with * are required.
                   </p>
                   <form class="review-form" id="reviewForm">
                     <div class="rating-input">
                       <span>Your rating *</span>
                       <div class="stars-input" id="ratingStars">
-                        <span class="star-icon" data-value="1">☆</span>
-                        <span class="star-icon" data-value="2">☆</span>
-                        <span class="star-icon" data-value="3">☆</span>
-                        <span class="star-icon" data-value="4">☆</span>
-                        <span class="star-icon" data-value="5">☆</span>
-                      </div>
+  <span class="star-icon" data-value="1">
+    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
+    </svg>
+  </span>
+
+  <span class="star-icon" data-value="2">
+    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
+    </svg>
+  </span>
+
+  <span class="star-icon" data-value="3">
+    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
+    </svg>
+  </span>
+
+  <span class="star-icon" data-value="4">
+    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
+    </svg>
+  </span>
+
+  <span class="star-icon" data-value="5">
+    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
+    </svg>
+  </span>
+</div>
                     </div>
 
                     <textarea
                       id="reviewText"
-                      placeholder="Write your review here *"
-                      rows="4"
+                      placeholder="Write your review here..."
+                      rows="5"
                       required
                     ></textarea>
 

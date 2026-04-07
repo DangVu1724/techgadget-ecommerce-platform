@@ -331,8 +331,11 @@ function renderLetterAvatar(name = "?") {
 }
 
 function renderStars(rating = 0) {
+  const starSvg = `<svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor"/>
+  </svg>`;
   return Array.from({ length: 5 }, (_, i) =>
-    `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">★</span>`
+    `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${starSvg}</span>`
   ).join("");
 }
 
@@ -342,12 +345,48 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
+function updateReviewSummary(reviews = []) {
+  const total = reviews.length;
+  const average = total
+    ? reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / total
+    : 0;
+  const counts = [0, 0, 0, 0, 0, 0];
+  reviews.forEach((review) => {
+    const value = Number(review.rating || 0);
+    if (value >= 1 && value <= 5) counts[value] += 1;
+  });
+
+  const averageRatingEl = document.getElementById("averageRating");
+  const averageStarsEl = document.getElementById("averageStars");
+  const reviewTotalEl = document.getElementById("reviewTotal");
+
+  if (averageRatingEl) averageRatingEl.textContent = average ? average.toFixed(1) : "0.0";
+  if (reviewTotalEl) reviewTotalEl.textContent = total;
+  if (averageStarsEl) {
+    const starSvg = `<svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor"/>
+    </svg>`;
+    averageStarsEl.innerHTML = Array.from({ length: 5 }, (_, i) =>
+      `<span style="color:${i < Math.round(average) ? "#F39C12" : "#ddd"}">${starSvg}</span>`
+    ).join("");
+  }
+
+  const maxCount = Math.max(total, 1);
+  for (let star = 1; star <= 5; star += 1) {
+    const bar = document.getElementById(`bar${star}`);
+    const countEl = document.getElementById(`count${star}`);
+    const value = counts[star] || 0;
+    if (bar) bar.style.width = `${Math.round((value / maxCount) * 100)}%`;
+    if (countEl) countEl.textContent = value;
+  }
+}
+
 function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
   const container = document.getElementById("reviewList");
   if (!container) return;
 
   if (!reviews.length) {
-    container.innerHTML = '<p class="review-empty">No reviews yet. Be the first to review!</p>';
+    container.innerHTML = '<p class="review-empty">There are no reviews yet. Be the first to leave one!</p>';
     return;
   }
 
@@ -356,8 +395,8 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
     const canDelete = canEdit || isAdmin;
     const actions = (canEdit || canDelete) ? `
       <div class="review-actions">
-        ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Edit</button>` : ""}
-        ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Delete</button>` : ""}
+        ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Chỉnh sửa</button>` : ""}
+        ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Xóa</button>` : ""}
       </div>` : "";
 
     return `
@@ -386,6 +425,7 @@ const setupReviews = () => {
   if (!productId) return;
 
   let activeRating = null;
+  let allReviews = [];
   const currentUser = authAPI.getUser();
   const currentUserId = currentUser?.id ?? null;
   const isAdmin = currentUser?.role === "ADMIN";
@@ -395,10 +435,15 @@ const setupReviews = () => {
     try {
       const reviews = await reviewAPI.getByProduct(productId, rating);
       renderReviewList(reviews || [], currentUserId, isAdmin);
-      // Chỉ cập nhật count khi không filter (hiển thị tổng)
+
+      if (!allReviews.length) {
+        allReviews = await reviewAPI.getByProduct(productId);
+      }
+
+      updateReviewSummary(allReviews);
       if (rating === null) {
         const countEl = document.getElementById("reviewCount");
-        if (countEl) countEl.textContent = (reviews || []).length;
+        if (countEl) countEl.textContent = (allReviews || []).length;
       }
     } catch {
       const container = document.getElementById("reviewList");
@@ -436,25 +481,26 @@ const setupReviews = () => {
   let selectedRating = 0;
   const starIcons = document.querySelectorAll(".star-icon");
 
+  const updateStarDisplay = (rating) => {
+    starIcons.forEach((s) => {
+      const value = Number(s.dataset.value);
+      s.classList.toggle("active", value <= rating);
+    });
+  };
+
   starIcons.forEach((star) => {
     star.addEventListener("mouseenter", () => {
       const val = Number(star.dataset.value);
-      starIcons.forEach((s) => {
-        s.textContent = Number(s.dataset.value) <= val ? "★" : "☆";
-      });
+      updateStarDisplay(val);
     });
 
     star.addEventListener("mouseleave", () => {
-      starIcons.forEach((s) => {
-        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
-      });
+      updateStarDisplay(selectedRating);
     });
 
     star.addEventListener("click", () => {
       selectedRating = Number(star.dataset.value);
-      starIcons.forEach((s) => {
-        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
-      });
+      updateStarDisplay(selectedRating);
     });
   });
 
@@ -487,6 +533,76 @@ const setupReviews = () => {
       }
     });
   }
+
+  const reviewList = document.getElementById("reviewList");
+  if (reviewList) {
+    reviewList.addEventListener("click", async (e) => {
+      // DELETE
+      if (e.target.classList.contains("review-btn-delete")) {
+        const reviewId = Number(e.target.dataset.id);
+        if (!confirm("Delete this review?")) return;
+        try {
+          await reviewAPI.delete(reviewId);
+          showToast("Review deleted.", "success");
+          loadReviews(activeRating);
+        } catch {
+          // handled by request.js
+        }
+      }
+
+      // EDIT — open inline edit form
+      if (e.target.classList.contains("review-btn-edit")) {
+        const reviewId = Number(e.target.dataset.id);
+        const oldRating = Number(e.target.dataset.rating);
+        const oldComment = decodeURIComponent(e.target.dataset.comment);
+        const reviewItem = e.target.closest(".review-item");
+        if (!reviewItem) return;
+
+        if (reviewItem.querySelector(".inline-edit-form")) return;
+
+        let editRating = oldRating;
+        const starsHtml = Array.from({ length: 5 }, (_, i) => {
+          const v = i + 1;
+          return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? "★" : "☆"}</span>`;
+        }).join("");
+
+        const form = document.createElement("div");
+        form.className = "inline-edit-form";
+        form.innerHTML = `
+          <div class="inline-edit-stars">${starsHtml}</div>
+          <textarea class="inline-edit-textarea">${oldComment}</textarea>
+          <div class="inline-edit-btns">
+            <button class="review-btn-save" data-id="${reviewId}">Save</button>
+            <button class="review-btn-cancel">Cancel</button>
+          </div>`;
+
+        reviewItem.appendChild(form);
+
+        form.querySelectorAll(".star-icon-edit").forEach((s) => {
+          s.addEventListener("click", () => {
+            editRating = Number(s.dataset.value);
+            form.querySelectorAll(".star-icon-edit").forEach((x) => {
+              x.textContent = Number(x.dataset.value) <= editRating ? "★" : "☆";
+            });
+          });
+        });
+
+        form.querySelector(".review-btn-cancel").addEventListener("click", () => form.remove());
+
+        form.querySelector(".review-btn-save").addEventListener("click", async () => {
+          const comment = form.querySelector(".inline-edit-textarea").value.trim();
+          if (!comment) { showToast("Comment cannot be empty.", "warning"); return; }
+          try {
+            await reviewAPI.update(reviewId, { rating: editRating, comment });
+            showToast("Review updated.", "success");
+            loadReviews(activeRating);
+          } catch {
+            // handled by request.js
+          }
+        });
+      }
+    });
+  }
 };
 // Lấy thẻ button
 const backToTopBtn = document.getElementById("backToTop");
@@ -506,82 +622,12 @@ function scrollFunction() {
 }
 
 // Khi người dùng nhấn vào nút
-backToTopBtn.onclick = function() {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
+if (backToTopBtn) {
+  backToTopBtn.onclick = function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+}
 
-  // Edit / Delete via event delegation on reviewList
-  const reviewList = document.getElementById("reviewList");
-  if (!reviewList) return;
-
-  reviewList.addEventListener("click", async (e) => {
-    // DELETE
-    if (e.target.classList.contains("review-btn-delete")) {
-      const reviewId = Number(e.target.dataset.id);
-      if (!confirm("Delete this review?")) return;
-      try {
-        await reviewAPI.delete(reviewId);
-        showToast("Review deleted.", "success");
-        loadReviews(activeRating);
-      } catch {
-        // handled by request.js
-      }
-    }
-
-    // EDIT — open inline edit form
-    if (e.target.classList.contains("review-btn-edit")) {
-      const reviewId = Number(e.target.dataset.id);
-      const oldRating = Number(e.target.dataset.rating);
-      const oldComment = decodeURIComponent(e.target.dataset.comment);
-      const reviewItem = e.target.closest(".review-item");
-      if (!reviewItem) return;
-
-      // Prevent duplicate inline forms
-      if (reviewItem.querySelector(".inline-edit-form")) return;
-
-      let editRating = oldRating;
-      const starsHtml = Array.from({ length: 5 }, (_, i) => {
-        const v = i + 1;
-        return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? "★" : "☆"}</span>`;
-      }).join("");
-
-      const form = document.createElement("div");
-      form.className = "inline-edit-form";
-      form.innerHTML = `
-        <div class="inline-edit-stars">${starsHtml}</div>
-        <textarea class="inline-edit-textarea">${oldComment}</textarea>
-        <div class="inline-edit-btns">
-          <button class="review-btn-save" data-id="${reviewId}">Save</button>
-          <button class="review-btn-cancel">Cancel</button>
-        </div>`;
-
-      reviewItem.appendChild(form);
-
-      // Star interaction inside inline form
-      form.querySelectorAll(".star-icon-edit").forEach((s) => {
-        s.addEventListener("click", () => {
-          editRating = Number(s.dataset.value);
-          form.querySelectorAll(".star-icon-edit").forEach((x) => {
-            x.textContent = Number(x.dataset.value) <= editRating ? "★" : "☆";
-          });
-        });
-      });
-
-      form.querySelector(".review-btn-cancel").addEventListener("click", () => form.remove());
-
-      form.querySelector(".review-btn-save").addEventListener("click", async () => {
-        const comment = form.querySelector(".inline-edit-textarea").value.trim();
-        if (!comment) { showToast("Comment cannot be empty.", "warning"); return; }
-        try {
-          await reviewAPI.update(reviewId, { rating: editRating, comment });
-          showToast("Review updated.", "success");
-          loadReviews(activeRating);
-        } catch {
-          // handled by request.js
-        }
-      });
-    }
-  });
-};

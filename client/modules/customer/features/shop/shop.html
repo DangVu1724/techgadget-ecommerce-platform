@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="/modules/customer/features/shop/shop.css" />
   </head>
   <body>
+    <!-- Filter Overlay (Backdrop) -->
+    <div class="filter-overlay" id="filterOverlay"></div>
+    
     <div class="container">
       <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb">
         <a href="/" aria-label="Home">
@@ -62,85 +65,110 @@
               <i class="fas fa-chevron-down"></i>
             </button>
 
+            <!-- Modern Advanced Filters Panel -->
             <div class="advanced-filters" id="advancedFilters">
-              <div class="filter-dropdown-header">
-                <div>
-                  <h3>Filters</h3>
-                  <p id="filterSummary">No filters selected</p>
+              <!-- Header -->
+              <div class="filter-panel-header">
+                <div class="filter-panel-title-group">
+                  <h2>
+                    <i class="fas fa-sliders-h"></i>
+                    Filter Products
+                  </h2>
+                  <p id="filterSummary" class="filter-summary">No filters selected</p>
                 </div>
+                <button 
+                  type="button" 
+                  class="filter-panel-close" 
+                  id="closeFilters" 
+                  aria-label="Close filters"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
               </div>
 
-              <div class="filter-panel-body">
-                <div class="filter-section">
-                  <h4>Price range <i class="fas fa-chevron-down"></i></h4>
-                  <div class="filter-content">
-                    <div class="price-inputs">
-                      <input
-                        type="number"
-                        id="minPrice"
-                        placeholder="Min price"
-                        min="0"
-                        class="price-input"
-                      />
-                      <span>-</span>
-                      <input
-                        type="number"
-                        id="maxPrice"
-                        placeholder="Max price"
-                        min="0"
-                        class="price-input"
-                      />
+              <!-- Scrollable Content -->
+              <div class="filter-panel-scroll">
+                <div class="filter-panel-content">
+                  <!-- Price Range Section -->
+                  <div class="filter-section collapsed">
+                    <div class="filter-section-header">
+                      <h3>
+                        <i class="fas fa-tag"></i>
+                        Price Range
+                      </h3>
+                      <i class="fas fa-chevron-down"></i>
                     </div>
-                    <div class="price-presets">
-                      <button
-                        type="button"
-                        class="price-preset"
-                        data-min="0"
-                        data-max="2300000"
-                        style="font-family: 'Poppins', sans-serif;"
-                      >
-                        Under 2.300.000₫
-                      </button>
-                      <button
-                        type="button"
-                        class="price-preset"
-                        data-min="2300000"
-                        data-max="11500000"
-                         style="font-family: 'Poppins', sans-serif;"
-                      >
-                        2.300.000₫ - 11.500.000₫
-                      </button>
-                      <button
-                        type="button"
-                        class="price-preset"
-                        data-min="11500000"
-                        data-max="23000000"
-                         style="font-family: 'Poppins', sans-serif;"
-                      >
-                        11.500.000₫ - 23.000.000₫
-                      </button>
-                      <button
-                        type="button"
-                        class="price-preset"
-                        data-min="23000000"
-                        data-max="99999999"
-                         style="font-family: 'Poppins', sans-serif;"
-                      >
-                        Over 23.000.000₫
-                      </button>
+                    <div class="filter-content">
+                      <div class="price-range-container">
+                        <div class="price-inputs">
+                          <input
+                            type="number"
+                            id="minPrice"
+                            placeholder="Min price"
+                            min="0"
+                            class="price-input"
+                          />
+                          <span class="price-separator">to</span>
+                          <input
+                            type="number"
+                            id="maxPrice"
+                            placeholder="Max price"
+                            min="0"
+                            class="price-input"
+                          />
+                        </div>
+                      </div>
+                      <div class="price-presets">
+                        <button
+                          type="button"
+                          class="price-preset"
+                          data-min="0"
+                          data-max="2300000"
+                        >
+                          <span class="preset-label" style="font-family: 'Poppins', sans-serif;">Under 2.3m ₫</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="price-preset"
+                          data-min="2300000"
+                          data-max="11500000"
+                        >
+                          <span class="preset-label" style="font-family: 'Poppins', sans-serif;">2.3m - 11.5m ₫</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="price-preset"
+                          data-min="11500000"
+                          data-max="23000000"
+                        >
+                          <span class="preset-label" style="font-family: 'Poppins', sans-serif;">11.5m - 23m ₫</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="price-preset"
+                          data-min="23000000"
+                          data-max="99999999"
+                        >
+                          <span class="preset-label" style="font-family: 'Poppins', sans-serif;">Over 23m ₫</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div id="dynamicFilterSections"></div>
+                  <!-- Dynamic Filter Sections -->
+                  <div id="dynamicFilterSections"></div>
+                </div>
               </div>
 
-              <div class="filter-actions">
-                <button id="clearFilters" type="button" class="clear-filters">
-                  Clear
+              <!-- Footer with Actions -->
+              <div class="filter-panel-footer">
+                <button id="clearFilters" type="button" class="btn-clear">
+                  <i class="fas fa-redo"></i>
+                  Clear All
                 </button>
-                <button id="applyFilters" type="button" class="apply-filters">
-                  Apply
+                <button id="applyFilters" type="button" class="btn-apply">
+                  <i class="fas fa-check"></i>
+                  Apply Filters
                 </button>
               </div>
             </div>
