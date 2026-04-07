@@ -81,7 +81,7 @@ body {
 .account-hero h1,
 .panel-head h2 {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: clamp(28px, 3vw, 40px);
   line-height: 1.1;
 }
@@ -126,7 +126,7 @@ body {
   justify-content: center;
   background: linear-gradient(135deg, var(--account-accent), #ff9f7e);
   color: #fff;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 28px;
   font-weight: 700;
   box-shadow: 0 12px 22px rgba(255, 111, 66, 0.22);

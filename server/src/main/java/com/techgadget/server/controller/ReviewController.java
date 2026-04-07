@@ -2,6 +2,7 @@ package com.techgadget.server.controller;
 
 import com.techgadget.server.model.dto.ApiResponse;
 import com.techgadget.server.model.dto.review.ReviewCreateRequest;
+import com.techgadget.server.model.dto.review.ReviewPageResponse;
 import com.techgadget.server.model.dto.review.ReviewUpdateRequest;
 import com.techgadget.server.model.dto.review.ReviewResponse;
 import com.techgadget.server.service.ReviewService;
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
@@ -31,13 +30,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ApiResponse<List<ReviewResponse>>> getReviews(
+    public ResponseEntity<ApiResponse<ReviewPageResponse>> getReviews(
             @PathVariable Long productId,
-            @RequestParam(required = false) Integer rating
+            @RequestParam(required = false) Integer rating,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
     ) {
         return ResponseEntity.ok(ApiResponse.success(
                 "Reviews retrieved successfully.",
-                reviewService.getReviews(productId, rating)
+                reviewService.getReviews(productId, rating, page, size)
         ));
     }
 

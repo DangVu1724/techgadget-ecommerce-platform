@@ -32,6 +32,8 @@ public class Product {
     private String image;
 
     private Integer totalSold = 0;
+    private Double averageRating = 0.0;
+    private Long totalReviews = 0L;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductSummaryResponse {
     private Long id;
@@ -19,6 +18,32 @@ public class ProductSummaryResponse {
     private String categoryName;
     private String brandName;
     private LocalDateTime createdAt;
+    private Double averageRating;
+    private Long totalReviews;
 
-
+    public ProductSummaryResponse(
+            Long id,
+            String name,
+            String image,
+            BigDecimal minPrice,
+            Long totalStock,
+            Integer totalSold,
+            String categoryName,
+            String brandName,
+            LocalDateTime createdAt,
+            Double averageRating,
+            Long totalReviews
+    ) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.minPrice = minPrice;
+        this.totalStock = totalStock;
+        this.totalSold = totalSold;
+        this.categoryName = categoryName;
+        this.brandName = brandName;
+        this.createdAt = createdAt;
+        this.averageRating = averageRating;
+        this.totalReviews = totalReviews;
+    }
 }

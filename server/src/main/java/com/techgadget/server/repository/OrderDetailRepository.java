@@ -18,7 +18,9 @@ SELECT new com.techgadget.server.model.dto.product.TopProductResponse(
     MIN(v.price),
     MAX(v.price),
 
-    COALESCE(SUM(od.quantity), 0)
+    COALESCE(SUM(od.quantity), 0),
+    p.averageRating,
+    p.totalReviews
 )
 FROM OrderDetail od
 JOIN od.variant v
@@ -26,7 +28,7 @@ JOIN v.product p
 
 WHERE od.order.orderStatus = com.techgadget.server.model.enums.OrderStatus.DELIVERED
 
-GROUP BY p.id, p.name, p.image
+GROUP BY p.id, p.name, p.image, p.averageRating, p.totalReviews
 ORDER BY COALESCE(SUM(od.quantity), 0) DESC
 """)
     List<TopProductResponse> findTopSellingProducts(Pageable pageable);

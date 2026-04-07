@@ -4,7 +4,7 @@
     --dark-bg: #2a2a2a;
     --border-grey: #eeeeee;
     --font-main: 'Poppins', sans-serif;
-    --font-heading: 'Montserrat', sans-serif;
+    --font-heading: 'Poppins', sans-serif;
     --text-light: #888;
     --text-dark: #333;
     --white: #fff;
@@ -28,6 +28,170 @@ body {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+.product-skeleton {
+    display: block;
+}
+
+.product-content {
+    display: block;
+}
+
+.skeleton-box,
+.skeleton-line,
+.skeleton-chip {
+    position: relative;
+    overflow: hidden;
+    background: #ececec;
+}
+
+.skeleton-box::after,
+.skeleton-line::after,
+.skeleton-chip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+    animation: skeleton-shimmer 1.25s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.skeleton-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+
+.skeleton-stack {
+    flex: 1;
+}
+
+.skeleton-line {
+    height: 14px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+}
+
+.skeleton-line:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-line-title {
+    width: 78%;
+    height: 44px;
+    border-radius: 14px;
+}
+
+.skeleton-line-price {
+    width: 34%;
+    height: 32px;
+}
+
+.skeleton-line-lg {
+    width: 100%;
+}
+
+.skeleton-line-md {
+    width: 68%;
+}
+
+.skeleton-line-sm {
+    width: 46%;
+}
+
+.skeleton-line-xs {
+    width: 22%;
+    height: 12px;
+}
+
+.skeleton-line-section {
+    width: 220px;
+    height: 28px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+}
+
+.skeleton-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+}
+
+.skeleton-main-image {
+    min-height: 520px;
+}
+
+.skeleton-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-block {
+    margin-bottom: 25px;
+}
+
+.skeleton-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skeleton-chip {
+    width: 84px;
+    height: 36px;
+    border-radius: 999px;
+}
+
+.skeleton-chip-lg {
+    width: 120px;
+}
+
+.skeleton-qty {
+    width: 118px;
+    height: 48px;
+    border-radius: 40px;
+}
+
+.skeleton-btn {
+    width: 170px;
+    height: 48px;
+    border-radius: 40px;
+}
+
+.skeleton-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.tabs-header-skeleton {
+    justify-content: center;
+}
+
+.skeleton-tab {
+    width: 180px;
+    height: 18px;
+    border-radius: 999px;
+}
+
+.skeleton-panel {
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 30px;
+    background: #fff;
 }
 
 /* UTILITY CLASSES */
@@ -694,29 +858,12 @@ body {
 }
 
 .stars {
-    /* Màu nền chính cho khối 3D */
-    color: #FBC02D; /* Màu vàng đậm hơn một chút làm nền khối */
-    
+    color: #F39C12;
     font-size: 20px;
     letter-spacing: 0.1em;
     margin-bottom: 10px;
     display: inline-block;
-    
-    /* Hiệu ứng 3D xếp chồng bóng đổ */
-    text-shadow: 
-        /* --- Tạo khối (khớp màu với color) --- */
-        0px 1px 0px #F9A825,
-        0px 2px 0px #F9A825,
-        /* --- Bóng đổ mềm mại bên dưới (màu tối, mờ) --- */
-        1px 3px 2px rgba(0, 0, 0, 0.2), /* Bóng xa hơn một chút, mờ hơn */
-        0px 2px 1px rgba(0, 0, 0, 0.1); /* Bóng gần hơn, sắc hơn một chút */
-}
-
-/* Tùy chọn: Thêm hiệu ứng bo tròn đỉnh nhọn (chỉ là mẹo đánh lừa thị giác) */
-.stars {
-    -webkit-text-stroke: 1px #FBC02D; /* Thêm viền cùng màu để làm mập các đỉnh */
-    paint-order: stroke fill;
-    stroke-linejoin: round; /* Bo tròn các điểm nối của viền */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
 }
 
 .review-meta {
@@ -1108,6 +1255,15 @@ body {
     .add-review-section {
         padding: 25px;
     }
+
+    .skeleton-main-image {
+        min-height: 360px;
+    }
+
+    .skeleton-btn {
+        width: 100%;
+        flex: 1 1 180px;
+    }
 }
 
 @media (max-width: 600px) {
@@ -1137,6 +1293,19 @@ body {
     
     .p-title {
         font-size: 28px;
+    }
+
+    .skeleton-thumb {
+        width: 60px;
+        height: 60px;
+    }
+
+    .skeleton-main-image {
+        min-height: 280px;
+    }
+
+    .skeleton-tab {
+        width: 120px;
     }
 }
 
@@ -1227,6 +1396,55 @@ body {
     font-size: 14px;
     padding: 20px 0;
     font-style: italic;
+}
+
+.review-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.review-pagination[hidden] {
+    display: none;
+}
+
+.review-page-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid #e2e2e2;
+    border-radius: 999px;
+    background: #fff;
+    color: #555;
+    font-size: 13px;
+    font-family: var(--font-main, sans-serif);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.review-page-btn:hover:not(:disabled) {
+    border-color: var(--accent, #FF6F42);
+    color: var(--accent, #FF6F42);
+}
+
+.review-page-btn.active {
+    background: var(--accent, #FF6F42);
+    border-color: var(--accent, #FF6F42);
+    color: #fff;
+}
+
+.review-page-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.review-page-ellipsis {
+    color: #999;
+    font-size: 14px;
+    padding: 0 2px;
 }
 
 /* ── Star Input ── */

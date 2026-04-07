@@ -33,7 +33,7 @@
       "destination": "/modules/customer/features/checkout/cancel.html"
     },
     {
-      "source": "/products/:id",
+      "source": "/product/:id",
       "destination": "/modules/customer/features/product_detail/product_detail.html"
     },
     {

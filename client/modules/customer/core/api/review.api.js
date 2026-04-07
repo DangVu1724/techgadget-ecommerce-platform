@@ -1,8 +1,12 @@
 import { request } from "./base.api.js";
 
 export const reviewAPI = {
-  getByProduct(productId, rating = null) {
-    const query = rating ? `?rating=${rating}` : "";
+  getByProduct(productId, { rating = null, page = 0, size = 5 } = {}) {
+    const params = new URLSearchParams();
+    if (rating) params.set("rating", String(rating));
+    params.set("page", String(page));
+    params.set("size", String(size));
+    const query = `?${params.toString()}`;
     return request(`/reviews/${productId}${query}`);
   },
 

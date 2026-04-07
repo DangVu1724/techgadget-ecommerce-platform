@@ -84,7 +84,9 @@ public class ProductFilterSupport {
                 root.get("totalSold"),
                 categoryJoin.get("name"),
                 brandJoin.get("brandName"),
-                root.get("createdAt")
+                root.get("createdAt"),
+                root.get("averageRating"),
+                root.get("totalReviews")
         ));
 
         Predicate[] predicates = buildFilterPredicates(root, query, cb, keyword, brandId, categoryId, minPrice, maxPrice, resolvedFilters);
@@ -96,7 +98,9 @@ public class ProductFilterSupport {
                 root.get("totalSold"),
                 categoryJoin.get("name"),
                 brandJoin.get("brandName"),
-                root.get("createdAt")
+                root.get("createdAt"),
+                root.get("averageRating"),
+                root.get("totalReviews")
         );
         query.orderBy(buildSummaryOrders(cb, root, variantJoin, pageable.getSort()));
 

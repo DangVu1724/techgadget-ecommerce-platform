@@ -7,7 +7,7 @@
 
     <!-- Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -26,81 +26,209 @@
   <body>
     <!-- Breadcrumb -->
     <div class="container" style="padding: 20px 0">
-      <p class="breadcrumb text-muted" style="font-size: 14px">
+      <p
+        class="breadcrumb text-muted"
+        style="font-size: 14px"
+        id="productBreadcrumb"
+      >
         <a href="/" style="color: #999; text-decoration: none">Home</a> >
         <span class="text-dark" id="breadcrumbName">iPhone 15 Pro Max</span>
       </p>
     </div>
 
     <main class="container section-padding">
-      <!-- Product Layout -->
-      <div class="product-layout">
-        <!-- Gallery -->
-        <div class="product-gallery">
-          <div class="gallery-top">
-            <div class="thumbnail-vertical">
-              <img
-                src="/modules/customer/assets/images/macbook.png"
-                class="thumb active"
-                alt="Product thumbnail 1"
-              />
-              <img
-                src="/modules/customer/assets/images/banner1.png"
-                class="thumb"
-                alt="Product thumbnail 2"
-              />
-              <img
-                src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-air-size-unselect-202601-gallery-2?wid=5120&hei=3280&fmt=webp&qlt=90&.v=YTFkSnBPS2tMZFdhaFNRRkx6VnJZaUd4WmthcldkemtncUgvMzhXenFEVVRlaHhGN20wRmRVeXJZOXVWckpTTEE0ZWxMVGt3djRUV0FHWk92REs5YjAxSlgrVWMrMzU1OXo2c2JyNjJZTGl5b3ZJaHdmbkJtMTkzbm9PRTFDVXM&traceId=1"
-                class="thumb"
-                alt="Product thumbnail 3"
-              />
+      <section id="productSkeleton" class="product-skeleton" aria-hidden="true">
+        <div class="product-layout product-layout-skeleton">
+          <div class="product-gallery">
+            <div class="gallery-top">
+              <div class="thumbnail-vertical">
+                <div class="skeleton-box skeleton-thumb"></div>
+                <div class="skeleton-box skeleton-thumb"></div>
+                <div class="skeleton-box skeleton-thumb"></div>
+              </div>
+              <div class="main-image-box skeleton-main-image">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
             </div>
-            <div class="main-image-box">
-              <img
-                src="/modules/customer/assets/images/macbook.png"
-                id="mainImg"
-                alt="Main product image"
-              />
+            <div class="product-highlights">
+              <div class="highlight-card">
+                <div class="skeleton-box skeleton-icon"></div>
+                <div class="skeleton-stack">
+                  <div class="skeleton-line skeleton-line-md"></div>
+                  <div class="skeleton-line skeleton-line-sm"></div>
+                </div>
+              </div>
+              <div class="highlight-card">
+                <div class="skeleton-box skeleton-icon"></div>
+                <div class="skeleton-stack">
+                  <div class="skeleton-line skeleton-line-md"></div>
+                  <div class="skeleton-line skeleton-line-sm"></div>
+                </div>
+              </div>
+              <div class="highlight-card">
+                <div class="skeleton-box skeleton-icon"></div>
+                <div class="skeleton-stack">
+                  <div class="skeleton-line skeleton-line-md"></div>
+                  <div class="skeleton-line skeleton-line-sm"></div>
+                </div>
+              </div>
+              <div class="highlight-card">
+                <div class="skeleton-box skeleton-icon"></div>
+                <div class="skeleton-stack">
+                  <div class="skeleton-line skeleton-line-md"></div>
+                  <div class="skeleton-line skeleton-line-sm"></div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="product-highlights">
-            <div class="highlight-card">
-              <i class="fas fa-bolt"></i>
-              <div>
-                <strong>Fast charging available</strong>
-                <span>Includes the original charger</span>
+          <div class="product-details">
+            <div class="skeleton-line skeleton-line-title"></div>
+            <div class="skeleton-line skeleton-line-md"></div>
+            <div class="skeleton-line skeleton-line-price"></div>
+            <div class="skeleton-line skeleton-line-lg"></div>
+            <div class="skeleton-line skeleton-line-md"></div>
+            <div class="skeleton-line skeleton-line-sm"></div>
+            <div class="skeleton-block">
+              <div class="skeleton-line skeleton-line-xs"></div>
+              <div class="skeleton-chip-row">
+                <div class="skeleton-chip"></div>
+                <div class="skeleton-chip"></div>
+                <div class="skeleton-chip"></div>
               </div>
             </div>
-            <div class="highlight-card">
-              <i class="fas fa-shield-alt"></i>
-              <div>
-                <strong>24-month warranty</strong>
-                <span>Peace of mind for long-term use</span>
+            <div class="skeleton-block">
+              <div class="skeleton-line skeleton-line-xs"></div>
+              <div class="skeleton-chip-row">
+                <div class="skeleton-chip skeleton-chip-lg"></div>
+                <div class="skeleton-chip skeleton-chip-lg"></div>
               </div>
             </div>
-            <div class="highlight-card">
-              <i class="fas fa-box-open"></i>
-              <div>
-                <strong>Free phone case</strong>
-                <span>Gift with purchase</span>
-              </div>
+            <div class="skeleton-line skeleton-line-sm"></div>
+            <div class="action-bar">
+              <div class="skeleton-box skeleton-qty"></div>
+              <div class="skeleton-box skeleton-btn"></div>
+              <div class="skeleton-box skeleton-btn"></div>
+              <div class="skeleton-box skeleton-circle"></div>
             </div>
-            <div class="highlight-card">
-              <i class="fas fa-receipt"></i>
-              <div>
-                <strong>Price includes VAT</strong>
-                <span>No hidden fees, transparent pricing</span>
-              </div>
-            </div>
+            <div class="divider-slanted"></div>
           </div>
         </div>
 
-        <!-- Product Details -->
-        <div class="product-details">
-          <h1 class="p-title" id="productTitle"></h1>
-          <p class="selected-variant-label" id="selectedVariantLabel"></p>
-          <p class="p-price" id="productPrice"></p>
-          <p class="p-short-desc" id="productDescription"></p>
+        <div class="tabs-section">
+          <div class="tabs-header tabs-header-skeleton">
+            <div class="skeleton-line skeleton-tab"></div>
+            <div class="skeleton-line skeleton-tab"></div>
+            <div class="skeleton-line skeleton-tab"></div>
+          </div>
+          <div class="skeleton-panel">
+            <div class="skeleton-line skeleton-line-lg"></div>
+            <div class="skeleton-line skeleton-line-lg"></div>
+            <div class="skeleton-line skeleton-line-md"></div>
+            <div class="skeleton-line skeleton-line-lg"></div>
+          </div>
+        </div>
+
+        <section class="related-products">
+          <div class="skeleton-line skeleton-line-section"></div>
+          <div class="grid-5">
+            <article class="product-card-simple">
+              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="skeleton-line skeleton-line-md"></div>
+              <div class="skeleton-line skeleton-line-sm"></div>
+            </article>
+            <article class="product-card-simple">
+              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="skeleton-line skeleton-line-md"></div>
+              <div class="skeleton-line skeleton-line-sm"></div>
+            </article>
+            <article class="product-card-simple">
+              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="skeleton-line skeleton-line-md"></div>
+              <div class="skeleton-line skeleton-line-sm"></div>
+            </article>
+            <article class="product-card-simple">
+              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="skeleton-line skeleton-line-md"></div>
+              <div class="skeleton-line skeleton-line-sm"></div>
+            </article>
+            <article class="product-card-simple">
+              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="skeleton-line skeleton-line-md"></div>
+              <div class="skeleton-line skeleton-line-sm"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <div id="productContent" class="product-content is-hidden" aria-busy="true">
+        <!-- Product Layout -->
+        <div class="product-layout">
+          <!-- Gallery -->
+          <div class="product-gallery">
+            <div class="gallery-top">
+              <div class="thumbnail-vertical">
+                <img
+                  src="/modules/customer/assets/images/macbook.png"
+                  class="thumb active"
+                  alt="Product thumbnail 1"
+                />
+                <img
+                  src="/modules/customer/assets/images/banner1.png"
+                  class="thumb"
+                  alt="Product thumbnail 2"
+                />
+                <img
+                  src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-air-size-unselect-202601-gallery-2?wid=5120&hei=3280&fmt=webp&qlt=90&.v=YTFkSnBPS2tMZFdhaFNRRkx6VnJZaUd4WmthcldkemtncUgvMzhXenFEVVRlaHhGN20wRmRVeXJZOXVWckpTTEE0ZWxMVGt3djRUV0FHWk92REs5YjAxSlgrVWMrMzU1OXo2c2JyNjJZTGl5b3ZJaHdmbkJtMTkzbm9PRTFDVXM&traceId=1"
+                  class="thumb"
+                  alt="Product thumbnail 3"
+                />
+              </div>
+              <div class="main-image-box">
+                <img
+                  src="/modules/customer/assets/images/macbook.png"
+                  id="mainImg"
+                  alt="Main product image"
+                />
+              </div>
+            </div>
+            <div class="product-highlights">
+              <div class="highlight-card">
+                <i class="fas fa-bolt"></i>
+                <div>
+                  <strong>Fast charging available</strong>
+                  <span>Includes the original charger</span>
+                </div>
+              </div>
+              <div class="highlight-card">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                  <strong>24-month warranty</strong>
+                  <span>Peace of mind for long-term use</span>
+                </div>
+              </div>
+              <div class="highlight-card">
+                <i class="fas fa-box-open"></i>
+                <div>
+                  <strong>Free phone case</strong>
+                  <span>Gift with purchase</span>
+                </div>
+              </div>
+              <div class="highlight-card">
+                <i class="fas fa-receipt"></i>
+                <div>
+                  <strong>Price includes VAT</strong>
+                  <span>No hidden fees, transparent pricing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Details -->
+          <div class="product-details">
+            <h1 class="p-title" id="productTitle"></h1>
+            <p class="selected-variant-label" id="selectedVariantLabel"></p>
+            <p class="p-price" id="productPrice"></p>
+            <p class="p-short-desc" id="productDescription"></p>
 
           <!-- Meta Info -->
           <div class="p-meta">
@@ -134,7 +262,7 @@
                 onclick="window.changeQty(-1)"
                 aria-label="Decrease quantity"
               >
-                −
+                -
               </button>
               <input
                 type="text"
@@ -162,38 +290,91 @@
         </div>
       </div>
 
-      <!-- Tabs Section -->
-      <div class="tabs-section">
-        <div class="tabs-header">
-          <span class="tab-link active" data-tab="description"
-            >DESCRIPTION</span
-          >
-          <span class="tab-link" data-tab="information"
-            >ADDITIONAL INFORMATION</span
-          >
-          <span class="tab-link" data-tab="reviews">REVIEWS (<span id="reviewCount">0</span>)</span>
-        </div>
-
-        <!-- Tab Content -->
-        <div class="tabs-content">
-          <!-- Description Tab -->
-          <div class="tab-pane active" id="tab-description">
-            <p id="descriptionText">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-              odio. Quisque volutpat mattis eros. Nullam malesuada erat ut
-              turpis. Suspendisse urna viverra non, semper suscipit, posuere a,
-              pede.
+          <!-- Meta Info -->
+          <div class="p-meta">
+            <p>
+              <strong>Category:</strong> <span id="productCategory">Phone</span>
             </p>
+          </div>
 
-            <div class="attributes-wrapper">
-              <h4>Specifications</h4>
-              <div id="attributeTableContainer"></div>
+          <!-- Color Options -->
+          <div class="p-variation">
+            <span class="v-label">COLOR</span>
+            <div class="v-options" id="colorOptions"></div>
+          </div>
+
+          <!-- Variant Options -->
+          <div class="p-variation">
+            <span class="v-label">VARIANT</span>
+            <div class="v-options" id="variantOptions">
+              <button class="v-btn active">Default</button>
             </div>
           </div>
 
-          <!-- Information Tab -->
-          <div class="tab-pane" id="tab-information" style="display: none">
-            <h4>Customer Information Privacy Policy</h4>
+          <!-- Stock -->
+          <p class="p-stock" id="productStock">2 in stock</p>
+
+          <!-- Action Bar -->
+          <div class="action-bar">
+            <div class="qty-control">
+              <button
+                type="button"
+                onclick="window.changeQty(-1)"
+                aria-label="Decrease quantity"
+              >
+                -
+              </button>
+              <input
+                type="text"
+                id="quantity"
+                value="1"
+                readonly
+                aria-label="Quantity"
+              />
+              <button
+                type="button"
+                onclick="window.changeQty(1)"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+            <button class="btn-primary">ORDER NOW</button>
+            <button class="btn-secondary">ADD TO CART</button>
+            <button class="btn-wishlist" aria-label="Add to wishlist">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+
+          <div class="divider-slanted"></div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="tabs-section">
+          <div class="tabs-header">
+            <span class="tab-link active" data-tab="description"
+              >DESCRIPTION</span
+            >
+            <span class="tab-link" data-tab="information"
+              >ADDITIONAL INFORMATION</span
+            >
+            <span class="tab-link" data-tab="reviews"
+              >REVIEWS (<span id="reviewCount">0</span>)</span
+            >
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tabs-content">
+            <!-- Description Tab -->
+            <div class="tab-pane active" id="tab-description">
+              <div class="attributes-wrapper">
+                <div id="attributeTableContainer"></div>
+              </div>
+            </div>
+
+            <!-- Information Tab -->
+            <div class="tab-pane" id="tab-information" style="display: none">
+              <h4>Customer Information Privacy Policy</h4>
 
             <h5>1. Purpose of Information Collection</h5>
             <p>
@@ -270,44 +451,58 @@
                 through the website or email.
               </em>
             </p>
-          </div>
+            </div>
 
-          <!-- Reviews Tab -->
-          <div class="tab-pane" id="tab-reviews" style="display: none">
-            <div class="reviews-wrapper">
+            <!-- Reviews Tab -->
+            <div class="tab-pane" id="tab-reviews" style="display: none">
+              <div class="reviews-wrapper">
               <div class="review-top-grid">
                 <div class="review-summary">
                   <p class="review-score-label">Product Rating</p>
                   <div class="review-score-card">
                     <h2 id="averageRating">0.0</h2>
-                    <div class="avg-stars" id="averageStars">★★★★★</div>
-                    <p class="review-total"><span id="reviewTotal">0</span> reviews</p>
+                    <div class="avg-stars" id="averageStars">
+                      ★★★★★
+                    </div>
+                    <p class="review-total">
+                      <span id="reviewTotal">0</span> reviews
+                    </p>
                   </div>
 
                   <div class="rating-breakdown">
                     <div class="rating-row">
                       <span>5 ★</span>
-                      <div class="rating-bar"><div class="rating-bar-fill" id="bar5"></div></div>
+                      <div class="rating-bar">
+                        <div class="rating-bar-fill" id="bar5"></div>
+                      </div>
                       <span id="count5">0</span>
                     </div>
                     <div class="rating-row">
                       <span>4 ★</span>
-                      <div class="rating-bar"><div class="rating-bar-fill" id="bar4"></div></div>
+                      <div class="rating-bar">
+                        <div class="rating-bar-fill" id="bar4"></div>
+                      </div>
                       <span id="count4">0</span>
                     </div>
                     <div class="rating-row">
                       <span>3 ★</span>
-                      <div class="rating-bar"><div class="rating-bar-fill" id="bar3"></div></div>
+                      <div class="rating-bar">
+                        <div class="rating-bar-fill" id="bar3"></div>
+                      </div>
                       <span id="count3">0</span>
                     </div>
                     <div class="rating-row">
                       <span>2 ★</span>
-                      <div class="rating-bar"><div class="rating-bar-fill" id="bar2"></div></div>
+                      <div class="rating-bar">
+                        <div class="rating-bar-fill" id="bar2"></div>
+                      </div>
                       <span id="count2">0</span>
                     </div>
                     <div class="rating-row">
                       <span>1 ★</span>
-                      <div class="rating-bar"><div class="rating-bar-fill" id="bar1"></div></div>
+                      <div class="rating-bar">
+                        <div class="rating-bar-fill" id="bar1"></div>
+                      </div>
                       <span id="count1">0</span>
                     </div>
                   </div>
@@ -316,7 +511,9 @@
                 <div class="review-list-panel">
                   <!-- Star Filter -->
                   <div class="review-filter" id="reviewFilter">
-                    <button class="filter-btn active" data-rating="all">All</button>
+                    <button class="filter-btn active" data-rating="all">
+                      All
+                    </button>
                     <button class="filter-btn" data-rating="5">5 ★</button>
                     <button class="filter-btn" data-rating="4">4 ★</button>
                     <button class="filter-btn" data-rating="3">3 ★</button>
@@ -328,6 +525,7 @@
                   <div id="reviewList">
                     <p class="review-empty">Loading reviews...</p>
                   </div>
+                  <div class="review-pagination" id="reviewPagination"></div>
                 </div>
               </div>
 
@@ -337,51 +535,103 @@
 
                 <!-- Shown when NOT logged in -->
                 <div id="reviewLoginPrompt" style="display: none">
-                  <p class="form-note">You must be logged in to submit a review.</p>
-                  <a href="/login" class="btn-primary text-uppercase review-login-btn">
+                  <p class="form-note">
+                    You must be logged in to submit a review.
+                  </p>
+                  <a
+                    href="/login"
+                    class="btn-primary text-uppercase review-login-btn"
+                  >
                     Login to review
                   </a>
                 </div>
 
                 <!-- Shown when logged in -->
                 <div id="reviewFormWrapper">
-                  <p class="form-note">
-                    Your email address will not be published. Fields marked with * are required.
-                  </p>
                   <form class="review-form" id="reviewForm">
                     <div class="rating-input">
                       <span>Your rating *</span>
                       <div class="stars-input" id="ratingStars">
-  <span class="star-icon" data-value="1">
-    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
-    </svg>
-  </span>
+                        <span class="star-icon" data-value="1">
+                          <svg
+                            viewBox="0 0 17 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                              fill="currentColor"
+                              stroke="currentColor"
+                              stroke-width="0.5"
+                              stroke-linejoin="round"
+                            ></path>
+                          </svg>
+                        </span>
 
-  <span class="star-icon" data-value="2">
-    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
-    </svg>
-  </span>
+                        <span class="star-icon" data-value="2">
+                          <svg
+                            viewBox="0 0 17 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                              fill="currentColor"
+                              stroke="currentColor"
+                              stroke-width="0.5"
+                              stroke-linejoin="round"
+                            ></path>
+                          </svg>
+                        </span>
 
-  <span class="star-icon" data-value="3">
-    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
-    </svg>
-  </span>
+                        <span class="star-icon" data-value="3">
+                          <svg
+                            viewBox="0 0 17 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                              fill="currentColor"
+                              stroke="currentColor"
+                              stroke-width="0.5"
+                              stroke-linejoin="round"
+                            ></path>
+                          </svg>
+                        </span>
 
-  <span class="star-icon" data-value="4">
-    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
-    </svg>
-  </span>
+                        <span class="star-icon" data-value="4">
+                          <svg
+                            viewBox="0 0 17 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                              fill="currentColor"
+                              stroke="currentColor"
+                              stroke-width="0.5"
+                              stroke-linejoin="round"
+                            ></path>
+                          </svg>
+                        </span>
 
-  <span class="star-icon" data-value="5">
-    <svg viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"></path>
-    </svg>
-  </span>
-</div>
+                        <span class="star-icon" data-value="5">
+                          <svg
+                            viewBox="0 0 17 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                              fill="currentColor"
+                              stroke="currentColor"
+                              stroke-width="0.5"
+                              stroke-linejoin="round"
+                            ></path>
+                          </svg>
+                        </span>
+                      </div>
                     </div>
 
                     <textarea
@@ -397,18 +647,19 @@
                   </form>
                 </div>
               </div>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Related Products -->
+        <section class="related-products">
+          <h3 class="section-title-slanted">RELATED ITEMS</h3>
+          <div class="grid-5" id="relatedProductsGrid"></div>
+        </section>
+
+        <!-- Customer Reviews Grid -->
       </div>
-
-      <!-- Related Products -->
-      <section class="related-products">
-        <h3 class="section-title-slanted">RELATED ITEMS</h3>
-        <div class="grid-5" id="relatedProductsGrid"></div>
-      </section>
-
-      <!-- Customer Reviews Grid -->
     </main>
 
     <!-- Scripts -->
@@ -419,7 +670,7 @@
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
     <button id="backToTop" title="Lên đầu trang">
-  <span class="arrow"></span>
-</button>
+      <span class="arrow"></span>
+    </button>
   </body>
 </html>

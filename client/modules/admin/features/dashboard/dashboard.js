@@ -11,9 +11,9 @@ const dashboardState = {
 };
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("vi-VN", {
     style: "currency",
-    currency: "USD",
+    currency: "VND",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(Number(value || 0));
@@ -327,6 +327,61 @@ function renderNewestProducts(products) {
     .join("");
 }
 
+function getTopRatedProducts(products = [], limit = 5) {
+  return [...products]
+    .filter((product) => Number(product.totalReviews || 0) > 0)
+    .sort((left, right) => {
+      const ratingDiff =
+        Number(right.averageRating || 0) - Number(left.averageRating || 0);
+      if (ratingDiff !== 0) return ratingDiff;
+
+      const reviewsDiff =
+        Number(right.totalReviews || 0) - Number(left.totalReviews || 0);
+      if (reviewsDiff !== 0) return reviewsDiff;
+
+      return Number(right.totalSold || 0) - Number(left.totalSold || 0);
+    })
+    .slice(0, limit);
+}
+
+function renderTopRatedProducts(products) {
+  const container = document.getElementById("topRatedProductsList");
+  if (!container) return;
+
+  if (!products.length) {
+    container.innerHTML =
+      '<div class="no-data">Chưa có dữ liệu đánh giá sản phẩm.</div>';
+    return;
+  }
+
+  container.innerHTML = products
+    .map((product) => {
+      const averageRating = Number(product.averageRating || 0);
+      const totalReviews = Number(product.totalReviews || 0);
+      const priceLabel =
+        Number(product.minPrice || 0) === Number(product.maxPrice || 0)
+          ? formatCurrency(product.minPrice)
+          : `${formatCurrency(product.minPrice)} - ${formatCurrency(product.maxPrice)}`;
+
+      return `
+        <div class="list-card">
+          <div class="list-card-header">
+            <div>
+              <div class="list-card-title">${product.name}</div>
+              <div class="list-card-subtitle">${priceLabel}</div>
+            </div>
+            <div class="rating-badge">${averageRating.toFixed(1)} ★</div>
+          </div>
+          <div class="list-card-footer">
+            <span>${totalReviews} đánh giá</span>
+            <span>${Number(product.totalSold || 0)} đã bán</span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
 function getStatusBadgeClass(status) {
   const normalizedStatus = (status || "").toUpperCase();
   if (normalizedStatus === "DELIVERED") return "completed";
@@ -367,6 +422,7 @@ function renderDashboardError() {
   const salesChartSummary = document.getElementById("salesChartSummary");
   const orderStatusList = document.getElementById("orderStatusList");
   const topProductsList = document.getElementById("topProductsList");
+  const topRatedProductsList = document.getElementById("topRatedProductsList");
   const newestProductsList = document.getElementById("newestProductsList");
   const ordersTableBody = document.getElementById("ordersTableBody");
 
@@ -400,6 +456,11 @@ function renderDashboardError() {
   if (topProductsList) {
     topProductsList.innerHTML =
       '<div class="no-data">Failed to load top products.</div>';
+  }
+
+  if (topRatedProductsList) {
+    topRatedProductsList.innerHTML =
+      '<div class="no-data">Failed to load rated products.</div>';
   }
 
   if (newestProductsList) {
@@ -458,6 +519,8 @@ async function loadDashboardData() {
     ]);
 
   dashboardState.orders = ordersData.content || [];
+  const productItems = productsData.content || [];
+  const topRatedProducts = getTopRatedProducts(productItems, 5);
 
   renderStats({
     orders: ordersData,
@@ -468,6 +531,7 @@ async function loadDashboardData() {
   renderSalesChart(dashboardState.orders, dashboardState.activePeriod);
   renderOrderStatus(dashboardState.orders);
   renderTopProducts(topProducts || []);
+  renderTopRatedProducts(topRatedProducts);
   renderNewestProducts(newestProducts || []);
   renderRecentOrders(dashboardState.orders);
 }

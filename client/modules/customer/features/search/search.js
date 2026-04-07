@@ -124,7 +124,7 @@ function renderProducts(products) {
         </div>
         <div class="product-info">
           <h3 class="product-name">
-            <a href="/modules/customer/features/product_detail/product_detail.html?id=${product.id}">${escapeHtml(product.name || "Sản phẩm")}</a>
+            <a href="/product/${product.id}">${escapeHtml(product.name || "Sản phẩm")}</a>
           </h3>
           <p class="product-desc">${escapeHtml(description)}</p>
           <div class="product-price">${priceHtml}</div>
@@ -141,7 +141,7 @@ function renderProducts(products) {
     btn.addEventListener("click", (event) => {
       event.stopPropagation();
       const productId = event.currentTarget.dataset.productId;
-      window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
+      window.location.href = `/product/${productId}`;
     });
   });
 
@@ -149,7 +149,7 @@ function renderProducts(products) {
     btn.addEventListener("click", (event) => {
       event.stopPropagation();
       const productId = event.currentTarget.dataset.productId;
-      window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
+      window.location.href = `/product/${productId}`;
     });
   });
 }
@@ -232,13 +232,16 @@ function getProductDescription(product) {
 const backToTopBtn = document.getElementById("backToTop");
 
 // Theo dõi sự kiện cuộn chuột
-window.onscroll = function() {
+window.onscroll = function () {
   scrollFunction();
 };
 
 function scrollFunction() {
   // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+  if (
+    document.body.scrollTop > 300 ||
+    document.documentElement.scrollTop > 300
+  ) {
     backToTopBtn.style.display = "flex";
   } else {
     backToTopBtn.style.display = "none";
@@ -246,10 +249,10 @@ function scrollFunction() {
 }
 
 // Khi người dùng nhấn vào nút
-backToTopBtn.onclick = function() {
+backToTopBtn.onclick = function () {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth' // Cuộn mượt mà
+    behavior: "smooth", // Cuộn mượt mà
   });
 };
 

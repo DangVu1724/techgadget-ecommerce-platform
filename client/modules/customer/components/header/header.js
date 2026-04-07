@@ -3,7 +3,7 @@ import { productApi } from "../../core/api/product.api.js";
 const searchInput = document.querySelector(".search-input");
 const searchForm = document.querySelector(".search-form");
 const suggestionsDiv = document.querySelector(".search-suggestions");
-const SEARCH_HISTORY_KEY = 'searchHistory';
+const SEARCH_HISTORY_KEY = "searchHistory";
 
 const formatPrice = (value) => {
   if (!value || isNaN(value)) return "";
@@ -14,12 +14,12 @@ const formatPrice = (value) => {
 };
 
 function getSearchHistory() {
-  return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || '[]');
+  return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || "[]");
 }
 
 function saveSearchHistory(keyword) {
   let history = getSearchHistory();
-  history = history.filter(item => item !== keyword); // remove duplicates
+  history = history.filter((item) => item !== keyword); // remove duplicates
   history.unshift(keyword); // add to front
   history = history.slice(0, 10); // limit to 10
   localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(history));
@@ -31,10 +31,17 @@ let searchTimeout;
 if (searchInput) {
   // Khi focus
   searchInput.addEventListener("focus", () => {
-    if (searchInput.value.trim() === '') {
+    if (searchInput.value.trim() === "") {
       const history = getSearchHistory();
       if (history.length > 0) {
-        let html = '<div class="history-header">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+        let html =
+          '<div class="history-header">Lịch sử tìm kiếm</div>' +
+          history
+            .map(
+              (item) =>
+                `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`,
+            )
+            .join("");
         suggestionsDiv.innerHTML = html;
         suggestionsDiv.classList.add("active");
       }
@@ -48,11 +55,18 @@ if (searchInput) {
     clearTimeout(searchTimeout);
 
     if (keyword.length < 2) {
-      if (keyword === '') {
+      if (keyword === "") {
         // Show history if empty
         const history = getSearchHistory();
         if (history.length > 0) {
-          let html = '<div class="history-header">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+          let html =
+            '<div class="history-header">Lịch sử tìm kiếm</div>' +
+            history
+              .map(
+                (item) =>
+                  `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`,
+              )
+              .join("");
           suggestionsDiv.innerHTML = html;
           suggestionsDiv.classList.add("active");
         } else {
@@ -83,15 +97,16 @@ if (searchInput) {
   suggestionsDiv.addEventListener("click", (e) => {
     const suggestionItem = e.target.closest(".suggestion-item");
     if (suggestionItem) {
-      if (suggestionItem.classList.contains('history-item')) {
+      if (suggestionItem.classList.contains("history-item")) {
         const keyword = suggestionItem.dataset.keyword;
         searchInput.value = keyword;
-        searchForm.dispatchEvent(new Event('submit'));
+        searchForm.dispatchEvent(new Event("submit"));
       } else {
         const productId = suggestionItem.dataset.productId;
-        const productName = suggestionItem.querySelector("span")?.textContent?.trim() || "";
+        const productName =
+          suggestionItem.querySelector("span")?.textContent?.trim() || "";
         searchInput.value = productName;
-        window.location.href = `/modules/customer/features/product_detail/product_detail.html?id=${productId}`;
+        window.location.href = `/product/${productId}`;
       }
     }
   });
@@ -113,21 +128,25 @@ async function loadSuggestions(keyword) {
 
     // Kiểm tra xem có typo correction không
     const searchUrl = `/api/products?keyword=${encodeURIComponent(keyword)}`;
-    const isTypoCorrected = products.some(product => 
-      product.name.toLowerCase().includes(keyword.toLowerCase()) === false &&
-      (product.name.toLowerCase().includes('iphone') && keyword.toLowerCase().includes('ihone')) ||
-      (product.name.toLowerCase().includes('samsung') && keyword.toLowerCase().includes('samung')) ||
-      (product.name.toLowerCase().includes('macbook') && keyword.toLowerCase().includes('macbok'))
+    const isTypoCorrected = products.some(
+      (product) =>
+        (product.name.toLowerCase().includes(keyword.toLowerCase()) === false &&
+          product.name.toLowerCase().includes("iphone") &&
+          keyword.toLowerCase().includes("ihone")) ||
+        (product.name.toLowerCase().includes("samsung") &&
+          keyword.toLowerCase().includes("samung")) ||
+        (product.name.toLowerCase().includes("macbook") &&
+          keyword.toLowerCase().includes("macbok")),
     );
 
     // Hiển thị kết quả với smart search
-    let html = '';
-    
+    let html = "";
+
     // Nếu có typo correction, hiển thị thông báo
     if (isTypoCorrected) {
       html += `<div class="typo-correction">
         <i class="fas fa-magic"></i>
-        <span>Searching with the corrected keyword: "${products[0]?.name?.split(' ')[0] || '...'}"</span>
+        <span>Searching with the corrected keyword: "${products[0]?.name?.split(" ")[0] || "..."}"</span>
       </div>`;
     }
 
@@ -139,7 +158,7 @@ async function loadSuggestions(keyword) {
             <i class="fas fa-search"></i>
             <span>${escapeHtml(product.name)}</span>
             ${product.minPrice ? `<span class="price">${formatPrice(product.minPrice)}</span>` : ""}
-          </div>`
+          </div>`,
       )
       .join("");
 

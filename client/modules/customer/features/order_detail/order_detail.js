@@ -317,7 +317,7 @@ function renderItems() {
 function renderSummary() {
   const items = state.order?.items || [];
   const subtotal = Number(state.order?.amount) || 0;
-  const shippingFee = 0;
+  const shippingFee = Number(state.order?.shippingFee) || 0;
   const discount = Number(state.order?.discountAmount || 0);
   const total = Number(
     state.order?.totalAmount || subtotal + shippingFee - discount,

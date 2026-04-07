@@ -13,11 +13,14 @@ public class PendingOrderPayload {
     private CheckoutType checkoutType;
     private PaymentMethod paymentMethod;
     private String shippingAddress;
+    private String shippingCity;
+    private String shippingWard;
     private String phoneNumber;
     private String orderEmail;
     private BigDecimal amount;
     private String couponCode;
     private BigDecimal discountAmount;
+    private BigDecimal shippingFee;
     private BigDecimal finalAmount;
     private List<PendingOrderItemPayload> items;
 

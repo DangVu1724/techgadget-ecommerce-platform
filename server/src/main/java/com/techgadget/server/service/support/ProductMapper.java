@@ -35,6 +35,8 @@ public class ProductMapper {
                 .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
                 .createdAt(product.getCreatedAt())
+                .averageRating(product.getAverageRating())
+                .totalReviews(product.getTotalReviews())
                 .build();
     }
 
@@ -73,6 +75,8 @@ public class ProductMapper {
                 .minPrice(product.getVariants().stream().map(ProductVariant::getPrice).min(BigDecimal::compareTo).orElse(BigDecimal.ZERO))
                 .maxPrice(product.getVariants().stream().map(ProductVariant::getPrice).max(BigDecimal::compareTo).orElse(BigDecimal.ZERO))
                 .totalStock(product.getVariants().stream().mapToInt(ProductVariant::getStock).sum())
+                .averageRating(product.getAverageRating())
+                .totalReviews(product.getTotalReviews())
                 .build();
     }
 }

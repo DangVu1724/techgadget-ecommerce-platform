@@ -14,6 +14,10 @@ public class OrderRequest {
     private String phoneNumber;
     @NotBlank
     private String orderEmail;
+    @NotBlank
+    private String shippingCity;
+    @NotBlank
+    private String shippingWard;
 
     private PaymentMethod paymentMethod; // COD | QR
     private List<OrderItemRequest> items;

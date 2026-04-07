@@ -9,12 +9,7 @@ import {
   prefillUserInfo,
   getCartData,
 } from "./cart.js";
-import {
-  setupVietnamAddressForm,
-  isSelectedAddressValid,
-  getSelectedCity,
-  getSelectedWard,
-} from "./address.js";
+import { setupVietnamAddressForm, isSelectedAddressValid } from "./address.js";
 import {
   handleApplyCoupon,
   loadCheckoutCoupons,
@@ -69,8 +64,6 @@ const handleCheckoutSubmit = async (event) => {
 
   const orderRequest = {
     shippingAddress,
-    shippingCity: getSelectedCity()?.name || "",
-    shippingWard: getSelectedWard() || "",
     phoneNumber: formData.get("phone"),
     orderEmail: formData.get("email"),
     paymentMethod: formData.get("paymentMethod"),
@@ -205,9 +198,4 @@ document.addEventListener("DOMContentLoaded", () => {
       couponToggle.setAttribute("aria-expanded", String(expanded));
     });
   }
-
-  // Listen for address changes to update shipping cost
-  window.addEventListener("addressChanged", () => {
-    updateSummaryTotals(getAppliedCoupon());
-  });
 });
