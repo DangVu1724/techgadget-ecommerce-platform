@@ -759,6 +759,11 @@ body {
     background: var(--accent);
     color: #fff;
     border-color: var(--accent);
+.review-text { 
+    font-size: 14px; 
+    color: #666; 
+    line-height: 1.7; 
+    font-family: 'Poppins', sans-serif;
 }
 
 /* REVIEW FORM */
@@ -1271,6 +1276,20 @@ body {
     height: 24px;
     stroke-linejoin: round;
     stroke-linecap: round;
+    gap: 4px;
+    font-size: 28px;
+    cursor: pointer;
+    margin-top: 6px;
+}
+
+.star-icon {
+    color: #F39C12;
+    transition: transform 0.1s;
+    line-height: 1;
+}
+
+.star-icon:hover {
+    transform: scale(1.2);
 }
 
 /* ── Login Prompt ── */
@@ -1341,4 +1360,6 @@ body {
     outline: none;
 }
 
-.inline-edit-btns { display: flex; gap: 8px; }
+.inline-edit-btns { display: flex; gap: 8px; 
+}
+}

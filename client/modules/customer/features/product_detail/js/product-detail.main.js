@@ -335,8 +335,7 @@ function renderStars(rating = 0) {
     <path d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z" fill="currentColor"/>
   </svg>`;
   return Array.from({ length: 5 }, (_, i) =>
-    `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${starSvg}</span>`
-  ).join("");
+    `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${starSvg}</span>`)
 }
 
 function formatDate(dateStr) {
@@ -387,6 +386,7 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
 
   if (!reviews.length) {
     container.innerHTML = '<p class="review-empty">There are no reviews yet. Be the first to leave one!</p>';
+    container.innerHTML = '<p class="review-empty">No reviews yet. Be the first to review!</p>';
     return;
   }
 
@@ -397,6 +397,8 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
       <div class="review-actions">
         ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Chỉnh sửa</button>` : ""}
         ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Xóa</button>` : ""}
+        ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Edit</button>` : ""}
+        ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Delete</button>` : ""}
       </div>` : "";
 
     return `
@@ -444,8 +446,12 @@ const setupReviews = () => {
       if (rating === null) {
         const countEl = document.getElementById("reviewCount");
         if (countEl) countEl.textContent = (allReviews || []).length;
+      // Chỉ cập nhật count khi không filter (hiển thị tổng)
+      if (rating === null) {
+        const countEl = document.getElementById("reviewCount");
+        if (countEl) countEl.textContent = (reviews || []).length;
       }
-    } catch {
+    }} catch {
       const container = document.getElementById("reviewList");
       if (container) container.innerHTML = '<p class="review-empty">Failed to load reviews.</p>';
     }
@@ -496,11 +502,35 @@ const setupReviews = () => {
 
     star.addEventListener("mouseleave", () => {
       updateStarDisplay(selectedRating);
+  starIcons.forEach((star) => {
+    star.addEventListener("mouseenter", () => {
+      const val = Number(star.dataset.value);
+      starIcons.forEach((s) => {
+        s.textContent = Number(s.dataset.value) <= val ? "★" : "☆";
+      });
+    });
+
+    star.addEventListener("mouseleave", () => {
+      starIcons.forEach((s) => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
+      });
     });
 
     star.addEventListener("click", () => {
       selectedRating = Number(star.dataset.value);
       updateStarDisplay(selectedRating);
+      starIcons.forEach((s) => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
+      });
+    });
+  });
+
+
+    star.addEventListener("click", () => {
+      selectedRating = Number(star.dataset.value);
+      starIcons.forEach((s) => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? "★" : "☆";
+      });
     });
   });
 
@@ -603,7 +633,7 @@ const setupReviews = () => {
       }
     });
   }
-};
+});
 // Lấy thẻ button
 const backToTopBtn = document.getElementById("backToTop");
 
@@ -631,3 +661,82 @@ if (backToTopBtn) {
   };
 }
 
+backToTopBtn.onclick = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+
+  // Edit / Delete via event delegation on reviewList
+  const reviewList = document.getElementById("reviewList");
+  if (!reviewList) return;
+
+  reviewList.addEventListener("click", async (e) => {
+    // DELETE
+    if (e.target.classList.contains("review-btn-delete")) {
+      const reviewId = Number(e.target.dataset.id);
+      if (!confirm("Delete this review?")) return;
+      try {
+        await reviewAPI.delete(reviewId);
+        showToast("Review deleted.", "success");
+        loadReviews(activeRating);
+      } catch {
+        // handled by request.js
+      }
+    }
+
+    // EDIT — open inline edit form
+    if (e.target.classList.contains("review-btn-edit")) {
+      const reviewId = Number(e.target.dataset.id);
+      const oldRating = Number(e.target.dataset.rating);
+      const oldComment = decodeURIComponent(e.target.dataset.comment);
+      const reviewItem = e.target.closest(".review-item");
+      if (!reviewItem) return;
+
+      // Prevent duplicate inline forms
+      if (reviewItem.querySelector(".inline-edit-form")) return;
+
+      let editRating = oldRating;
+      const starsHtml = Array.from({ length: 5 }, (_, i) => {
+        const v = i + 1;
+        return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? "★" : "☆"}</span>`;
+      }).join("");
+
+      const form = document.createElement("div");
+      form.className = "inline-edit-form";
+      form.innerHTML = `
+        <div class="inline-edit-stars">${starsHtml}</div>
+        <textarea class="inline-edit-textarea">${oldComment}</textarea>
+        <div class="inline-edit-btns">
+          <button class="review-btn-save" data-id="${reviewId}">Save</button>
+          <button class="review-btn-cancel">Cancel</button>
+        </div>`;
+
+      reviewItem.appendChild(form);
+
+      // Star interaction inside inline form
+      form.querySelectorAll(".star-icon-edit").forEach((s) => {
+        s.addEventListener("click", () => {
+          editRating = Number(s.dataset.value);
+          form.querySelectorAll(".star-icon-edit").forEach((x) => {
+            x.textContent = Number(x.dataset.value) <= editRating ? "★" : "☆";
+          });
+        });
+      });
+
+      form.querySelector(".review-btn-cancel").addEventListener("click", () => form.remove());
+
+      form.querySelector(".review-btn-save").addEventListener("click", async () => {
+        const comment = form.querySelector(".inline-edit-textarea").value.trim();
+        if (!comment) { showToast("Comment cannot be empty.", "warning"); return; }
+        try {
+          await reviewAPI.update(reviewId, { rating: editRating, comment });
+          showToast("Review updated.", "success");
+          loadReviews(activeRating);
+        } catch {
+          // handled by request.js
+        }
+      });
+    }
+  });
+}};

@@ -328,6 +328,21 @@
                   <div id="reviewList">
                     <p class="review-empty">Loading reviews...</p>
                   </div>
+              <!-- Review List Section -->
+              <div class="existing-reviews">
+                <!-- Star Filter -->
+                <div class="review-filter" id="reviewFilter">
+                  <button class="filter-btn active" data-rating="all">All</button>
+                  <button class="filter-btn" data-rating="5">5 ★</button>
+                  <button class="filter-btn" data-rating="4">4 ★</button>
+                  <button class="filter-btn" data-rating="3">3 ★</button>
+                  <button class="filter-btn" data-rating="2">2 ★</button>
+                  <button class="filter-btn" data-rating="1">1 ★</button>
+                </div>
+
+                <!-- Dynamic Review List -->
+                <div id="reviewList">
+                  <p class="review-empty">Loading reviews...</p>
                 </div>
               </div>
 
@@ -340,6 +355,13 @@
                   <p class="form-note">You must be logged in to submit a review.</p>
                   <a href="/login" class="btn-primary text-uppercase review-login-btn">
                     Login to review
+                <h3 class="section-title-slanted">ADD A REVIEW</h3>
+
+                <!-- Shown when NOT logged in -->
+                <div id="reviewLoginPrompt" style="display: none">
+                  <p class="form-note">You must be logged in to leave a review.</p>
+                  <a href="/login" class="btn-primary text-uppercase review-login-btn">
+                    Please Login to review this product
                   </a>
                 </div>
 
@@ -347,6 +369,7 @@
                 <div id="reviewFormWrapper">
                   <p class="form-note">
                     Your email address will not be published. Fields marked with * are required.
+                    Your email address will not be published. Required fields are marked *
                   </p>
                   <form class="review-form" id="reviewForm">
                     <div class="rating-input">
@@ -388,6 +411,18 @@
                       id="reviewText"
                       placeholder="Write your review here..."
                       rows="5"
+                        <span class="star-icon" data-value="1">☆</span>
+                        <span class="star-icon" data-value="2">☆</span>
+                        <span class="star-icon" data-value="3">☆</span>
+                        <span class="star-icon" data-value="4">☆</span>
+                        <span class="star-icon" data-value="5">☆</span>
+                      </div>
+                    </div>
+
+                    <textarea
+                      id="reviewText"
+                      placeholder="Write your review here *"
+                      rows="4"
                       required
                     ></textarea>
 
