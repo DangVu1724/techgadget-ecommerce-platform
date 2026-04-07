@@ -415,23 +415,6 @@ body {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   
   overflow: hidden;
-  display: none; /* Sẽ được JS thêm class .show hoặc style display: block */
-  position: absolute;
-  
-  /* Căn lề: Cách đỉnh thanh bar một khoảng (top) và bám sát 2 mép (left/right) */
-  top: calc(100% + 10px); 
-  left: 0;
-  right: 0;
-  
-  /* Độ rộng: Tự động bằng 100% của .filter-bar (tức là bằng khung container) */
-  width: 100%; 
-  
-  z-index: 999;
-  background: #fff;
-  border-radius: 18px;
-  padding: 24px;
-  border: 1px solid #f1dfd7;
-  box-shadow: 0 22px 55px rgba(35, 25, 22, 0.14);
 }
 .advanced-filters.show {
   transform: translateX(0);
