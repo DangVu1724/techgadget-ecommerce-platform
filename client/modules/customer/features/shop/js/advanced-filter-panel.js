@@ -29,6 +29,8 @@ export function createAdvancedFilterPanel(config) {
     toggleButton: config.toggleButton ?? null,
     applyButton: config.applyButton ?? null,
     clearButton: config.clearButton ?? null,
+    overlay: document.getElementById("filterOverlay"),
+    closeButton: document.getElementById("closeFilters"),
   };
 
   const options = {
@@ -95,6 +97,21 @@ export function createAdvancedFilterPanel(config) {
 
     elements.panel.classList.toggle("show", isOpen);
     elements.toggleButton.setAttribute("aria-expanded", String(isOpen));
+    
+    // Handle overlay visibility
+    if (elements.overlay) {
+      elements.overlay.classList.toggle("show", isOpen);
+    }
+    
+    // Toggle header visibility and body state
+    document.body.classList.toggle("filter-panel-open", isOpen);
+    
+    // Prevent body scroll when filter panel is open
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
   };
 
   const syncPriceInputs = () => {
@@ -172,11 +189,12 @@ export function createAdvancedFilterPanel(config) {
   };
 
   const bindSectionToggles = () => {
-    elements.root
-      ?.querySelectorAll(".advanced-filter-group h4")
+    const container = elements.panel || elements.root;
+    container
+      ?.querySelectorAll(".filter-section-header")
       .forEach((header) => {
         header.onclick = () => {
-          const section = header.closest(".advanced-filter-group");
+          const section = header.closest(".filter-section");
           if (section) section.classList.toggle("collapsed");
         };
       });
@@ -204,9 +222,15 @@ export function createAdvancedFilterPanel(config) {
 
     dynamicFilters.forEach((filter) => {
       const section = document.createElement("div");
-      section.className = "advanced-filter-group filter-section";
+      section.className = "filter-section collapsed";
       section.innerHTML = `
-        <h4>${filter.label}<i class="fas fa-chevron-down"></i></h4>
+        <div class="filter-section-header">
+          <h3>
+            <i class="fas fa-circle-check"></i>
+            ${filter.label}
+          </h3>
+          <i class="fas fa-chevron-down"></i>
+        </div>
         <div class="filter-content dynamic-filter-list"></div>
       `;
 
@@ -273,9 +297,24 @@ export function createAdvancedFilterPanel(config) {
       });
     }
 
+    // Close button handler
+    if (elements.closeButton) {
+      elements.closeButton.addEventListener("click", () => {
+        setDropdownOpen(false);
+      });
+    }
+    
+    // Overlay click handler
+    if (elements.overlay) {
+      elements.overlay.addEventListener("click", () => {
+        setDropdownOpen(false);
+      });
+    }
+
     if (elements.dropdownRoot) {
       document.addEventListener("click", (event) => {
-        if (!elements.dropdownRoot.contains(event.target)) {
+        if (!elements.dropdownRoot.contains(event.target) && 
+            !elements.panel.classList.contains("show")) {
           setDropdownOpen(false);
         }
       });
