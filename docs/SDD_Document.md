@@ -235,19 +235,19 @@ Chức năng:
 
 ### 5.2.2 Sequence – Xem danh sách sản phẩm
 
-![Sequence View List](images/sequence-view-list.png)
+![Sequence View List](images/view-list.png)
 
 ### 5.2.3 Sequence – Lọc sản phẩm
 
-![Sequence Filter](images/sequence-filter.png)
+![Sequence Filter](images/filter.png)
 
 ### 5.2.4 Sequence – Tìm kiếm sản phẩm
 
-![Sequence Search](images/sequence-search.png)
+![Sequence Search](images/search.png)
 
 ### 5.2.5 Sequence – Xem chi tiết sản phẩm
 
-![Sequence Detail](images/sequence-detail.png)
+![Sequence Detail](images/detail.png)
 
 ---
 
