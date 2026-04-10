@@ -28,6 +28,7 @@ let selectedVariant = null;
 const BUY_NOW_KEY = "buyNowCheckoutItem";
 const FILLED_STAR = "\u2605";
 const EMPTY_STAR = "\u2606";
+const PRODUCT_DETAIL_ROUTE_PATTERN = /\/product\/(\d+)/;
 
 const setProductLoading = (isLoading) => {
   const skeleton = document.getElementById("productSkeleton");
@@ -57,10 +58,10 @@ const renderRelatedProducts = (products = []) => {
     return;
   }
 
-  container.innerHTML = relatedItems
+      container.innerHTML = relatedItems
     .map(
       (item) => `
-      <a class="product-card-link" href="/products/${item.id}">
+      <a class="product-card-link" href="/product/${item.id}">
         <article class="product-card-simple">
           <div class="p-img-box">
             <img
@@ -80,11 +81,11 @@ const renderRelatedProducts = (products = []) => {
 const loadProductFromDb = async () => {
   setProductLoading(true);
   try {
-    // Extract product ID from URL path (/products/:id) or query string (?id=123)
+    // Extract product ID from URL path (/product/:id) or query string (?id=123)
     let productId = null;
 
-    // Try URL path first: /products/123
-    const pathMatch = window.location.pathname.match(/\/products\/(\d+)/);
+    // Try URL path first: /product/123
+    const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
     if (pathMatch && pathMatch[1]) {
       productId = pathMatch[1];
     } else {
@@ -511,7 +512,7 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
 }
 
 function getProductId() {
-  const pathMatch = window.location.pathname.match(/\/products\/(\d+)/);
+  const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
   if (pathMatch) return Number(pathMatch[1]);
   return Number(new URLSearchParams(window.location.search).get("id"));
 }

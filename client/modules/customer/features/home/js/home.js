@@ -242,7 +242,7 @@ function renderPromotionPopup(popup) {
     : "/modules/customer/features/shop/shop.html";
   const imageUrl = resolvePopupImage(popup.imageUrl);
 
-  const targetLink = popup.productId ? `/products/${popup.productId}` : "/shop";
+  const targetLink = popup.productId ? `/product/${popup.productId}` : "/shop";
 
   overlay.innerHTML = `
     <div class="promo-popup">
