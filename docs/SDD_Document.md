@@ -263,15 +263,15 @@ Chức năng:
 
 ### 5.3.2 Sequence – Tạo đơn hàng
 
-![Sequence Create Order](images/sequence-create-order.png)
+![Sequence Create Order](images/create-order.png)
 
 ### 5.3.3 Sequence – Xem lịch sử đơn hàng
 
-![Sequence Order History](images/sequence-order-history.png)
+![Sequence Order History](images/history-order.png)
 
 ### 5.3.4 Sequence – Theo dõi trạng thái đơn hàng
 
-![Sequence Track Order](images/sequence-track-order.png)
+![Sequence Track Order](images/track-order.png)
 
 ---
 
