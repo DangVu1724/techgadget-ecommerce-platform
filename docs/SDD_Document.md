@@ -2,7 +2,7 @@
 
 ## Project: TechGadget – E-Commerce System
 
-**Version:** 0.9
+**Version:** 1.0
 
 **Author:** Đặng Vũ
 
@@ -20,6 +20,7 @@
 | Đặng Vũ         | 28/02/2026 | Thiết kế kiến trúc tổng thể, lớp và cơ sở dữ liệu | 0.2     |
 | Đặng Trung Kiên | 01/03/2026 | Thiết kế và hoàn thiện các sơ đồ tuần tự          | 0.5     |
 | Đặng Vũ         | 01/03/2026 | Rà soát tổng thể và hoàn thiện tài liệu           | 0.9     |
+| Đặng Trung Kiên | 10/04/2026 | Cập nhật CSDL, module Review và Promotion Popup   | 1.0     |
 
 ---
 
@@ -44,6 +45,8 @@ Hệ thống cho phép:
 * Xem và tìm kiếm sản phẩm
 * Quản lý giỏ hàng
 * Đặt và theo dõi đơn hàng
+* Đánh giá sản phẩm (Review & Rating)
+* Hiển thị popup khuyến mãi
 * Quản trị hệ thống
 
 Không bao gồm:
@@ -61,6 +64,9 @@ Không bao gồm:
 | API      | Application Programming Interface |
 | MVC      | Model – View – Controller         |
 | CRUD     | Create – Read – Update – Delete   |
+| JWT      | JSON Web Token                    |
+| DTO      | Data Transfer Object              |
+| ERD      | Entity Relationship Diagram       |
 
 ## 1.4 Tài liệu tham khảo
 
@@ -120,7 +126,7 @@ Lợi ích:
 
 ### Database
 
-* MySQL
+* PostgreSQL
 * Lưu trữ dữ liệu
 
 ---
@@ -131,14 +137,44 @@ Hệ thống gồm các bảng chính:
 
 * USERS
 * CATEGORIES
+* BRANDS
 * PRODUCTS
 * PRODUCT_VARIANTS
+* PRODUCT_ATTRIBUTES
 * CART
 * CART_ITEM
 * ORDERS
 * ORDER_DETAILS
+* COUPONS
+* REVIEWS
+* PROMOTION_POPUPS
 
 ![ERD](images/erd.png)
+
+## 3.1 Bảng REVIEWS
+
+| Cột          | Kiểu dữ liệu  | Ràng buộc              | Mô tả                        |
+| ------------ | ------------- | ---------------------- | ---------------------------- |
+| id           | BIGINT        | PK, AUTO_INCREMENT     | Khóa chính                   |
+| product_id   | BIGINT        | NOT NULL, INDEX        | ID sản phẩm được đánh giá    |
+| user_id      | BIGINT        | NOT NULL, INDEX        | ID người dùng viết đánh giá  |
+| rating       | INT           | NOT NULL, INDEX, 1–5   | Số sao đánh giá              |
+| comment      | TEXT          | NOT NULL               | Nội dung đánh giá            |
+| created_at   | DATETIME      | NOT NULL               | Thời điểm tạo                |
+
+## 3.2 Bảng PROMOTION_POPUPS
+
+| Cột          | Kiểu dữ liệu  | Ràng buộc          | Mô tả                              |
+| ------------ | ------------- | ------------------ | ---------------------------------- |
+| id           | BIGINT        | PK, AUTO_INCREMENT | Khóa chính                         |
+| title        | VARCHAR       | NOT NULL           | Tiêu đề popup                      |
+| image_url    | VARCHAR       |                    | URL ảnh banner                     |
+| coupon_id    | BIGINT        | FK → COUPONS       | Mã coupon liên kết (nếu có)        |
+| product_id   | BIGINT        |                    | ID sản phẩm redirect (nếu có)      |
+| description  | TEXT          |                    | Mô tả nội dung popup               |
+| is_active    | BOOLEAN       |                    | Trạng thái hiển thị                |
+| start_date   | DATETIME      |                    | Thời điểm bắt đầu hiển thị         |
+| end_date     | DATETIME      |                    | Thời điểm kết thúc hiển thị        |
 
 ---
 
@@ -150,6 +186,8 @@ Các nhóm lớp:
 * Quản lý sản phẩm
 * Giỏ hàng
 * Đơn hàng
+* Đánh giá sản phẩm
+* Promotion Popup
 
 Thiết kế đảm bảo:
 
@@ -170,9 +208,9 @@ Thiết kế đảm bảo:
 Chức năng:
 
 * Đăng ký
-* Đăng nhập
+* Đăng nhập (trả về JWT token)
 * Cập nhật thông tin
-* Phân quyền
+* Phân quyền (CUSTOMER / ADMIN)
 
 ### 5.1.2 Sequence – Đăng ký
 
@@ -261,7 +299,7 @@ Chức năng:
 
 ---
 
-## 5.5 Module Quản lý hệ thống
+## 5.5 Module Quản lý hệ thống (Admin)
 
 ### 5.5.1 Tổng quan
 
@@ -270,6 +308,8 @@ Chức năng:
 * Thêm sản phẩm
 * Cập nhật sản phẩm
 * Quản lý biến thể
+* Quản lý người dùng
+* Quản lý Promotion Popup
 
 ### 5.5.2 Sequence – Thêm sản phẩm
 
@@ -278,6 +318,85 @@ Chức năng:
 ### 5.5.3 Sequence – Cập nhật thông tin sản phẩm
 
 ![Sequence Update Product](images/sequence-update-product.png)
+
+---
+
+## 5.6 Module Đánh giá sản phẩm (Review)
+
+### 5.6.1 Tổng quan
+
+Chức năng:
+
+* Xem danh sách đánh giá theo sản phẩm (công khai)
+* Lọc đánh giá theo số sao (1–5)
+* Viết đánh giá mới (yêu cầu đăng nhập)
+* Sửa đánh giá của chính mình
+* Xóa đánh giá của chính mình
+* Admin xóa bất kỳ đánh giá nào
+
+### 5.6.2 Phân quyền
+
+| Hành động         | Guest | Customer | Admin |
+| ----------------- | ----- | -------- | ----- |
+| Xem đánh giá      | ✓     | ✓        | ✓     |
+| Lọc theo sao      | ✓     | ✓        | ✓     |
+| Viết đánh giá     | ✗     | ✓        | ✗     |
+| Sửa đánh giá      | ✗     | Của mình | ✓     |
+| Xóa đánh giá      | ✗     | Của mình | ✓     |
+
+### 5.6.3 API Endpoints
+
+| Method | Endpoint                        | Quyền truy cập       | Mô tả                        |
+| ------ | ------------------------------- | -------------------- | ---------------------------- |
+| GET    | /api/reviews/{productId}        | Public               | Lấy danh sách đánh giá       |
+| GET    | /api/reviews/{productId}?rating | Public               | Lọc đánh giá theo số sao     |
+| POST   | /api/reviews                    | Authenticated        | Tạo đánh giá mới             |
+| PUT    | /api/reviews/{id}               | Authenticated (owner)| Sửa đánh giá                 |
+| DELETE | /api/reviews/{id}               | Authenticated        | Xóa đánh giá (owner/admin)   |
+
+### 5.6.4 Cấu trúc lớp
+
+```
+ReviewController
+    └── ReviewService (interface)
+        └── ReviewServiceImpl
+            ├── ReviewRepository
+            └── UserRepository
+
+DTO:
+    ReviewCreateRequest  { productId, rating, comment }
+    ReviewUpdateRequest  { rating, comment }
+    ReviewResponse       { id, productId, userId, userName, rating, comment, createdAt }
+```
+
+---
+
+## 5.7 Module Promotion Popup
+
+### 5.7.1 Tổng quan
+
+Chức năng:
+
+* Hiển thị popup khuyến mãi lần đầu tiên mỗi tab truy cập trang chủ
+* Admin quản lý popup (thêm, sửa, xóa, bật/tắt)
+* Popup có thể liên kết đến sản phẩm hoặc trang shop
+* Hỗ trợ gắn mã coupon vào popup
+
+### 5.7.2 Logic hiển thị
+
+* Sử dụng `sessionStorage` để kiểm soát: mỗi tab chỉ hiển thị popup một lần
+* Hệ thống lấy popup đang active từ API `/api/public/popups/active`
+* Popup active là popup có `is_active = true` và trong khoảng `start_date` – `end_date`
+
+### 5.7.3 API Endpoints
+
+| Method | Endpoint                    | Quyền truy cập | Mô tả                          |
+| ------ | --------------------------- | -------------- | ------------------------------ |
+| GET    | /api/public/popups/active   | Public         | Lấy popup đang active          |
+| GET    | /api/popups                 | Admin          | Lấy toàn bộ danh sách popup    |
+| POST   | /api/popups                 | Admin          | Tạo popup mới                  |
+| PUT    | /api/popups/{id}            | Admin          | Cập nhật popup                 |
+| DELETE | /api/popups/{id}            | Admin          | Xóa popup                      |
 
 ---
 
