@@ -313,11 +313,11 @@ Chức năng:
 
 ### 5.5.2 Sequence – Thêm sản phẩm
 
-![Sequence Add Product](images/sequence-add-product.png)
+![Sequence Add Product](images/add-product.png)
 
 ### 5.5.3 Sequence – Cập nhật thông tin sản phẩm
 
-![Sequence Update Product](images/sequence-update-product.png)
+![Sequence Update Product](images/update-product.png)
 
 ---
 
