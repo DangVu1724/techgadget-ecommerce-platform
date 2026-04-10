@@ -21,7 +21,7 @@
 | Đặng Trung Kiên | 01/03/2026 | Thiết kế và hoàn thiện các sơ đồ tuần tự                    | 0.5     |
 | Đặng Vũ         | 01/03/2026 | Rà soát tổng thể và hoàn thiện tài liệu                     | 0.9     |
 | Đặng Trung Kiên | 10/04/2026 | Cập nhật CSDL, module Review và Promotion Popup             | 1.0     |
-| Đặng Vũ         | 10/04/2026 | Cập nhật đầy đủ theo code thực tế: CSDL, enums, module mới | 1.1     |
+
 
 ---
 
