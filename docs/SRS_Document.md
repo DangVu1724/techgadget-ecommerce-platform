@@ -2,7 +2,7 @@
 
 # **Project: TechGadget E-Commerce**
 
-**Version:** 0.9
+**Version:** 1.1
 
 **Author:** Đặng Vũ
 
@@ -16,13 +16,14 @@
 
 ## **Revision History**
 
-| Name            | Date       | Description                              | Version |
-| --------------- | ---------- | ---------------------------------------- | ------- |
-| Đặng Vũ         | 25/02/2026 | Initial draft                            | 0.1     |
-| Đặng Vũ         | 25/03/2026 | Completed general Use Case list          | 0.2     |
-| Đặng Trung Kiên | 26/03/2026 | Drafted Use Cases and NFRs               | 0.3     |
-| Đặng Vũ         | 26/03/2026 | Completed detailed Use Cases             | 0.4     |
-| Đặng Vũ         | 27/02/2026 | Final formatting and document refinement | 0.9     |
+| Name            | Date       | Description                                                              | Version |
+| --------------- | ---------- | ------------------------------------------------------------------------ | ------- |
+| Đặng Vũ         | 25/02/2026 | Initial draft                                                            | 0.1     |
+| Đặng Vũ         | 25/03/2026 | Completed general Use Case list                                          | 0.2     |
+| Đặng Trung Kiên | 26/03/2026 | Drafted Use Cases and NFRs                                               | 0.3     |
+| Đặng Vũ         | 26/03/2026 | Completed detailed Use Cases                                             | 0.4     |
+| Đặng Vũ         | 27/02/2026 | Final formatting and document refinement                                 | 0.9     |
+| Đặng Vũ         | 10/04/2026 | Cập nhật theo code thực tế: thêm UC mới, sửa UC011/UC013, cập nhật ch.1-2 | 1.1   |
 
 ---
 
@@ -75,68 +76,80 @@ Dự án được xây dựng nhằm phát triển một website thương mại 
 ### **1.2.3 Chức năng chính**
 
 1. **Product Catalog**
-
-   * Hiển thị danh sách sản phẩm
-   * Trang chi tiết sản phẩm
+   * Hiển thị danh sách sản phẩm (phân trang)
+   * Lọc theo danh mục, thương hiệu, khoảng giá, thuộc tính (RAM, Storage...)
+   * Trang chi tiết sản phẩm với biến thể, thông số kỹ thuật, sản phẩm liên quan
 
 2. **Product Search**
-
-   * Tìm kiếm theo từ khóa
+   * Tìm kiếm theo từ khóa tên sản phẩm
    * Không phân biệt hoa/thường
-   * Hỗ trợ sai chính tả cơ bản
 
 3. **Shopping Cart**
-
-   * Thêm sản phẩm
+   * Thêm variant sản phẩm vào giỏ
    * Cập nhật số lượng
    * Xóa sản phẩm
    * Hiển thị tổng tiền
 
-4. **Checkout**
-
-   * Nhập thông tin đặt hàng
-   * Thanh toán giả lập
-   * Tạo đơn hàng
+4. **Checkout & Payment**
+   * Nhập thông tin đặt hàng (họ tên, địa chỉ, số điện thoại)
+   * Áp dụng mã giảm giá (coupon)
+   * Thanh toán COD (Cash on Delivery)
+   * Thanh toán QR qua PayOS
+   * Mua ngay (Buy Now) không qua giỏ hàng
 
 5. **User Account**
-
-   * Đăng ký / đăng nhập
+   * Đăng ký / đăng nhập (JWT)
    * Xem lịch sử đơn hàng
-   * Theo dõi trạng thái
+   * Theo dõi và hủy đơn hàng
+   * Cập nhật thông tin cá nhân
 
-6. **Admin Dashboard**
+6. **Review & Rating**
+   * Xem đánh giá sản phẩm (công khai)
+   * Lọc đánh giá theo số sao
+   * Viết, sửa, xóa đánh giá (yêu cầu đăng nhập)
 
-   * CRUD sản phẩm
-   * Quản lý đơn hàng
-   * Cập nhật trạng thái
-   * Theo dõi tồn kho
+7. **Promotion Popup**
+   * Hiển thị popup khuyến mãi lần đầu mỗi tab
+   * Liên kết đến sản phẩm hoặc coupon
+
+8. **Admin Dashboard**
+   * CRUD sản phẩm, biến thể, thuộc tính
+   * Quản lý danh mục, thương hiệu
+   * Quản lý đơn hàng và cập nhật trạng thái
+   * Quản lý người dùng (xem, khóa/mở khóa)
+   * Quản lý mã giảm giá (coupon)
+   * Quản lý Promotion Popup
 
 ---
 
 ### **1.2.4 Đối tượng sử dụng**
 
-**Guest**
+**Guest (Khách truy cập)**
+* Xem danh sách và chi tiết sản phẩm
+* Tìm kiếm và lọc sản phẩm
+* Xem đánh giá sản phẩm
+* Xem popup khuyến mãi
 
-* Xem và tìm kiếm sản phẩm
-
-**Customer**
-
-* Đăng ký / đăng nhập
-* Đặt hàng
-* Theo dõi đơn
+**Customer (Khách hàng đã đăng nhập)**
+* Tất cả quyền của Guest
+* Quản lý giỏ hàng
+* Đặt hàng và thanh toán (COD / QR)
+* Xem lịch sử, theo dõi và hủy đơn hàng
+* Viết, sửa, xóa đánh giá của mình
+* Cập nhật thông tin cá nhân
 
 **Admin**
-
-* Quản lý sản phẩm
-* Quản lý đơn hàng
-* Cập nhật tồn kho
+* Tất cả quyền quản trị hệ thống
+* CRUD sản phẩm, danh mục, thương hiệu, thuộc tính, biến thể
+* Quản lý đơn hàng, người dùng, coupon, popup
+* Xóa bất kỳ đánh giá nào
 
 ---
 
 ### **1.2.5 Giới hạn hệ thống**
 
-* Không tích hợp thanh toán trực tuyến thực tế
-* Không tích hợp API vận chuyển
+* Tích hợp thanh toán QR qua PayOS (không hỗ trợ thẻ tín dụng, ví điện tử khác)
+* Không tích hợp API vận chuyển (không tính phí ship tự động)
 * Không có ứng dụng mobile riêng
 * Thiết kế cho quy mô nhỏ và vừa
 * Không sử dụng AI nâng cao
@@ -155,6 +168,11 @@ Dự án được xây dựng nhằm phát triển một website thương mại 
 | API   | Application Programming Interface   |
 | UC    | Use Case                            |
 | Admin | Administrator                       |
+| JWT   | JSON Web Token                      |
+| COD   | Cash on Delivery                    |
+| QR    | Quick Response (thanh toán QR)      |
+| CRUD  | Create, Read, Update, Delete        |
+| SKU   | Stock Keeping Unit                  |
 
 ---
 
@@ -178,21 +196,24 @@ Dự án được xây dựng nhằm phát triển một website thương mại 
 
 TechGadget là hệ thống web-based hoạt động theo mô hình Client–Server gồm:
 
-* Frontend (UI)
-* Backend (Business Logic & API)
-* Database (MySQL)
+* Frontend (HTML, CSS, JavaScript)
+* Backend (Spring Boot REST API)
+* Database (PostgreSQL)
 
-Thanh toán thực hiện theo phương thức giả lập hoặc COD.
+Xác thực người dùng sử dụng JWT token. Thanh toán hỗ trợ COD và QR qua PayOS.
 
 ---
 
 ## **2.2 Các nhóm chức năng chính**
 
-* User Management
-* Product Management
-* Cart Management
-* Order Management
-* Admin Management
+* User Management (Đăng ký, đăng nhập, cập nhật thông tin)
+* Product Management (Sản phẩm, biến thể, thuộc tính, danh mục, thương hiệu)
+* Cart Management (Giỏ hàng)
+* Order Management (Đặt hàng, thanh toán COD/QR, theo dõi, hủy đơn)
+* Coupon Management (Mã giảm giá)
+* Review Management (Đánh giá sản phẩm)
+* Promotion Popup Management (Popup khuyến mãi)
+* Admin Management (Quản trị toàn hệ thống)
 
 ---
 
@@ -208,17 +229,21 @@ Thanh toán thực hiện theo phương thức giả lập hoặc COD.
 **Technical Constraints**
 
 * Backend: Java Spring Boot
-* Database: MySQL
-* Frontend: HTML, CSS, JS
+* Database: PostgreSQL
+* Frontend: HTML, CSS, JavaScript (Vanilla)
+* Authentication: JWT (JSON Web Token)
+* Payment: PayOS (QR), COD
 
 **Operational Constraints**
 
 * Hosting chi phí thấp
-* Không tích hợp thanh toán thật
+* Chỉ hỗ trợ thanh toán QR (PayOS) và COD
 
 **Security Constraints**
 
-* Bảo mật thông tin người dùng
+* Mật khẩu mã hóa bằng BCrypt
+* Phân quyền RBAC: ADMIN / CUSTOMER
+* Bảo vệ API bằng JWT filter
 
 ---
 
@@ -226,32 +251,41 @@ Thanh toán thực hiện theo phương thức giả lập hoặc COD.
 
 **Assumptions**
 
-* Người dùng có Internet
-* Chủ cửa hàng cung cấp đủ dữ liệu
+* Người dùng có kết nối Internet ổn định
+* Chủ cửa hàng cung cấp đủ dữ liệu sản phẩm ban đầu
+* Tài khoản PayOS đã được cấu hình sẵn cho thanh toán QR
 
 **Dependencies**
 
 * Server hosting
-* MySQL
-* Modern browsers
+* PostgreSQL database
+* Trình duyệt hiện đại (Chrome, Firefox, Safari, Edge)
+* PayOS API (cho thanh toán QR)
 
 ---
 
 ## **2.6 Phân chia yêu cầu**
 
-### Version 1
+### Version 1 (Đã triển khai)
 
-* Authentication
-* Search
-* Cart
-* Fake payment
-* Admin management
+* Authentication (JWT)
+* Product catalog, search, filter
+* Shopping cart
+* Checkout với COD và QR Payment (PayOS)
+* Buy Now (mua ngay)
+* Coupon / mã giảm giá
+* Order management
+* Admin management (sản phẩm, danh mục, thương hiệu, thuộc tính, biến thể, đơn hàng, người dùng, coupon)
+* Promotion popup
+* Product review & rating
 
 ### Future Version
 
-* Recommendation system
-* Promotion popup
-* Product review & rating
+* Recommendation system (gợi ý sản phẩm AI)
+* Wishlist (danh sách yêu thích)
+* So sánh sản phẩm
+* Thông báo email tự động
+* Tích hợp API vận chuyển
 
 ---
 # 3. Yêu cầu hệ thống
