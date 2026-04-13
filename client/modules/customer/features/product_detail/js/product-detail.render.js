@@ -166,9 +166,9 @@ export const renderRegularVariants = (variants, product, onVariantSelect) => {
   const colorContainer = document.getElementById("colorOptions");
   if (colorContainer) {
     colorContainer.innerHTML = "";
-    const colorLabel = document.querySelector(
-      ".p-variation:has(#colorOptions) .v-label",
-    );
+    const colorLabel = colorContainer
+      .closest(".p-variation")
+      ?.querySelector(".v-label");
     if (colorLabel) colorLabel.style.display = "none";
   }
 };

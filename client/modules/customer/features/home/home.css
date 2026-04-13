@@ -533,6 +533,77 @@ body.app-loading {
   padding:14px 16px 18px;
 }
 
+.skeleton-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-box,
+.skeleton-line,
+.skeleton-pill,
+.skeleton-circle {
+  background: linear-gradient(90deg, #f2f2f2 25%, #e9e9e9 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.4s ease infinite;
+}
+
+.skeleton-box {
+  width: 100%;
+  min-height: 140px;
+  border-radius: 18px;
+}
+
+.skeleton-image {
+  min-height: 180px;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 12px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+}
+
+.skeleton-line.short {
+  width: 55%;
+}
+
+.skeleton-line.medium {
+  width: 75%;
+}
+
+.skeleton-line.long {
+  width: 100%;
+}
+
+.skeleton-pill {
+  width: 110px;
+  height: 34px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.skeleton-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 999px;
+  margin: 0 auto 14px;
+}
+
+@keyframes skeletonPulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 .product-name{
   font-size:15px;
   font-weight:600;

@@ -58,7 +58,7 @@ const renderRelatedProducts = (products = []) => {
     return;
   }
 
-      container.innerHTML = relatedItems
+  container.innerHTML = relatedItems
     .map(
       (item) => `
       <a class="product-card-link" href="/product/${item.id}">
@@ -85,7 +85,9 @@ const loadProductFromDb = async () => {
     let productId = null;
 
     // Try URL path first: /product/123
-    const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
+    const pathMatch = window.location.pathname.match(
+      PRODUCT_DETAIL_ROUTE_PATTERN,
+    );
     if (pathMatch && pathMatch[1]) {
       productId = pathMatch[1];
     } else {
@@ -94,7 +96,11 @@ const loadProductFromDb = async () => {
       productId = params.get("id");
     }
 
-    if (!productId) return;
+    if (!productId) {
+      showToast("Product ID is missing.", "warning");
+      setProductLoading(false);
+      return;
+    }
 
     const product = await productApi.getById(productId);
     if (!product) {
@@ -131,9 +137,9 @@ const loadProductFromDb = async () => {
     updateThumbnails(images);
 
     const isSmartphone = isSmartphoneCategory(product.category);
-    const colorVariation = document.querySelector(
-      ".p-variation:has(#colorOptions)",
-    );
+    const colorVariation = document
+      .getElementById("colorOptions")
+      ?.closest(".p-variation");
     const colorLabel = colorVariation?.querySelector(".v-label");
     if (colorLabel) {
       colorLabel.style.display = isSmartphone ? "block" : "none";
@@ -378,9 +384,8 @@ function paintStarSelection(starIcons, rating) {
 
 function renderAverageStars(rating = 0) {
   const rounded = Math.round(rating);
-  return Array.from(
-    { length: 5 },
-    (_, index) => (index < rounded ? FILLED_STAR : EMPTY_STAR),
+  return Array.from({ length: 5 }, (_, index) =>
+    index < rounded ? FILLED_STAR : EMPTY_STAR,
   ).join("");
 }
 
@@ -436,10 +441,25 @@ function buildPaginationItems(currentPage, totalPages) {
   }
 
   if (currentPage >= totalPages - 2) {
-    return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    return [
+      1,
+      "...",
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
   }
 
-  return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+  return [
+    1,
+    "...",
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    "...",
+    totalPages,
+  ];
 }
 
 function renderReviewPagination(currentPage, totalPages) {
@@ -512,7 +532,9 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
 }
 
 function getProductId() {
-  const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
+  const pathMatch = window.location.pathname.match(
+    PRODUCT_DETAIL_ROUTE_PATTERN,
+  );
   if (pathMatch) return Number(pathMatch[1]);
   return Number(new URLSearchParams(window.location.search).get("id"));
 }
@@ -688,7 +710,9 @@ const setupReviews = () => {
             editRating = Number(s.dataset.value);
             form.querySelectorAll(".star-icon-edit").forEach((x) => {
               x.textContent =
-                Number(x.dataset.value) <= editRating ? FILLED_STAR : EMPTY_STAR;
+                Number(x.dataset.value) <= editRating
+                  ? FILLED_STAR
+                  : EMPTY_STAR;
             });
           });
         });
@@ -725,7 +749,11 @@ const setupReviews = () => {
       if (!target || target.disabled) return;
 
       const nextPage = Number(target.dataset.page);
-      if (!Number.isFinite(nextPage) || nextPage < 1 || nextPage === currentPage) {
+      if (
+        !Number.isFinite(nextPage) ||
+        nextPage < 1 ||
+        nextPage === currentPage
+      ) {
         return;
       }
 

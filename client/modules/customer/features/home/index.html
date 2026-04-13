@@ -14,18 +14,7 @@
     />
     <link rel="stylesheet" href="/modules/customer/features/home/home.css" />
   </head>
-  <body class="app-loading">
-    <div class="app-loader" id="appLoader" aria-live="polite">
-      <div class="app-loader__panel">
-        <span class="app-loader__eyebrow">TECHGADGET</span>
-        <h1 class="app-loader__title">Preparing your storefront</h1>
-        <p class="app-loader__text">Loading products, categories, and latest offers...</p>
-        <div class="app-loader__bar">
-          <span class="app-loader__bar-fill"></span>
-        </div>
-      </div>
-    </div>
-
+  <body>
     <section class="hero">
       <div class="container">
         <div class="hero-slider">
@@ -40,7 +29,11 @@
                 <div class="slide-content">
                   <h2>Summer Sale 2026</h2>
                   <p>Up to 50% off on selected items</p>
-                  <a href="/modules/customer/features/home/index.html" class="btn-shop">Shop Now</a>
+                  <a
+                    href="/modules/customer/features/home/index.html"
+                    class="btn-shop"
+                    >Shop Now</a
+                  >
                 </div>
               </div>
               <!-- Slide 2 -->
@@ -52,7 +45,11 @@
                 <div class="slide-content">
                   <h2>New Arrivals</h2>
                   <p>Latest tech gadgets just landed</p>
-                  <a href="/modules/customer/features/home/index.html" class="btn-shop">Discover</a>
+                  <a
+                    href="/modules/customer/features/home/index.html"
+                    class="btn-shop"
+                    >Discover</a
+                  >
                 </div>
               </div>
               <!-- Slide 3 -->
@@ -125,12 +122,46 @@
 
     <section class="section-padding container">
       <h3 class="section-header">CATEGORIES</h3>
-      <div class="grid-6" id="categoryList"></div>
+      <div class="grid-6" id="categoryList">
+        <div class="cat-card skeleton-card">
+          <div class="cat-icon skeleton-circle"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="cat-card skeleton-card">
+          <div class="cat-icon skeleton-circle"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="cat-card skeleton-card">
+          <div class="cat-icon skeleton-circle"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="cat-card skeleton-card">
+          <div class="cat-icon skeleton-circle"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="cat-card skeleton-card">
+          <div class="cat-icon skeleton-circle"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="cat-card skeleton-card">
+          <div class="cat-icon skeleton-circle"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+      </div>
     </section>
 
     <section class="section-padding container">
       <h3 class="section-header">BRANDS</h3>
-      <div class="brands-bar" id="brandList"></div>
+      <div class="brands-bar" id="brandList">
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+        <div class="brand-item skeleton-pill"></div>
+      </div>
     </section>
 
     <section class="modern-banner">
@@ -177,7 +208,58 @@
     <section class="section-padding container">
       <h3 class="section-header">BEST SELLING ITEMS</h3>
 
-      <div class="grid-5" id="bestSellingProductList"></div>
+      <div class="grid-5" id="bestSellingProductList">
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="promo-banner">
@@ -196,11 +278,19 @@
           </div>
 
           <div class="promo-actions">
-            <a href="/modules/customer/features/home/index.html" class="btn-primary">
+            <a
+              href="/modules/customer/features/home/index.html"
+              class="btn-primary"
+            >
               <span>Explore Now</span>
               <i class="fas fa-arrow-right"></i>
             </a>
-            <a href="/modules/customer/features/home/index.html" class="btn-secondary"> Watch More </a>
+            <a
+              href="/modules/customer/features/home/index.html"
+              class="btn-secondary"
+            >
+              Watch More
+            </a>
           </div>
         </div>
 
@@ -221,9 +311,59 @@
     <section class="section-padding container">
       <h3 class="section-header">NEW ITEMS</h3>
 
-      <div class="grid-5" id="newProductList"></div>
+      <div class="grid-5" id="newProductList">
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        <div class="home-product-card skeleton-card">
+          <div class="product-img">
+            <div class="skeleton-box skeleton-image"></div>
+          </div>
+          <div class="product-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+      </div>
     </section>
-
 
     <section class="newsletter">
       <div class="container newsletter-box">
@@ -244,7 +384,7 @@
     <script src="/modules/customer/assets/js/header.js" type="module"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
     <button id="backToTop" title="Lên đầu trang">
-  <span class="arrow"></span>
-  </button>
+      <span class="arrow"></span>
+    </button>
   </body>
 </html>
