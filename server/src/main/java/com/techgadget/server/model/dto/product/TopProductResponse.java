@@ -18,5 +18,7 @@ public class TopProductResponse {
     private BigDecimal maxPrice;
 
     private Long totalSold;
+    private Double averageRating;
+    private Long totalReviews;
 
 }

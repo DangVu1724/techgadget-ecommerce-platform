@@ -4,6 +4,9 @@ import { productApi } from "/modules/customer/core/api/product.api.js";
 import { popupApi } from "/modules/customer/core/api/popup.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
+const appLoader = document.getElementById("appLoader");
+let loaderHidden = false;
+
 const categoryImages = {
   smartphone: "/modules/customer/assets/images/categories/phone.jpg",
   laptop: "/modules/customer/assets/images/categories/mac.jpg",
@@ -66,6 +69,17 @@ function capitalizeFirstLetter(text = "") {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
+function renderRatingStars(averageRating = 0) {
+  return Array(5)
+    .fill(null)
+    .map((_, index) =>
+      index < Math.round(Number(averageRating) || 0)
+        ? '<i class="fas fa-star"></i>'
+        : '<i class="far fa-star"></i>',
+    )
+    .join("");
+}
+
 async function loadNewProducts() {
   const container = document.getElementById("newProductList");
   if (!container) return;
@@ -81,6 +95,12 @@ async function loadNewProducts() {
       const image =
         product.image || "/modules/customer/assets/images/macbook.png";
       const price = formatPrice(product.minPrice);
+      const averageRating = Number(product.averageRating) || 0;
+      const totalReviews = Number(product.totalReviews) || 0;
+      const ratingStars = renderRatingStars(averageRating);
+      const ratingLabel = totalReviews
+        ? `${averageRating.toFixed(1)} (${totalReviews})`
+        : "No reviews";
       const promos = [
         "Save 5% today",
         "Bonus $20 voucher",
@@ -90,7 +110,7 @@ async function loadNewProducts() {
       const promoText = promos[Math.floor(Math.random() * promos.length)];
 
       card.innerHTML = `
-        <a href="/modules/customer/features/product_detail/product_detail.html?id=${product.id}" class="product-link">
+        <a href="/product/${product.id}" class="product-link">
           <div class="product-img">
             <span class="badge-new">NEW</span>
             <img src="${image}" alt="${product.name}">
@@ -99,8 +119,8 @@ async function loadNewProducts() {
             <h4 class="product-name">${product.name}</h4>
             <div class="product-promo"><i class="fas fa-bolt"></i><span>${promoText}</span></div>
             <div class="product-rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-              <span>(124)</span>
+              ${ratingStars}
+              <span>${ratingLabel}</span>
             </div>
             <div class="product-price">${price}</div>
           </div>
@@ -128,9 +148,15 @@ async function loadBestSellingProducts() {
       const image =
         product.image || "/modules/customer/assets/images/macbook.png";
       const price = formatPrice(product.minPrice);
+      const averageRating = Number(product.averageRating) || 0;
+      const totalReviews = Number(product.totalReviews) || 0;
+      const ratingStars = renderRatingStars(averageRating);
+      const ratingLabel = totalReviews
+        ? `${averageRating.toFixed(1)} (${totalReviews})`
+        : "No reviews";
 
       card.innerHTML = `
-        <a href="/modules/customer/features/product_detail/product_detail.html?id=${product.id}" class="product-link">
+        <a href="/product/${product.id}" class="product-link">
           <div class="product-img">
             <span class="badge-new">BEST SELLER</span>
             <img src="${image}" alt="${product.name}">
@@ -138,8 +164,8 @@ async function loadBestSellingProducts() {
           <div class="product-info">
             <h4 class="product-name">${product.name}</h4>
             <div class="product-rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-              <span>(124)</span>
+              ${ratingStars}
+              <span>${ratingLabel}</span>
             </div>
             <div class="product-price">${price}</div>
           </div>
@@ -165,7 +191,48 @@ async function initHome() {
   } catch (error) {
     console.error("Home initialization failed:", error);
     showToast("Some homepage sections could not be loaded.", "warning");
+  } finally {
+    window.dispatchEvent(new Event("home-ready"));
   }
+}
+
+function hideAppLoader() {
+  if (!appLoader || loaderHidden) return;
+
+  loaderHidden = true;
+  appLoader.classList.add("is-hidden");
+  document.body.classList.remove("app-loading");
+
+  window.setTimeout(() => {
+    appLoader.remove();
+  }, 500);
+}
+
+function waitForEvent(eventName, timeout = 2500) {
+  return new Promise((resolve) => {
+    let settled = false;
+
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+
+    window.addEventListener(eventName, finish, { once: true });
+    window.setTimeout(finish, timeout);
+  });
+}
+
+async function bootHomePage() {
+  document.body.classList.add("app-loading");
+
+  await Promise.all([
+    waitForEvent("header-loaded"),
+    waitForEvent("footer-loaded"),
+    waitForEvent("home-ready"),
+  ]);
+
+  hideAppLoader();
 }
 
 function formatPrice(value) {
@@ -174,27 +241,27 @@ function formatPrice(value) {
 }
 // Kết quả: 150.000 VNĐ
 function canShowPromotionPopup() {
-  return !sessionStorage.getItem('popupShown');
+  return !sessionStorage.getItem("popupShown");
 }
 
 function savePopupShownTime() {
-  sessionStorage.setItem('popupShown', '1');
+  sessionStorage.setItem("popupShown", "1");
 }
 
 // Sửa lại hàm loadPromotionPopup
 async function loadPromotionPopup() {
   try {
     if (!canShowPromotionPopup()) {
-      console.log('Popup will show after 15 minutes from last display');
+      console.log("Popup will show after 15 minutes from last display");
       return;
     }
-    
+
     const popup = await popupApi.getActive();
     if (!popup) return;
-    
+
     const delaySeconds = Number(popup.displayDelay || 0);
     const delayMs = Math.max(0, delaySeconds) * 1000;
-    
+
     setTimeout(() => {
       renderPromotionPopup(popup);
       savePopupShownTime();
@@ -219,7 +286,7 @@ function renderPromotionPopup(popup) {
     : "/modules/customer/features/shop/shop.html";
   const imageUrl = resolvePopupImage(popup.imageUrl);
 
-  const targetLink = popup.productId ? `/products/${popup.productId}` : "/shop";
+  const targetLink = popup.productId ? `/product/${popup.productId}` : "/shop";
 
   overlay.innerHTML = `
     <div class="promo-popup">
@@ -262,7 +329,14 @@ function resolvePopupImage(imageUrl) {
   return imageUrl || "/modules/customer/assets/images/banner1.png";
 }
 
-document.addEventListener("DOMContentLoaded", initHome);
+document.addEventListener("DOMContentLoaded", () => {
+  initHome();
+  bootHomePage();
+});
+
+window.addEventListener("load", () => {
+  window.setTimeout(hideAppLoader, 300);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const slider = {
@@ -355,13 +429,16 @@ document.addEventListener("DOMContentLoaded", () => {
 const backToTopBtn = document.getElementById("backToTop");
 
 // Theo dõi sự kiện cuộn chuột
-window.onscroll = function() {
+window.onscroll = function () {
   scrollFunction();
 };
 
 function scrollFunction() {
   // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+  if (
+    document.body.scrollTop > 300 ||
+    document.documentElement.scrollTop > 300
+  ) {
     backToTopBtn.style.display = "flex";
   } else {
     backToTopBtn.style.display = "none";
@@ -369,9 +446,9 @@ function scrollFunction() {
 }
 
 // Khi người dùng nhấn vào nút
-backToTopBtn.onclick = function() {
+backToTopBtn.onclick = function () {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth' // Cuộn mượt mà
+    behavior: "smooth", // Cuộn mượt mà
   });
 };

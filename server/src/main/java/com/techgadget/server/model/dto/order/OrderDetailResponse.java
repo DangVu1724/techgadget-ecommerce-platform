@@ -12,6 +12,7 @@ public class OrderDetailResponse {
     private Long id;
     private Long orderCode;
     private BigDecimal amount;
+    private BigDecimal shippingFee;
     private BigDecimal discountAmount;
     private BigDecimal finalAmount;
     private String shippingAddress;

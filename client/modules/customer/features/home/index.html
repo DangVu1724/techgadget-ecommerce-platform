@@ -14,7 +14,18 @@
     />
     <link rel="stylesheet" href="/modules/customer/features/home/home.css" />
   </head>
-  <body>
+  <body class="app-loading">
+    <div class="app-loader" id="appLoader" aria-live="polite">
+      <div class="app-loader__panel">
+        <span class="app-loader__eyebrow">TECHGADGET</span>
+        <h1 class="app-loader__title">Preparing your storefront</h1>
+        <p class="app-loader__text">Loading products, categories, and latest offers...</p>
+        <div class="app-loader__bar">
+          <span class="app-loader__bar-fill"></span>
+        </div>
+      </div>
+    </div>
+
     <section class="hero">
       <div class="container">
         <div class="hero-slider">

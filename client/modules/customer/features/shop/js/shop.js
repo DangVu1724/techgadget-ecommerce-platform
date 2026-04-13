@@ -246,19 +246,22 @@ const renderProducts = (products) => {
 
     const image =
       product.image || "/modules/customer/assets/images/macbook.png";
-    const productLink = `/modules/customer/features/product_detail/product_detail.html?id=${product.id}`;
+    const productLink = `/product/${product.id}`;
     const price = Number(product.minPrice || 0);
     const oldPrice = price * 1.15;
-    const rating = ((product.id % 2) + 4).toFixed(1);
-
+    const averageRating = Number(product.averageRating) || 0;
+    const totalReviews = Number(product.totalReviews) || 0;
     const stars = Array(5)
-      .fill()
+      .fill(null)
       .map((_, index) =>
-        index < Math.round(rating)
+        index < Math.round(averageRating)
           ? `<i class="fas fa-star"></i>`
           : `<i class="far fa-star"></i>`,
       )
       .join("");
+    const ratingLabel = totalReviews
+      ? `${averageRating.toFixed(1)} (${totalReviews})`
+      : "No reviews";
 
     card.innerHTML = `
       <a href="${productLink}" class="product-link">
@@ -268,7 +271,7 @@ const renderProducts = (products) => {
         <h4>${product.name || "Unnamed product"}</h4>
         <div class="product-rating">
           <div class="stars">${stars}</div>
-          <span class="rating-count">(${Math.floor(Math.random() * 200) + 20})</span>
+          <span class="rating-count">${ratingLabel}</span>
         </div>
         <div class="product-price">
           <span class="current-price">${formatPrice(price)}</span>
@@ -498,13 +501,16 @@ document.addEventListener("DOMContentLoaded", () => {
 const backToTopBtn = document.getElementById("backToTop");
 
 // Theo dõi sự kiện cuộn chuột
-window.onscroll = function() {
+window.onscroll = function () {
   scrollFunction();
 };
 
 function scrollFunction() {
   // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+  if (
+    document.body.scrollTop > 300 ||
+    document.documentElement.scrollTop > 300
+  ) {
     backToTopBtn.style.display = "flex";
   } else {
     backToTopBtn.style.display = "none";
@@ -512,9 +518,9 @@ function scrollFunction() {
 }
 
 // Khi người dùng nhấn vào nút
-backToTopBtn.onclick = function() {
+backToTopBtn.onclick = function () {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth' // Cuộn mượt mà
+    behavior: "smooth", // Cuộn mượt mà
   });
 };

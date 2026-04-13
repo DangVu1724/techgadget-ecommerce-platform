@@ -1,8 +1,8 @@
 // helpers.js
 export function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("vi-VN", {
     style: "currency",
-    currency: "USD",
+    currency: "VND",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value || 0);

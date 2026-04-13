@@ -156,6 +156,7 @@ public class PaymentServiceImpl implements PaymentService {
         order.setAmount(payload.getAmount());
         order.setCouponCode(payload.getCouponCode());
         order.setDiscountAmount(payload.getDiscountAmount());
+        order.setShippingFee(payload.getShippingFee());
         order.setFinalAmount(payload.getFinalAmount() != null ? payload.getFinalAmount() : payload.getAmount());
 
         if (payload.getUserId() != null) {

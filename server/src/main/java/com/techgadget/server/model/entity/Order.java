@@ -41,6 +41,7 @@ public class Order {
     private String couponCode;
 
     private BigDecimal discountAmount;
+    private BigDecimal shippingFee;
 
     private BigDecimal finalAmount;
 

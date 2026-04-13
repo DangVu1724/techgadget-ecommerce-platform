@@ -22,6 +22,7 @@ import com.techgadget.server.repository.*;
 import com.techgadget.server.service.CouponService;
 import com.techgadget.server.service.OrderService;
 import com.techgadget.server.service.PaymentService;
+import com.techgadget.server.service.support.ShippingCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentService paymentService;
     private final CouponService couponService;
     private final CouponRepository couponRepository;
+    private final ShippingCalculator shippingCalculator;
 
     @Override
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
@@ -127,7 +129,8 @@ public class OrderServiceImpl implements OrderService {
                     .map(item -> item.getVariant().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             CouponApplication couponApplication = applyCouponIfPresent(request.getCouponCode(), total);
-            return paymentService.createQrPayment(buildCartPendingPayload(request, user, cart, couponApplication));
+            BigDecimal shippingFee = shippingCalculator.calculate(request.getShippingCity(), request.getShippingWard());
+            return paymentService.createQrPayment(buildCartPendingPayload(request, user, cart, couponApplication, shippingFee));
         }
 
         Order order = buildBaseOrder(request);
@@ -149,11 +152,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
         CouponApplication couponApplication = applyCouponIfPresent(request.getCouponCode(), total);
+        BigDecimal shippingFee = shippingCalculator.calculate(request.getShippingCity(), request.getShippingWard());
         order.setOrderDetails(details);
         order.setAmount(couponApplication.subtotal());
         order.setCouponCode(couponApplication.code());
         order.setDiscountAmount(couponApplication.discountAmount());
-        order.setFinalAmount(couponApplication.finalAmount());
+        order.setShippingFee(shippingFee);
+        order.setFinalAmount(couponApplication.finalAmount().add(shippingFee));
         order.setUser(user);
 
         Order saved = orderRepository.save(order);
@@ -197,11 +202,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
         CouponApplication couponApplication = applyCouponIfPresent(request.getCouponCode(), total);
+        BigDecimal shippingFee = shippingCalculator.calculate(request.getShippingCity(), request.getShippingWard());
         order.setOrderDetails(details);
         order.setAmount(couponApplication.subtotal());
         order.setCouponCode(couponApplication.code());
         order.setDiscountAmount(couponApplication.discountAmount());
-        order.setFinalAmount(couponApplication.finalAmount());
+        order.setShippingFee(shippingFee);
+        order.setFinalAmount(couponApplication.finalAmount().add(shippingFee));
         order.setUser(user);
 
         Order saved = orderRepository.save(order);
@@ -213,7 +220,8 @@ public class OrderServiceImpl implements OrderService {
             OrderRequest request,
             User user,
             Cart cart,
-            CouponApplication couponApplication
+            CouponApplication couponApplication,
+            BigDecimal shippingFee
     ) {
         List<PendingOrderPayload.PendingOrderItemPayload> pendingItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -229,7 +237,7 @@ public class OrderServiceImpl implements OrderService {
                 ? couponApplication
                 : applyCouponIfPresent(request.getCouponCode(), total);
 
-        return buildPendingPayload(request, user.getId(), CheckoutType.CART, applied, pendingItems);
+        return buildPendingPayload(request, user.getId(), CheckoutType.CART, applied, pendingItems, shippingFee);
     }
 
     private PendingOrderPayload buildBuyNowPendingPayload(OrderRequest request, User user) {
@@ -245,7 +253,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         CouponApplication couponApplication = applyCouponIfPresent(request.getCouponCode(), total);
-        return buildPendingPayload(request, user.getId(), CheckoutType.BUY_NOW, couponApplication, pendingItems);
+        BigDecimal shippingFee = shippingCalculator.calculate(request.getShippingCity(), request.getShippingWard());
+        return buildPendingPayload(request, user.getId(), CheckoutType.BUY_NOW, couponApplication, pendingItems, shippingFee);
     }
 
     private PendingOrderPayload buildPendingPayload(
@@ -253,19 +262,23 @@ public class OrderServiceImpl implements OrderService {
             Long userId,
             CheckoutType checkoutType,
             CouponApplication couponApplication,
-            List<PendingOrderPayload.PendingOrderItemPayload> pendingItems
+            List<PendingOrderPayload.PendingOrderItemPayload> pendingItems,
+            BigDecimal shippingFee
     ) {
         PendingOrderPayload payload = new PendingOrderPayload();
         payload.setUserId(userId);
         payload.setCheckoutType(checkoutType);
         payload.setPaymentMethod(PaymentMethod.QR);
         payload.setShippingAddress(request.getShippingAddress());
+        payload.setShippingCity(request.getShippingCity());
+        payload.setShippingWard(request.getShippingWard());
         payload.setPhoneNumber(request.getPhoneNumber());
         payload.setOrderEmail(request.getOrderEmail());
         payload.setAmount(couponApplication.subtotal());
         payload.setCouponCode(couponApplication.code());
         payload.setDiscountAmount(couponApplication.discountAmount());
-        payload.setFinalAmount(couponApplication.finalAmount());
+        payload.setShippingFee(shippingFee);
+        payload.setFinalAmount(couponApplication.finalAmount().add(shippingFee));
         payload.setItems(pendingItems);
         return payload;
     }
@@ -338,6 +351,7 @@ public class OrderServiceImpl implements OrderService {
         response.setId(order.getId());
         response.setOrderCode(order.getOrderCode());
         response.setAmount(order.getAmount());
+        response.setShippingFee(order.getShippingFee());
         response.setDiscountAmount(order.getDiscountAmount());
         response.setFinalAmount(order.getFinalAmount());
         response.setOrderStatus(order.getOrderStatus().name());
@@ -352,6 +366,7 @@ public class OrderServiceImpl implements OrderService {
         response.setId(order.getId());
         response.setOrderCode(order.getOrderCode());
         response.setAmount(order.getAmount());
+        response.setShippingFee(order.getShippingFee());
         response.setDiscountAmount(order.getDiscountAmount());
         response.setFinalAmount(order.getFinalAmount());
         response.setOrderStatus(order.getOrderStatus().name());

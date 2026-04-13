@@ -26,13 +26,15 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.totalSold,
     c.name,
     b.brandName,
-    p.createdAt
+    p.createdAt,
+    p.averageRating,
+    p.totalReviews
 )
 FROM Product p
 LEFT JOIN p.category c
 LEFT JOIN p.brand b
 LEFT JOIN p.variants v
-GROUP BY p.id, p.name, p.image, c.name, b.brandName, p.createdAt
+GROUP BY p.id, p.name, p.image, p.totalSold, c.name, b.brandName, p.createdAt, p.averageRating, p.totalReviews
 """)
     Page<ProductSummaryResponse> findProductSummary(Pageable pageable);
 
@@ -46,14 +48,16 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.totalSold,
     c.name,
     b.brandName,
-    p.createdAt
+    p.createdAt,
+    p.averageRating,
+    p.totalReviews
 )
 FROM Product p
 LEFT JOIN p.category c
 LEFT JOIN p.brand b
 LEFT JOIN p.variants v
 WHERE LOWER(CAST(p.name AS text)) LIKE LOWER(CONCAT('%', CAST(:name AS text), '%'))
-GROUP BY p.id, p.name, p.image, c.name, b.brandName, p.createdAt
+GROUP BY p.id, p.name, p.image, p.totalSold, c.name, b.brandName, p.createdAt, p.averageRating, p.totalReviews
 """)
     Page<ProductSummaryResponse> findProductSummaryByName(@Param("name") String name, Pageable pageable);
 
@@ -78,14 +82,16 @@ SELECT new com.techgadget.server.model.dto.product.ProductSummaryResponse(
     p.totalSold,
     c.name,
     b.brandName,
-    p.createdAt
+    p.createdAt,
+    p.averageRating,
+    p.totalReviews
 )
 FROM Product p
 JOIN p.variants v
 LEFT JOIN p.category c
 LEFT JOIN p.brand b
 WHERE p.id <> :currentProductId
-GROUP BY p.id, p.name, p.image, c.name, b.brandName, p.createdAt, c.id, b.brandId
+GROUP BY p.id, p.name, p.image, p.totalSold, c.name, b.brandName, p.createdAt, p.averageRating, p.totalReviews, c.id, b.brandId
 HAVING COALESCE(SUM(v.stock), 0) > 0
 ORDER BY 
 

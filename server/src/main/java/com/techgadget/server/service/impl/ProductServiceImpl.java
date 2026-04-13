@@ -187,7 +187,9 @@ public class ProductServiceImpl implements ProductService {
                         p.getImage(),
                         p.getVariants().stream().map(ProductVariant::getPrice).min(BigDecimal::compareTo).orElse(BigDecimal.ZERO),
                         p.getVariants().stream().map(ProductVariant::getPrice).max(BigDecimal::compareTo).orElse(BigDecimal.ZERO),
-                        0L
+                        0L,
+                        p.getAverageRating(),
+                        p.getTotalReviews()
                 ))
                 .toList();
     }
