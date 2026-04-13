@@ -8,6 +8,7 @@
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -26,6 +27,11 @@
   <body>
     <!-- Breadcrumb -->
     <div class="container" style="padding: 20px 0">
+      <p
+        class="breadcrumb text-muted"
+        style="font-size: 14px"
+        id="productBreadcrumb"
+      >
       <p
         class="breadcrumb text-muted"
         style="font-size: 14px"
@@ -243,6 +249,12 @@
             <p class="selected-variant-label" id="selectedVariantLabel"></p>
             <p class="p-price" id="productPrice"></p>
             <p class="p-short-desc" id="productDescription"></p>
+          <!-- Product Details -->
+          <div class="product-details">
+            <h1 class="p-title" id="productTitle"></h1>
+            <p class="selected-variant-label" id="selectedVariantLabel"></p>
+            <p class="p-price" id="productPrice"></p>
+            <p class="p-short-desc" id="productDescription"></p>
 
             <!-- Meta Info -->
             <div class="p-meta">
@@ -318,6 +330,19 @@
               >REVIEWS (<span id="reviewCount">0</span>)</span
             >
           </div>
+        <!-- Tabs Section -->
+        <div class="tabs-section">
+          <div class="tabs-header">
+            <span class="tab-link active" data-tab="description"
+              >DESCRIPTION</span
+            >
+            <span class="tab-link" data-tab="information"
+              >ADDITIONAL INFORMATION</span
+            >
+            <span class="tab-link" data-tab="reviews"
+              >REVIEWS (<span id="reviewCount">0</span>)</span
+            >
+          </div>
 
           <!-- Tab Content -->
           <div class="tabs-content">
@@ -327,7 +352,18 @@
                 <div id="attributeTableContainer"></div>
               </div>
             </div>
+          <!-- Tab Content -->
+          <div class="tabs-content">
+            <!-- Description Tab -->
+            <div class="tab-pane active" id="tab-description">
+              <div class="attributes-wrapper">
+                <div id="attributeTableContainer"></div>
+              </div>
+            </div>
 
+            <!-- Information Tab -->
+            <div class="tab-pane" id="tab-information" style="display: none">
+              <h4>Customer Information Privacy Policy</h4>
             <!-- Information Tab -->
             <div class="tab-pane" id="tab-information" style="display: none">
               <h4>Customer Information Privacy Policy</h4>
@@ -613,7 +649,14 @@
           <h3 class="section-title-slanted">RELATED ITEMS</h3>
           <div class="grid-5" id="relatedProductsGrid"></div>
         </section>
+        <!-- Related Products -->
+        <section class="related-products">
+          <h3 class="section-title-slanted">RELATED ITEMS</h3>
+          <div class="grid-5" id="relatedProductsGrid"></div>
+        </section>
 
+        <!-- Customer Reviews Grid -->
+      </div>
         <!-- Customer Reviews Grid -->
       </div>
     </main>
@@ -626,6 +669,8 @@
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
     <button id="backToTop" title="Lên đầu trang">
+      <span class="arrow"></span>
+    </button>
       <span class="arrow"></span>
     </button>
   </body>
