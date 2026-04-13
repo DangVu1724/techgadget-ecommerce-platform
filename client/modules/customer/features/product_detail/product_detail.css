@@ -1489,3 +1489,104 @@ body {
     }
 }
 
+@media (max-width: 992px) {
+    .product-layout {
+        gap: 32px;
+    }
+
+    .tabs-header {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 0;
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: min(100% - 24px, 1200px);
+    }
+
+    .action-bar {
+        position: static;
+        width: 100%;
+        padding: 0;
+        box-shadow: none;
+        background: transparent;
+        justify-content: stretch;
+        gap: 10px;
+    }
+
+    .qty-control,
+    .action-bar .btn-primary,
+    .action-bar .btn-secondary {
+        width: 100%;
+    }
+
+    .action-bar .btn-primary,
+    .action-bar .btn-secondary {
+        min-height: 46px;
+        justify-content: center;
+    }
+
+    .btn-wishlist {
+        flex-shrink: 0;
+    }
+
+    .main-image-box {
+        padding: 18px;
+    }
+
+    .main-image-box img {
+        max-height: 320px;
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 560px) {
+    .product-layout {
+        gap: 24px;
+    }
+
+    .highlight-card {
+        padding: 14px;
+        align-items: flex-start;
+    }
+
+    .tabs-header {
+        gap: 14px;
+    }
+
+    .tab-link {
+        font-size: 11px;
+    }
+
+    .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-wishlist {
+        width: 100%;
+        border-radius: 14px;
+    }
+
+    .review-item {
+        padding: 14px;
+    }
+
+    .review-actions,
+    .inline-edit-btns {
+        flex-wrap: wrap;
+    }
+
+    .grid-5 {
+        grid-template-columns: 1fr;
+    }
+
+    .p-img-box {
+        height: 200px;
+    }
+}

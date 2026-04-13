@@ -256,7 +256,7 @@ function resolvePopupImage(imageUrl) {
   }
 
   if (imageUrl && imageUrl.startsWith("/")) {
-    return `http://localhost:8080${imageUrl}`;
+    return `https://techgadget-ecommerce-platform.onrender.com${imageUrl}`;
   }
 
   return imageUrl || "/modules/customer/assets/images/banner1.png";

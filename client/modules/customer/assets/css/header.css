@@ -434,3 +434,65 @@ header {
     font-family: 'Poppins', sans-serif;
     margin-left: 8px;
 }
+
+@media (max-width: 768px) {
+    header {
+        padding: 12px 0;
+    }
+
+    .container {
+        width: min(100% - 24px, 1200px);
+    }
+
+    .header-actions {
+        margin-left: auto;
+        gap: 12px;
+    }
+
+    .search-input {
+        padding: 12px 16px;
+    }
+
+    .search-btn {
+        width: 52px;
+        height: 48px;
+    }
+
+    .search-suggestions {
+        max-height: min(50vh, 320px);
+    }
+
+    .cart-count {
+        top: -4px;
+        right: 6px;
+    }
+}
+
+@media (max-width: 520px) {
+    .logo {
+        font-size: 18px;
+        max-width: calc(100% - 132px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .user-action,
+    .cart-action {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 8px 10px;
+    }
+
+    .search-form {
+        border-radius: 18px;
+    }
+
+    .suggestion-item {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+}

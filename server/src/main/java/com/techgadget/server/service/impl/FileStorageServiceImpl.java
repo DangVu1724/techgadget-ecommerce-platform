@@ -44,7 +44,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             );
             Path target = uploadPath.resolve(filename);
             Files.copy(file.getInputStream(), target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            return "http://localhost:8080/uploads/" + filename;
+            return "https://techgadget-ecommerce-platform.onrender.com/uploads/" + filename;
         } catch (IOException ex) {
             throw new BadRequestException("Could not store file.");
         }

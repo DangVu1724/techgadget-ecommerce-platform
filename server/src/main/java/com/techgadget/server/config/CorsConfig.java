@@ -16,8 +16,7 @@ public class CorsConfig {
 
                 registry.addMapping("/**")
                         .allowedOriginPatterns(
-                                "http://localhost:3000",
-                                "http://127.0.0.1:5500",
+                                "https://techgadget-ecommerce-platform.onrender.com",
                                 "https://*.vercel.app"
                         )
                         .allowedMethods("*")

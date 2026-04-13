@@ -445,6 +445,9 @@ Chức năng:
 
 Luồng xem đánh giá được tích hợp trong sequence xem chi tiết sản phẩm (mục 5.2.5).
 
+![Sequence](images/review.png)
+
+
 ---
 
 ## 5.7 Module Promotion Popup

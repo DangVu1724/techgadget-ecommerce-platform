@@ -895,3 +895,56 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
         font-size: 20px;
     }
 }
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .container,
+    .checkout-header-section > div {
+        width: min(100% - 24px, 1200px);
+    }
+
+    .checkout-wrapper {
+        margin-bottom: 36px;
+    }
+
+    .coupon-input-row {
+        align-items: stretch;
+    }
+
+    .coupon-apply-btn {
+        min-height: 46px;
+    }
+
+    .btn-checkout-submit {
+        position: static;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 560px) {
+    .checkout-header-section {
+        margin-bottom: 24px;
+    }
+
+    .checkout-header-section h1 {
+        font-size: 22px;
+    }
+
+    .coupon-input-row {
+        flex-direction: column;
+    }
+
+    .voucher-modal-container {
+        width: calc(100% - 20px);
+        max-height: 88vh;
+    }
+
+    .voucher-modal-body,
+    .voucher-modal-header,
+    .checkout-summary-section,
+    .order-summary {
+        padding: 16px;
+    }
+}

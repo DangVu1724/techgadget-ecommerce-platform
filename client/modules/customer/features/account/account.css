@@ -788,3 +788,134 @@ body {
         grid-template-columns: repeat(2, 1fr); /* Rất nhỏ thì chia 2 hàng cho tab */
     }
 }
+@media (max-width: 992px) {
+  .account-shell {
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .profile-details-grid,
+  .order-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: min(100% - 24px, 1200px);
+  }
+
+  .account-page {
+    padding: 20px 0 40px;
+  }
+
+  .account-hero {
+    border-radius: 22px;
+    padding: 20px;
+    text-align: left;
+  }
+
+  .account-hero-copy {
+    display: block;
+  }
+
+  .account-hero h1 {
+    font-size: 26px;
+  }
+
+  .account-hero-summary {
+    padding: 18px;
+  }
+
+  .account-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-card,
+  .panel-card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .profile-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .menu-item {
+    min-height: 88px;
+  }
+
+  .menu-item.active {
+    background: var(--account-accent-soft);
+    border-color: rgba(255, 111, 66, 0.28);
+    color: var(--account-accent);
+  }
+
+  .menu-item i,
+  .menu-item.active i {
+    color: var(--account-accent);
+  }
+
+  .account-main,
+  .account-sidebar {
+    padding: 0;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-details-grid,
+  .order-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-card-top,
+  .order-card-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-actions,
+  .order-actions .btn-main,
+  .order-actions .btn-secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .account-hero {
+    padding: 18px;
+  }
+
+  .hero-avatar,
+  .avatar-sm,
+  .profile-summary-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+  }
+
+  .order-tabs-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ot-item {
+    white-space: normal;
+  }
+
+  .order-card-body {
+    grid-template-columns: 1fr;
+  }
+}
