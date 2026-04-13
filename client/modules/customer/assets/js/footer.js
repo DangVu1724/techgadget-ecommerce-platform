@@ -17,8 +17,10 @@ class FooterComponent {
 
       document.body.insertAdjacentHTML("beforeend", footerHtml);
       this.loadFooterCSS();
+      window.dispatchEvent(new Event("footer-loaded"));
     } catch (error) {
       console.error("Error loading footer:", error);
+      window.dispatchEvent(new Event("footer-loaded"));
     }
   }
 

@@ -4,6 +4,9 @@ import { productApi } from "/modules/customer/core/api/product.api.js";
 import { popupApi } from "/modules/customer/core/api/popup.api.js";
 import { showToast } from "/shared/ui/toast.js";
 
+const appLoader = document.getElementById("appLoader");
+let loaderHidden = false;
+
 const categoryImages = {
   smartphone: "/modules/customer/assets/images/categories/phone.jpg",
   laptop: "/modules/customer/assets/images/categories/mac.jpg",
@@ -188,7 +191,48 @@ async function initHome() {
   } catch (error) {
     console.error("Home initialization failed:", error);
     showToast("Some homepage sections could not be loaded.", "warning");
+  } finally {
+    window.dispatchEvent(new Event("home-ready"));
   }
+}
+
+function hideAppLoader() {
+  if (!appLoader || loaderHidden) return;
+
+  loaderHidden = true;
+  appLoader.classList.add("is-hidden");
+  document.body.classList.remove("app-loading");
+
+  window.setTimeout(() => {
+    appLoader.remove();
+  }, 500);
+}
+
+function waitForEvent(eventName, timeout = 2500) {
+  return new Promise((resolve) => {
+    let settled = false;
+
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+
+    window.addEventListener(eventName, finish, { once: true });
+    window.setTimeout(finish, timeout);
+  });
+}
+
+async function bootHomePage() {
+  document.body.classList.add("app-loading");
+
+  await Promise.all([
+    waitForEvent("header-loaded"),
+    waitForEvent("footer-loaded"),
+    waitForEvent("home-ready"),
+  ]);
+
+  hideAppLoader();
 }
 
 function formatPrice(value) {
@@ -285,7 +329,14 @@ function resolvePopupImage(imageUrl) {
   return imageUrl || "/modules/customer/assets/images/banner1.png";
 }
 
-document.addEventListener("DOMContentLoaded", initHome);
+document.addEventListener("DOMContentLoaded", () => {
+  initHome();
+  bootHomePage();
+});
+
+window.addEventListener("load", () => {
+  window.setTimeout(hideAppLoader, 300);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const slider = {
