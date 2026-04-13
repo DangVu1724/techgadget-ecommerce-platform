@@ -542,55 +542,6 @@ body {
   color: var(--account-accent);
 }
 
-@media (max-width: 1024px) {
-  .account-shell,
-  .account-hero {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .account-page {
-    padding-top: 24px;
-  }
-
-  .container {
-    width: min(100%, calc(100% - 20px));
-  }
-
-  .sidebar-card,
-  .panel-card,
-  .account-hero {
-    padding: 20px;
-    border-radius: 22px;
-  }
-
-  .profile-details-grid,
-  .order-card-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .order-card-body {
-    grid-template-columns: 1fr;
-  }
-
-  .order-card-thumb {
-    width: 100%;
-    height: 180px;
-  }
-
-  .order-card-top,
-  .order-card-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .order-actions,
-  .btn-main,
-  .btn-secondary {
-    width: 100%;
-  }
-}
 
 #backToTop {
   /* Vị trí cố định */
@@ -630,4 +581,341 @@ body {
   transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
   -webkit-transform: rotate(-135deg);
   margin-top: 5px;
+}
+
+
+/* --- RESPONSIVE TỐI ƯU CHO ACCOUNT PAGE (Mobile) --- */
+@media (max-width: 768px) {
+    .account-page {
+        padding-top: 10px;
+        background: #f8f9fa;
+    }
+
+    /* 1. Tối ưu Hero Section - Thu gọn diện tích */
+    .account-hero {
+        grid-template-columns: 1fr;
+        padding: 20px 15px;
+        text-align: center;
+        border-radius: 0;
+        margin-bottom: 10px;
+    }
+
+    .account-hero-copy {
+        display: none;
+    }
+
+    .hero-avatar {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 10px;
+    }
+
+    .hero-text h1 {
+        font-size: 20px;
+    }
+
+    /* 2. Cấu trúc lại Account Shell */
+    .account-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 0;
+    }
+
+    /* 3. SIDEBAR: Hiển thị dạng Dashboard không cần lướt */
+    .account-sidebar {
+        position: static;
+        padding: 0 15px;
+    }
+
+    .sidebar-card {
+        padding: 15px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #edf2f7;
+    }
+
+    .user-brief {
+        display: none; /* Đã có ở Hero Section */
+    }
+
+    /* Biến Menu thành dạng lưới 2 cột để hiện đủ Profile & Order */
+    .profile-menu {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Chia đôi */
+        gap: 10px;
+        padding: 0;
+    }
+
+    .menu-item {
+        display: flex;
+        flex-direction: column; /* Icon trên chữ dưới */
+        align-items: center;
+        justify-content: center;
+        padding: 15px 10px;
+        background: #fcfcfd;
+        border: 1px solid #f1f3f5;
+        border-radius: 12px;
+        text-align: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .menu-item i {
+        display: block; /* Hiện icon */
+        margin: 0;
+        font-size: 20px;
+        color: var(--text-light);
+    }
+
+    .menu-item span {
+        font-size: 13px;
+        font-weight: 500;
+        white-space: normal; /* Cho phép xuống dòng nếu chữ dài */
+    }
+
+    .menu-item.active {
+        background: var(--orange-light);
+        border-color: var(--orange);
+        color: var(--orange);
+    }
+
+    .menu-item.active i {
+        color: var(--orange);
+    }
+
+    /* Logout hiển thị rõ ràng dưới Menu */
+    .profile-logout-btn {
+        display: flex;
+        width: 100%;
+        margin-top: 12px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: #fff5f5;
+        color: #ff4d4f;
+        border: 1px dashed #ffccc7;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    /* 4. Tối ưu vùng nội dung Main */
+    .account-main {
+        padding: 0 15px 30px;
+    }
+
+    .panel-card {
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .panel-head h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    /* 5. Order Card Layout Mobile */
+    .order-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .order-tabs-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Chia tab đơn hàng thành lưới 3 cột */
+        gap: 5px;
+    }
+
+    .ot-item {
+        padding: 8px 2px;
+        text-align: center;
+        font-size: 11px;
+    }
+
+    .order-card-body {
+        grid-template-columns: 70px 1fr;
+        padding: 12px;
+    }
+
+    .order-card-thumb {
+        width: 70px;
+        height: 70px;
+    }
+
+    .order-card-title {
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+    .order-card-bottom {
+        padding: 12px;
+    }
+
+    .order-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .order-actions .btn-main, 
+    .order-actions .btn-secondary {
+        width: 100%;
+        padding: 10px 5px;
+        font-size: 12px;
+    }
+}
+
+/* --- Tối ưu cho màn hình nhỏ hơn 400px --- */
+@media (max-width: 400px) {
+    .profile-menu {
+        gap: 8px;
+    }
+    
+    .menu-item {
+        padding: 12px 5px;
+    }
+
+    .menu-item i {
+        font-size: 18px;
+    }
+
+    .order-tabs-container {
+        grid-template-columns: repeat(2, 1fr); /* Rất nhỏ thì chia 2 hàng cho tab */
+    }
+}
+@media (max-width: 992px) {
+  .account-shell {
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .profile-details-grid,
+  .order-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: min(100% - 24px, 1200px);
+  }
+
+  .account-page {
+    padding: 20px 0 40px;
+  }
+
+  .account-hero {
+    border-radius: 22px;
+    padding: 20px;
+    text-align: left;
+  }
+
+  .account-hero-copy {
+    display: block;
+  }
+
+  .account-hero h1 {
+    font-size: 26px;
+  }
+
+  .account-hero-summary {
+    padding: 18px;
+  }
+
+  .account-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-card,
+  .panel-card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .profile-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .menu-item {
+    min-height: 88px;
+  }
+
+  .menu-item.active {
+    background: var(--account-accent-soft);
+    border-color: rgba(255, 111, 66, 0.28);
+    color: var(--account-accent);
+  }
+
+  .menu-item i,
+  .menu-item.active i {
+    color: var(--account-accent);
+  }
+
+  .account-main,
+  .account-sidebar {
+    padding: 0;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-details-grid,
+  .order-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-card-top,
+  .order-card-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-actions,
+  .order-actions .btn-main,
+  .order-actions .btn-secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .account-hero {
+    padding: 18px;
+  }
+
+  .hero-avatar,
+  .avatar-sm,
+  .profile-summary-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+  }
+
+  .order-tabs-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ot-item {
+    white-space: normal;
+  }
+
+  .order-card-body {
+    grid-template-columns: 1fr;
+  }
 }

@@ -17,6 +17,9 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+    padding: 0;
 }
 
 /* CARD */
@@ -176,6 +179,116 @@ a {
 
 img {
     max-width: 80%;
-
 }
 
+/* --- RESPONSIVE TỐI ƯU CHO LOGIN & REGISTER (Mobile) --- */
+@media (max-width: 768px) {
+    body {
+        background: #ffffff; /* Chuyển nền trắng để trông thoáng hơn trên mobile */
+        padding: 20px 15px;
+    }
+
+    .card {
+        flex-direction: column !important; /* Luôn xếp dọc trên mobile */
+        width: 100%;
+        max-width: 450px;
+        box-shadow: none; /* Bỏ shadow để tránh cảm giác nặng nề */
+        border: none !important; /* Bỏ border màu mè của desktop */
+    }
+
+    /* Ẩn phần hình ảnh hoặc thu nhỏ lại để tiết kiệm không gian */
+    .image-side {
+        display: none; /* Thông thường nên ẩn hẳn để user tập trung vào Form */
+    }
+
+    .form-side {
+        padding: 0; /* Bỏ padding lớn của desktop */
+        width: 100%;
+    }
+
+    /* Tối ưu Header */
+    .logo {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-size: 26px;
+        text-align: center;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    /* Tối ưu các ô nhập liệu (Input) */
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    input {
+        height: 50px; /* Tăng chiều cao để dễ chạm */
+        font-size: 16px !important; /* Chống auto-zoom trên iOS */
+        padding: 12px 15px;
+        background: #f8f9fa; /* Màu nền nhẹ để phân biệt ô nhập */
+        border: 1px solid #e9ecef;
+    }
+
+    input:focus {
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.1);
+    }
+
+    /* Đặc biệt cho trang Register: Chuyển Grid 2 cột thành 1 cột */
+    .grid-inputs {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    /* Tối ưu Checkbox và Terms */
+    .checkbox-row {
+        align-items: flex-start;
+        margin-bottom: 25px;
+    }
+
+    .checkbox-row label {
+        white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+        line-height: 1.4;
+        font-size: 13px;
+    }
+
+    /* Nút bấm nổi bật */
+    .btn {
+        height: 54px;
+        font-size: 15px;
+        letter-spacing: 1px;
+        margin-top: 10px;
+        box-shadow: 0 4px 15px rgba(255, 122, 0, 0.2);
+    }
+
+    .footer-link {
+        margin-top: 30px;
+        font-size: 14px;
+        color: #666;
+    }
+}
+
+/* Tối ưu cho màn hình siêu nhỏ (iPhone SE, v.v.) */
+@media (max-width: 320px) {
+    h1 {
+        font-size: 22px;
+    }
+    
+    .logo {
+        margin-bottom: 20px;
+    }
+}

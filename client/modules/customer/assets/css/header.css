@@ -377,6 +377,32 @@ header {
     }
 }
 
+/* Touch-friendly for mobile */
+@media (max-width: 768px) {
+    button, a[role="button"], input[type="button"] {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 16px;
+    }
+    
+    input[type="text"], input[type="email"], input[type="password"], textarea, select {
+        padding: 14px 16px;
+        min-height: 44px;
+        font-size: 16px;
+    }
+}
+
+/* Additional breakpoints */
+@media (max-width: 640px) {
+    .header-wrapper { padding: 10px 15px; }
+    .search-container input { font-size: 13px; }
+}
+
+@media (max-width: 320px) {
+    .user-action span { display: none; }
+    .header-actions { gap: 8px; }
+}
+
 /* Animation cho cart */
 @keyframes bounce {
     0%, 100% { transform: scale(1); }
@@ -407,4 +433,66 @@ header {
 .history-item span {
     font-family: 'Poppins', sans-serif;
     margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 12px 0;
+    }
+
+    .container {
+        width: min(100% - 24px, 1200px);
+    }
+
+    .header-actions {
+        margin-left: auto;
+        gap: 12px;
+    }
+
+    .search-input {
+        padding: 12px 16px;
+    }
+
+    .search-btn {
+        width: 52px;
+        height: 48px;
+    }
+
+    .search-suggestions {
+        max-height: min(50vh, 320px);
+    }
+
+    .cart-count {
+        top: -4px;
+        right: 6px;
+    }
+}
+
+@media (max-width: 520px) {
+    .logo {
+        font-size: 18px;
+        max-width: calc(100% - 132px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .user-action,
+    .cart-action {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 8px 10px;
+    }
+
+    .search-form {
+        border-radius: 18px;
+    }
+
+    .suggestion-item {
+        padding: 10px 14px;
+        gap: 10px;
+    }
 }

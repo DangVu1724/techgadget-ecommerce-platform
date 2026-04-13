@@ -1,7 +1,7 @@
 import { getToken, clearAuthSession, redirectToLogin } from "/shared/core/auth/session.js";
 import { showToast } from "/shared/ui/toast.js";
 
-const BASE_URL = "http://localhost:8080/api";
+const BASE_URL = "https://techgadget-ecommerce-platform.onrender.com/api";
 
 async function parseJsonSafely(response) {
   const contentType = response.headers.get("content-type") || "";

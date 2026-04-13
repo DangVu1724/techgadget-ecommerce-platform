@@ -2,7 +2,7 @@
 
 # **Project: TechGadget E-Commerce**
 
-**Version:** 0.9
+**Version:** 1.1
 
 **Author:** Đặng Vũ
 
@@ -16,13 +16,13 @@
 
 ## **Revision History**
 
-| Name            | Date       | Description                              | Version |
-| --------------- | ---------- | ---------------------------------------- | ------- |
-| Đặng Vũ         | 25/02/2026 | Initial draft                            | 0.1     |
-| Đặng Vũ         | 25/03/2026 | Completed general Use Case list          | 0.2     |
-| Đặng Trung Kiên | 26/03/2026 | Drafted Use Cases and NFRs               | 0.3     |
-| Đặng Vũ         | 26/03/2026 | Completed detailed Use Cases             | 0.4     |
-| Đặng Vũ         | 27/02/2026 | Final formatting and document refinement | 0.9     |
+| Name            | Date       | Description                                                              | Version |
+| --------------- | ---------- | ------------------------------------------------------------------------ | ------- |
+| Đặng Vũ         | 25/02/2026 | Initial draft                                                            | 0.1     |
+| Đặng Vũ         | 25/03/2026 | Completed general Use Case list                                          | 0.2     |
+| Đặng Trung Kiên | 26/03/2026 | Drafted Use Cases and NFRs                                               | 0.3     |
+| Đặng Vũ         | 26/03/2026 | Completed detailed Use Cases                                             | 0.4     |
+| Đặng Vũ         | 27/02/2026 | Final formatting and document refinement                                 | 0.9     |
 
 ---
 
@@ -75,68 +75,80 @@ Dự án được xây dựng nhằm phát triển một website thương mại 
 ### **1.2.3 Chức năng chính**
 
 1. **Product Catalog**
-
-   * Hiển thị danh sách sản phẩm
-   * Trang chi tiết sản phẩm
+   * Hiển thị danh sách sản phẩm (phân trang)
+   * Lọc theo danh mục, thương hiệu, khoảng giá, thuộc tính (RAM, Storage...)
+   * Trang chi tiết sản phẩm với biến thể, thông số kỹ thuật, sản phẩm liên quan
 
 2. **Product Search**
-
-   * Tìm kiếm theo từ khóa
+   * Tìm kiếm theo từ khóa tên sản phẩm
    * Không phân biệt hoa/thường
-   * Hỗ trợ sai chính tả cơ bản
 
 3. **Shopping Cart**
-
-   * Thêm sản phẩm
+   * Thêm variant sản phẩm vào giỏ
    * Cập nhật số lượng
    * Xóa sản phẩm
    * Hiển thị tổng tiền
 
-4. **Checkout**
-
-   * Nhập thông tin đặt hàng
-   * Thanh toán giả lập
-   * Tạo đơn hàng
+4. **Checkout & Payment**
+   * Nhập thông tin đặt hàng (họ tên, địa chỉ, số điện thoại)
+   * Áp dụng mã giảm giá (coupon)
+   * Thanh toán COD (Cash on Delivery)
+   * Thanh toán QR qua PayOS
+   * Mua ngay (Buy Now) không qua giỏ hàng
 
 5. **User Account**
-
-   * Đăng ký / đăng nhập
+   * Đăng ký / đăng nhập (JWT)
    * Xem lịch sử đơn hàng
-   * Theo dõi trạng thái
+   * Theo dõi và hủy đơn hàng
+   * Cập nhật thông tin cá nhân
 
-6. **Admin Dashboard**
+6. **Review & Rating**
+   * Xem đánh giá sản phẩm (công khai)
+   * Lọc đánh giá theo số sao
+   * Viết, sửa, xóa đánh giá (yêu cầu đăng nhập)
 
-   * CRUD sản phẩm
-   * Quản lý đơn hàng
-   * Cập nhật trạng thái
-   * Theo dõi tồn kho
+7. **Promotion Popup**
+   * Hiển thị popup khuyến mãi lần đầu mỗi tab
+   * Liên kết đến sản phẩm hoặc coupon
+
+8. **Admin Dashboard**
+   * CRUD sản phẩm, biến thể, thuộc tính
+   * Quản lý danh mục, thương hiệu
+   * Quản lý đơn hàng và cập nhật trạng thái
+   * Quản lý người dùng (xem, khóa/mở khóa)
+   * Quản lý mã giảm giá (coupon)
+   * Quản lý Promotion Popup
 
 ---
 
 ### **1.2.4 Đối tượng sử dụng**
 
-**Guest**
+**Guest (Khách truy cập)**
+* Xem danh sách và chi tiết sản phẩm
+* Tìm kiếm và lọc sản phẩm
+* Xem đánh giá sản phẩm
+* Xem popup khuyến mãi
 
-* Xem và tìm kiếm sản phẩm
-
-**Customer**
-
-* Đăng ký / đăng nhập
-* Đặt hàng
-* Theo dõi đơn
+**Customer (Khách hàng đã đăng nhập)**
+* Tất cả quyền của Guest
+* Quản lý giỏ hàng
+* Đặt hàng và thanh toán (COD / QR)
+* Xem lịch sử, theo dõi và hủy đơn hàng
+* Viết, sửa, xóa đánh giá của mình
+* Cập nhật thông tin cá nhân
 
 **Admin**
-
-* Quản lý sản phẩm
-* Quản lý đơn hàng
-* Cập nhật tồn kho
+* Tất cả quyền quản trị hệ thống
+* CRUD sản phẩm, danh mục, thương hiệu, thuộc tính, biến thể
+* Quản lý đơn hàng, người dùng, coupon, popup
+* Xóa bất kỳ đánh giá nào
 
 ---
 
 ### **1.2.5 Giới hạn hệ thống**
 
-* Không tích hợp thanh toán trực tuyến thực tế
-* Không tích hợp API vận chuyển
+* Tích hợp thanh toán QR qua PayOS (không hỗ trợ thẻ tín dụng, ví điện tử khác)
+* Không tích hợp API vận chuyển (không tính phí ship tự động)
 * Không có ứng dụng mobile riêng
 * Thiết kế cho quy mô nhỏ và vừa
 * Không sử dụng AI nâng cao
@@ -155,6 +167,11 @@ Dự án được xây dựng nhằm phát triển một website thương mại 
 | API   | Application Programming Interface   |
 | UC    | Use Case                            |
 | Admin | Administrator                       |
+| JWT   | JSON Web Token                      |
+| COD   | Cash on Delivery                    |
+| QR    | Quick Response (thanh toán QR)      |
+| CRUD  | Create, Read, Update, Delete        |
+| SKU   | Stock Keeping Unit                  |
 
 ---
 
@@ -178,21 +195,24 @@ Dự án được xây dựng nhằm phát triển một website thương mại 
 
 TechGadget là hệ thống web-based hoạt động theo mô hình Client–Server gồm:
 
-* Frontend (UI)
-* Backend (Business Logic & API)
-* Database (MySQL)
+* Frontend (HTML, CSS, JavaScript)
+* Backend (Spring Boot REST API)
+* Database (PostgreSQL)
 
-Thanh toán thực hiện theo phương thức giả lập hoặc COD.
+Xác thực người dùng sử dụng JWT token. Thanh toán hỗ trợ COD và QR qua PayOS.
 
 ---
 
 ## **2.2 Các nhóm chức năng chính**
 
-* User Management
-* Product Management
-* Cart Management
-* Order Management
-* Admin Management
+* User Management (Đăng ký, đăng nhập, cập nhật thông tin)
+* Product Management (Sản phẩm, biến thể, thuộc tính, danh mục, thương hiệu)
+* Cart Management (Giỏ hàng)
+* Order Management (Đặt hàng, thanh toán COD/QR, theo dõi, hủy đơn)
+* Coupon Management (Mã giảm giá)
+* Review Management (Đánh giá sản phẩm)
+* Promotion Popup Management (Popup khuyến mãi)
+* Admin Management (Quản trị toàn hệ thống)
 
 ---
 
@@ -208,17 +228,21 @@ Thanh toán thực hiện theo phương thức giả lập hoặc COD.
 **Technical Constraints**
 
 * Backend: Java Spring Boot
-* Database: MySQL
-* Frontend: HTML, CSS, JS
+* Database: PostgreSQL
+* Frontend: HTML, CSS, JavaScript (Vanilla)
+* Authentication: JWT (JSON Web Token)
+* Payment: PayOS (QR), COD
 
 **Operational Constraints**
 
 * Hosting chi phí thấp
-* Không tích hợp thanh toán thật
+* Chỉ hỗ trợ thanh toán QR (PayOS) và COD
 
 **Security Constraints**
 
-* Bảo mật thông tin người dùng
+* Mật khẩu mã hóa bằng BCrypt
+* Phân quyền RBAC: ADMIN / CUSTOMER
+* Bảo vệ API bằng JWT filter
 
 ---
 
@@ -226,32 +250,41 @@ Thanh toán thực hiện theo phương thức giả lập hoặc COD.
 
 **Assumptions**
 
-* Người dùng có Internet
-* Chủ cửa hàng cung cấp đủ dữ liệu
+* Người dùng có kết nối Internet ổn định
+* Chủ cửa hàng cung cấp đủ dữ liệu sản phẩm ban đầu
+* Tài khoản PayOS đã được cấu hình sẵn cho thanh toán QR
 
 **Dependencies**
 
 * Server hosting
-* MySQL
-* Modern browsers
+* PostgreSQL database
+* Trình duyệt hiện đại (Chrome, Firefox, Safari, Edge)
+* PayOS API (cho thanh toán QR)
 
 ---
 
 ## **2.6 Phân chia yêu cầu**
 
-### Version 1
+### Version 1 (Đã triển khai)
 
-* Authentication
-* Search
-* Cart
-* Fake payment
-* Admin management
+* Authentication (JWT)
+* Product catalog, search, filter
+* Shopping cart
+* Checkout với COD và QR Payment (PayOS)
+* Buy Now (mua ngay)
+* Coupon / mã giảm giá
+* Order management
+* Admin management (sản phẩm, danh mục, thương hiệu, thuộc tính, biến thể, đơn hàng, người dùng, coupon)
+* Promotion popup
+* Product review & rating
 
 ### Future Version
 
-* Recommendation system
-* Promotion popup
-* Product review & rating
+* Recommendation system (gợi ý sản phẩm AI)
+* Wishlist (danh sách yêu thích)
+* So sánh sản phẩm
+* Thông báo email tự động
+* Tích hợp API vận chuyển
 
 ---
 # 3. Yêu cầu hệ thống
@@ -301,6 +334,28 @@ Thanh toán thực hiện theo phương thức giả lập hoặc COD.
 | UC015 | Quản lý danh mục             | Thêm/Sửa/Xóa danh mục              | Tổ chức sản phẩm rõ ràng          | Admin |
 | UC016 | Cập nhật trạng thái đơn hàng | Đổi trạng thái thành “Shipped”     | Để khách theo dõi được đơn        | Admin |
 | UC017 | Quản lý người dùng           | Xem, khóa tài khoản dựa trên email | Quản lý hệ thống và xử lý vi phạm | Admin 
+
+#### Module: Khuyến mãi, đánh giá và thanh toán
+
+| UC ID | Tên                        | Mô tả                                                             | Lý do                                                | Actor                       |
+| ----- | -------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------- | --------------------------- |
+| UC018 | Áp dụng mã giảm giá        | Chọn hoặc nhập coupon hợp lệ khi thanh toán                       | Tăng tỷ lệ chuyển đổi và hỗ trợ chương trình ưu đãi  | Khách hàng                  |
+| UC019 | Quản lý đánh giá sản phẩm  | Xem, tạo, cập nhật và xóa đánh giá cho sản phẩm                   | Tăng độ tin cậy sản phẩm và thu thập phản hồi        | Khách truy cập, Khách hàng, Admin |
+| UC020 | Hủy đơn hàng               | Khách hàng hủy đơn trước khi hoàn tất xử lý                       | Giảm yêu cầu hỗ trợ thủ công                         | Khách hàng                  |
+| UC021 | Mua ngay sản phẩm          | Tạo đơn trực tiếp từ sản phẩm đang xem mà không cần qua giỏ hàng  | Rút ngắn quy trình đặt hàng                          | Khách hàng                  |
+| UC022 | Thanh toán QR              | Theo dõi và xác nhận kết quả thanh toán QR cho đơn hàng           | Hỗ trợ thanh toán điện tử theo thời gian thực        | Khách hàng, Hệ thống thanh toán |
+| UC023 | Xem popup khuyến mãi       | Hiển thị popup ưu đãi đang hoạt động trên giao diện khách hàng    | Thu hút chú ý đến chương trình khuyến mãi hiện hành  | Khách truy cập, Khách hàng  |
+| UC024 | Xem sản phẩm liên quan và nổi bật | Hiển thị sản phẩm liên quan, bán chạy và mới nhất          | Tăng khám phá sản phẩm và cơ hội bán chéo            | Khách truy cập, Khách hàng  |
+
+#### Module: Quản trị mở rộng (Admin)
+
+| UC ID | Tên                        | Mô tả                                                        | Lý do                                              | Actor |
+| ----- | -------------------------- | ------------------------------------------------------------ | -------------------------------------------------- | ----- |
+| UC025 | Quản lý thương hiệu        | Thêm/Sửa/Xóa thương hiệu sản phẩm                            | Chuẩn hóa dữ liệu và hỗ trợ lọc sản phẩm           | Admin |
+| UC026 | Quản lý thuộc tính sản phẩm | Thêm/Sửa/Xóa thuộc tính dùng cho phân loại và biến thể      | Hỗ trợ cấu hình sản phẩm linh hoạt                 | Admin |
+| UC027 | Quản lý biến thể sản phẩm  | Thêm/Sửa/Xóa biến thể của từng sản phẩm                      | Quản lý tồn kho và lựa chọn chi tiết theo phiên bản | Admin |
+| UC028 | Quản lý mã giảm giá        | Thêm/Sửa/Xóa và tra cứu coupon khuyến mãi                    | Điều hành chương trình giảm giá                    | Admin |
+| UC029 | Quản lý popup khuyến mãi   | Thêm/Sửa/Xóa popup, tải ảnh và gắn coupon/sản phẩm liên quan | Quản trị chiến dịch quảng bá trên giao diện khách  | Admin |
 
 
 ### **3.1.2. Usecase chi tiết** {#3.1.2.-usecase-chi-tiết}
@@ -655,6 +710,257 @@ Thanh toán thực hiện theo phương thức giả lập hoặc COD.
 |  | 4 | Hệ thống hiển thị thông tin người dùng tương ứng. |
 | **Luồng thay thế** | 3a | Khách hàng không tồn tại → Hệ thống thông báo lỗi |
 |
+
+18. UC018: Áp dụng mã giảm giá
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC018 |  |
+| **Tên Use Case** | Áp dụng mã giảm giá |  |
+| **Tác nhân chính** | Khách hàng |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép khách hàng nhập hoặc chọn mã giảm giá hợp lệ trong quá trình thanh toán. |  |
+| **Sự kiện kích hoạt** | Khách hàng nhấn chức năng “Áp dụng mã giảm giá” tại trang thanh toán. |  |
+| **Tiền điều kiện** | Khách hàng có đơn hàng hoặc giỏ hàng hợp lệ để thanh toán. |  |
+| **Hậu điều kiện (Thành công)** | Mã giảm giá được áp dụng và tổng tiền thanh toán được cập nhật. |  |
+| **Hậu điều kiện (Thất bại)** | Mã giảm giá không được áp dụng và tổng tiền không thay đổi. |  |
+| **Luồng chính** | 1 | Khách hàng truy cập trang thanh toán. |
+|  | 2 | Hệ thống hiển thị danh sách voucher khả dụng hoặc ô nhập mã. |
+|  | 3 | Khách hàng nhập mã hoặc chọn một mã giảm giá. |
+|  | 4 | Hệ thống kiểm tra điều kiện áp dụng của mã giảm giá. |
+|  | 5 | Hệ thống cập nhật số tiền được giảm và tổng tiền đơn hàng. |
+| **Luồng thay thế** | 4a | Mã không tồn tại, hết hạn hoặc không đủ điều kiện → Hệ thống hiển thị thông báo lỗi. |
+|  | 4b | Đơn hàng chưa đạt giá trị tối thiểu → Hệ thống từ chối áp dụng mã. |
+
+19. UC019: Quản lý đánh giá sản phẩm
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC019 |  |
+| **Tên Use Case** | Quản lý đánh giá sản phẩm |  |
+| **Tác nhân chính** | Khách hàng |  |
+| **Tác nhân phụ** | Khách truy cập, Admin, Hệ thống |  |
+| **Mô tả** | Cho phép người dùng xem đánh giá sản phẩm; khách hàng có thể tạo, cập nhật hoặc xóa đánh giá của mình; Admin có thể xóa đánh giá vi phạm. |  |
+| **Sự kiện kích hoạt** | Người dùng mở tab đánh giá tại trang chi tiết sản phẩm hoặc chọn thao tác gửi/chỉnh sửa/xóa đánh giá. |  |
+| **Tiền điều kiện** | Sản phẩm tồn tại trong hệ thống; khách hàng phải đăng nhập nếu muốn gửi hoặc chỉnh sửa đánh giá. |  |
+| **Hậu điều kiện (Thành công)** | Danh sách đánh giá được hiển thị hoặc nội dung đánh giá được tạo/cập nhật/xóa thành công. |  |
+| **Hậu điều kiện (Thất bại)** | Không có thay đổi nào được lưu và hệ thống hiển thị thông báo lỗi phù hợp. |  |
+| **Luồng chính** | 1 | Người dùng truy cập trang chi tiết sản phẩm và mở khu vực đánh giá. |
+|  | 2 | Hệ thống hiển thị danh sách đánh giá, có thể lọc theo số sao. |
+|  | 3 | Khách hàng đăng nhập nhập số sao và nội dung đánh giá. |
+|  | 4 | Hệ thống lưu đánh giá mới hoặc cập nhật đánh giá hiện có. |
+|  | 5 | Hệ thống hiển thị lại danh sách đánh giá đã cập nhật. |
+| **Luồng thay thế** | 3a | Người dùng chưa đăng nhập → Hệ thống yêu cầu đăng nhập trước khi gửi đánh giá. |
+|  | 4a | Dữ liệu đánh giá không hợp lệ → Hệ thống hiển thị thông báo lỗi. |
+|  | 4b | Khách hàng hoặc Admin chọn xóa đánh giá → Hệ thống xóa đánh giá và cập nhật danh sách. |
+
+20. UC020: Hủy đơn hàng
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC020 |  |
+| **Tên Use Case** | Hủy đơn hàng |  |
+| **Tác nhân chính** | Khách hàng |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép khách hàng hủy đơn hàng của mình khi đơn còn ở trạng thái cho phép hủy. |  |
+| **Sự kiện kích hoạt** | Khách hàng chọn chức năng “Hủy đơn hàng” trên chi tiết đơn hàng. |  |
+| **Tiền điều kiện** | Khách hàng đã đăng nhập và đơn hàng tồn tại trong hệ thống. |  |
+| **Hậu điều kiện (Thành công)** | Trạng thái đơn hàng được chuyển sang “Cancelled”. |  |
+| **Hậu điều kiện (Thất bại)** | Đơn hàng giữ nguyên trạng thái hiện tại. |  |
+| **Luồng chính** | 1 | Khách hàng mở chi tiết đơn hàng. |
+|  | 2 | Khách hàng chọn thao tác hủy đơn. |
+|  | 3 | Hệ thống kiểm tra trạng thái hiện tại của đơn hàng. |
+|  | 4 | Hệ thống cập nhật trạng thái đơn sang “Cancelled”. |
+|  | 5 | Hệ thống hiển thị thông báo hủy đơn thành công. |
+| **Luồng thay thế** | 3a | Đơn hàng không tồn tại → Hệ thống hiển thị thông báo lỗi. |
+|  | 3b | Đơn hàng không còn ở trạng thái cho phép hủy → Hệ thống từ chối thao tác. |
+
+21. UC021: Mua ngay sản phẩm
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC021 |  |
+| **Tên Use Case** | Mua ngay sản phẩm |  |
+| **Tác nhân chính** | Khách hàng |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép khách hàng tạo đơn hàng trực tiếp từ một sản phẩm hoặc biến thể đang xem mà không cần thêm vào giỏ hàng trước. |  |
+| **Sự kiện kích hoạt** | Khách hàng nhấn nút “Mua ngay” tại trang chi tiết sản phẩm. |  |
+| **Tiền điều kiện** | Khách hàng đã đăng nhập và sản phẩm/biến thể còn hàng. |  |
+| **Hậu điều kiện (Thành công)** | Đơn hàng được tạo trực tiếp từ sản phẩm đã chọn. |  |
+| **Hậu điều kiện (Thất bại)** | Đơn hàng không được tạo. |  |
+| **Luồng chính** | 1 | Khách hàng xem chi tiết sản phẩm và chọn biến thể mong muốn. |
+|  | 2 | Khách hàng nhấn “Mua ngay”. |
+|  | 3 | Hệ thống hiển thị thông tin checkout cho sản phẩm đã chọn. |
+|  | 4 | Khách hàng xác nhận thông tin nhận hàng và thanh toán. |
+|  | 5 | Hệ thống tạo đơn hàng và trả kết quả checkout thành công. |
+| **Luồng thay thế** | 1a | Biến thể không hợp lệ hoặc hết hàng → Hệ thống thông báo lỗi. |
+|  | 4a | Khách hàng hủy thao tác → Hệ thống quay lại trang chi tiết sản phẩm. |
+
+22. UC022: Thanh toán QR
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC022 |  |
+| **Tên Use Case** | Thanh toán QR |  |
+| **Tác nhân chính** | Khách hàng |  |
+| **Tác nhân phụ** | Hệ thống, Hệ thống thanh toán |  |
+| **Mô tả** | Cho phép khách hàng thanh toán đơn hàng bằng QR và hệ thống đồng bộ trạng thái thanh toán từ cổng thanh toán. |  |
+| **Sự kiện kích hoạt** | Khách hàng chọn phương thức thanh toán QR khi checkout. |  |
+| **Tiền điều kiện** | Đơn hàng đã được tạo và hỗ trợ thanh toán QR. |  |
+| **Hậu điều kiện (Thành công)** | Thanh toán được xác nhận và trạng thái thanh toán/đơn hàng được cập nhật. |  |
+| **Hậu điều kiện (Thất bại)** | Thanh toán chưa hoàn tất hoặc bị từ chối. |  |
+| **Luồng chính** | 1 | Khách hàng chọn thanh toán QR cho đơn hàng. |
+|  | 2 | Hệ thống tạo giao dịch và hiển thị thông tin thanh toán QR. |
+|  | 3 | Khách hàng thực hiện quét mã và thanh toán trên ứng dụng ngân hàng/ví điện tử. |
+|  | 4 | Hệ thống thanh toán gửi kết quả về hệ thống qua webhook hoặc truy vấn trạng thái giao dịch. |
+|  | 5 | Hệ thống cập nhật trạng thái thanh toán thành công và phản hồi cho khách hàng. |
+| **Luồng thay thế** | 4a | Giao dịch chưa hoàn tất → Hệ thống tiếp tục giữ trạng thái chờ thanh toán. |
+|  | 4b | Cổng thanh toán trả lỗi hoặc dữ liệu không hợp lệ → Hệ thống hiển thị thông báo lỗi. |
+
+23. UC023: Xem popup khuyến mãi
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC023 |  |
+| **Tên Use Case** | Xem popup khuyến mãi |  |
+| **Tác nhân chính** | Khách truy cập, Khách hàng |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Hệ thống hiển thị popup khuyến mãi đang hoạt động trên trang khách hàng, có thể gắn với coupon hoặc sản phẩm cụ thể. |  |
+| **Sự kiện kích hoạt** | Người dùng truy cập trang chủ hoặc trang có hỗ trợ hiển thị popup khuyến mãi. |  |
+| **Tiền điều kiện** | Có popup đang hoạt động trong thời gian hiệu lực. |  |
+| **Hậu điều kiện (Thành công)** | Popup khuyến mãi được hiển thị đúng nội dung và liên kết. |  |
+| **Hậu điều kiện (Thất bại)** | Không có popup nào được hiển thị. |  |
+| **Luồng chính** | 1 | Người dùng truy cập trang chủ. |
+|  | 2 | Hệ thống kiểm tra popup khuyến mãi đang hoạt động. |
+|  | 3 | Hệ thống hiển thị hình ảnh, tiêu đề, mô tả và liên kết liên quan. |
+|  | 4 | Người dùng chọn đóng popup hoặc nhấn vào liên kết khuyến mãi. |
+| **Luồng thay thế** | 2a | Không có popup hợp lệ → Hệ thống không hiển thị popup. |
+|  | 3a | Hình ảnh hoặc liên kết không hợp lệ → Hệ thống bỏ qua popup và ghi nhận lỗi. |
+
+24. UC024: Xem sản phẩm liên quan và nổi bật
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC024 |  |
+| **Tên Use Case** | Xem sản phẩm liên quan và nổi bật |  |
+| **Tác nhân chính** | Khách truy cập, Khách hàng |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Hệ thống hiển thị danh sách sản phẩm liên quan, bán chạy hoặc mới nhất để gợi ý thêm cho người dùng. |  |
+| **Sự kiện kích hoạt** | Người dùng truy cập trang chủ, trang cửa hàng hoặc trang chi tiết sản phẩm. |  |
+| **Tiền điều kiện** | Hệ thống có dữ liệu sản phẩm phù hợp để đề xuất. |  |
+| **Hậu điều kiện (Thành công)** | Danh sách sản phẩm gợi ý được hiển thị. |  |
+| **Hậu điều kiện (Thất bại)** | Không hiển thị được danh sách gợi ý. |  |
+| **Luồng chính** | 1 | Người dùng truy cập trang có khu vực gợi ý sản phẩm. |
+|  | 2 | Hệ thống truy vấn danh sách sản phẩm liên quan, bán chạy hoặc mới nhất. |
+|  | 3 | Hệ thống hiển thị danh sách sản phẩm gợi ý. |
+|  | 4 | Người dùng chọn một sản phẩm để xem tiếp. |
+| **Luồng thay thế** | 2a | Không có dữ liệu phù hợp → Hệ thống hiển thị trạng thái trống. |
+|  | 2b | Truy vấn thất bại → Hệ thống hiển thị thông báo lỗi. |
+
+25. UC025: Quản lý thương hiệu
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC025 |  |
+| **Tên Use Case** | Quản lý thương hiệu |  |
+| **Tác nhân chính** | Admin |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép Admin thêm, chỉnh sửa, xóa và tìm kiếm thương hiệu sản phẩm. |  |
+| **Sự kiện kích hoạt** | Admin truy cập chức năng quản lý thương hiệu. |  |
+| **Tiền điều kiện** | Admin đã đăng nhập hệ thống. |  |
+| **Hậu điều kiện (Thành công)** | Dữ liệu thương hiệu được cập nhật trong hệ thống. |  |
+| **Hậu điều kiện (Thất bại)** | Dữ liệu thương hiệu không thay đổi. |  |
+| **Luồng chính** | 1 | Admin truy cập màn hình thương hiệu. |
+|  | 2 | Hệ thống hiển thị danh sách thương hiệu hiện có. |
+|  | 3 | Admin chọn thêm, sửa, xóa hoặc tìm kiếm thương hiệu. |
+|  | 4 | Hệ thống kiểm tra dữ liệu hợp lệ và lưu thay đổi. |
+|  | 5 | Hệ thống hiển thị kết quả cập nhật thành công. |
+| **Luồng thay thế** | 4a | Dữ liệu trùng hoặc không hợp lệ → Hệ thống hiển thị thông báo lỗi. |
+|  | 3a | Thương hiệu đang được tham chiếu không thể xóa → Hệ thống từ chối thao tác. |
+
+26. UC026: Quản lý thuộc tính sản phẩm
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC026 |  |
+| **Tên Use Case** | Quản lý thuộc tính sản phẩm |  |
+| **Tác nhân chính** | Admin |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép Admin quản lý danh sách thuộc tính sản phẩm dùng cho bộ lọc và cấu hình biến thể. |  |
+| **Sự kiện kích hoạt** | Admin truy cập chức năng quản lý thuộc tính. |  |
+| **Tiền điều kiện** | Admin đã đăng nhập hệ thống. |  |
+| **Hậu điều kiện (Thành công)** | Thuộc tính sản phẩm được thêm, sửa hoặc xóa thành công. |  |
+| **Hậu điều kiện (Thất bại)** | Không có thay đổi nào được lưu. |  |
+| **Luồng chính** | 1 | Admin mở màn hình quản lý thuộc tính. |
+|  | 2 | Hệ thống hiển thị danh sách thuộc tính hiện có. |
+|  | 3 | Admin chọn thao tác thêm, sửa, xóa hoặc tìm kiếm thuộc tính. |
+|  | 4 | Hệ thống kiểm tra tính hợp lệ của dữ liệu. |
+|  | 5 | Hệ thống lưu thay đổi và cập nhật danh sách. |
+| **Luồng thay thế** | 4a | Thuộc tính không hợp lệ hoặc trùng lặp → Hệ thống hiển thị lỗi. |
+|  | 3a | Thuộc tính đang được sử dụng không thể xóa → Hệ thống từ chối thao tác. |
+
+27. UC027: Quản lý biến thể sản phẩm
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC027 |  |
+| **Tên Use Case** | Quản lý biến thể sản phẩm |  |
+| **Tác nhân chính** | Admin |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép Admin thêm, chỉnh sửa, xóa và xem chi tiết biến thể của sản phẩm. |  |
+| **Sự kiện kích hoạt** | Admin thao tác trên màn hình quản lý sản phẩm hoặc biến thể. |  |
+| **Tiền điều kiện** | Admin đã đăng nhập và sản phẩm gốc tồn tại. |  |
+| **Hậu điều kiện (Thành công)** | Biến thể sản phẩm được cập nhật trong hệ thống. |  |
+| **Hậu điều kiện (Thất bại)** | Biến thể sản phẩm không thay đổi. |  |
+| **Luồng chính** | 1 | Admin chọn một sản phẩm cần quản lý biến thể. |
+|  | 2 | Hệ thống hiển thị danh sách biến thể hiện có. |
+|  | 3 | Admin thực hiện thêm, sửa hoặc xóa một biến thể. |
+|  | 4 | Hệ thống kiểm tra dữ liệu biến thể và lưu thay đổi. |
+|  | 5 | Hệ thống cập nhật lại danh sách biến thể. |
+| **Luồng thay thế** | 4a | Dữ liệu biến thể không hợp lệ → Hệ thống hiển thị lỗi. |
+|  | 3a | Biến thể không tồn tại hoặc không thể xóa → Hệ thống từ chối thao tác. |
+
+28. UC028: Quản lý mã giảm giá
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC028 |  |
+| **Tên Use Case** | Quản lý mã giảm giá |  |
+| **Tác nhân chính** | Admin |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép Admin tạo, cập nhật, xóa, xem chi tiết và tra cứu mã giảm giá. |  |
+| **Sự kiện kích hoạt** | Admin truy cập chức năng quản lý voucher/coupon. |  |
+| **Tiền điều kiện** | Admin đã đăng nhập hệ thống. |  |
+| **Hậu điều kiện (Thành công)** | Dữ liệu mã giảm giá được lưu và sẵn sàng áp dụng cho checkout. |  |
+| **Hậu điều kiện (Thất bại)** | Mã giảm giá không được thay đổi. |  |
+| **Luồng chính** | 1 | Admin mở màn hình quản lý mã giảm giá. |
+|  | 2 | Hệ thống hiển thị danh sách mã hiện có. |
+|  | 3 | Admin chọn thêm, sửa, xóa hoặc tìm kiếm mã giảm giá. |
+|  | 4 | Hệ thống kiểm tra điều kiện hiệu lực, mức giảm và giới hạn sử dụng. |
+|  | 5 | Hệ thống lưu dữ liệu và cập nhật danh sách mã. |
+| **Luồng thay thế** | 4a | Mã giảm giá không hợp lệ hoặc trùng mã → Hệ thống hiển thị lỗi. |
+|  | 3a | Mã giảm giá không tồn tại → Hệ thống thông báo lỗi. |
+
+29. UC029: Quản lý popup khuyến mãi
+
+| Thuộc tính | Nội dung |  |
+| ----- | ----- | :---- |
+| **Use Case ID** | UC029 |  |
+| **Tên Use Case** | Quản lý popup khuyến mãi |  |
+| **Tác nhân chính** | Admin |  |
+| **Tác nhân phụ** | Hệ thống |  |
+| **Mô tả** | Cho phép Admin tạo, cập nhật, xóa popup khuyến mãi, tải ảnh và liên kết popup với coupon hoặc sản phẩm cụ thể. |  |
+| **Sự kiện kích hoạt** | Admin truy cập chức năng quản lý popup khuyến mãi. |  |
+| **Tiền điều kiện** | Admin đã đăng nhập hệ thống. |  |
+| **Hậu điều kiện (Thành công)** | Popup khuyến mãi được lưu và có thể hiển thị trên giao diện khách hàng. |  |
+| **Hậu điều kiện (Thất bại)** | Popup không được thay đổi hoặc không thể kích hoạt. |  |
+| **Luồng chính** | 1 | Admin mở màn hình quản lý popup. |
+|  | 2 | Hệ thống hiển thị danh sách popup hiện có. |
+|  | 3 | Admin tạo mới hoặc chỉnh sửa popup, bao gồm nội dung, thời gian hiệu lực, ảnh và liên kết. |
+|  | 4 | Hệ thống tải ảnh popup lên kho lưu trữ nếu có. |
+|  | 5 | Hệ thống lưu popup và cập nhật trạng thái hiển thị. |
+| **Luồng thay thế** | 4a | Ảnh tải lên không hợp lệ → Hệ thống hiển thị lỗi. |
+|  | 3a | Popup không hợp lệ hoặc trùng thời gian/cấu hình → Hệ thống từ chối lưu. |
 
 ---
 
