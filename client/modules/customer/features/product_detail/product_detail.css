@@ -35,6 +35,7 @@ body {
 .text-muted { color: #999; }
 .text-uppercase { text-transform: uppercase; }
 .section-padding { padding: 60px 0; }
+.is-hidden { display: none !important; }
 
 /* PRODUCT LAYOUT */
 .product-layout { 

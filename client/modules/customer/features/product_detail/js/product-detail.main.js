@@ -46,6 +46,26 @@ const setProductLoading = (isLoading) => {
     breadcrumb.setAttribute("aria-busy", String(isLoading));
   }
 };
+const FILLED_STAR = "\u2605";
+const EMPTY_STAR = "\u2606";
+const PRODUCT_DETAIL_ROUTE_PATTERN = /\/product\/(\d+)/;
+
+const setProductLoading = (isLoading) => {
+  const skeleton = document.getElementById("productSkeleton");
+  const content = document.getElementById("productContent");
+  const breadcrumb = document.getElementById("productBreadcrumb");
+
+  skeleton?.classList.toggle("is-hidden", !isLoading);
+  content?.classList.toggle("is-hidden", isLoading);
+
+  if (content) {
+    content.setAttribute("aria-busy", String(isLoading));
+  }
+
+  if (breadcrumb) {
+    breadcrumb.setAttribute("aria-busy", String(isLoading));
+  }
+};
 
 const renderRelatedProducts = (products = []) => {
   const container = document.getElementById("relatedProductsGrid");
@@ -61,6 +81,7 @@ const renderRelatedProducts = (products = []) => {
       container.innerHTML = relatedItems
     .map(
       (item) => `
+      <a class="product-card-link" href="/product/${item.id}">
       <a class="product-card-link" href="/product/${item.id}">
         <article class="product-card-simple">
           <div class="p-img-box">
@@ -80,12 +101,16 @@ const renderRelatedProducts = (products = []) => {
 
 const loadProductFromDb = async () => {
   setProductLoading(true);
+  setProductLoading(true);
   try {
+    // Extract product ID from URL path (/product/:id) or query string (?id=123)
     // Extract product ID from URL path (/product/:id) or query string (?id=123)
     let productId = null;
 
     // Try URL path first: /product/123
-    const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
+    const pathMatch = window.location.pathname.match(
+      PRODUCT_DETAIL_ROUTE_PATTERN,
+    );
     if (pathMatch && pathMatch[1]) {
       productId = pathMatch[1];
     } else {
@@ -94,9 +119,17 @@ const loadProductFromDb = async () => {
       productId = params.get("id");
     }
 
-    if (!productId) return;
+    if (!productId) {
+      showToast("Product ID is missing.", "warning");
+      setProductLoading(false);
+      return;
+    }
 
     const product = await productApi.getById(productId);
+    if (!product) {
+      showToast("Product not found.", "warning");
+      return;
+    }
     if (!product) {
       showToast("Product not found.", "warning");
       return;
@@ -131,9 +164,9 @@ const loadProductFromDb = async () => {
     updateThumbnails(images);
 
     const isSmartphone = isSmartphoneCategory(product.category);
-    const colorVariation = document.querySelector(
-      ".p-variation:has(#colorOptions)",
-    );
+    const colorVariation = document
+      .getElementById("colorOptions")
+      ?.closest(".p-variation");
     const colorLabel = colorVariation?.querySelector(".v-label");
     if (colorLabel) {
       colorLabel.style.display = isSmartphone ? "block" : "none";
@@ -191,6 +224,8 @@ const loadProductFromDb = async () => {
   } catch (error) {
     console.error("Failed to load product:", error);
     showToast("Unable to load product details.", "error");
+  } finally {
+    setProductLoading(false);
   } finally {
     setProductLoading(false);
   }
@@ -349,6 +384,14 @@ const AVATAR_COLORS = [
   "#1ABC9C",
   "#E67E22",
   "#34495E",
+  "#E74C3C",
+  "#3498DB",
+  "#2ECC71",
+  "#F39C12",
+  "#9B59B6",
+  "#1ABC9C",
+  "#E67E22",
+  "#34495E",
 ];
 
 function getAvatarColor(name = "") {
@@ -367,6 +410,10 @@ function renderStars(rating = 0) {
     { length: 5 },
     (_, i) =>
       `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${FILLED_STAR}</span>`,
+  return Array.from(
+    { length: 5 },
+    (_, i) =>
+      `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${FILLED_STAR}</span>`,
   ).join("");
 }
 
@@ -378,9 +425,8 @@ function paintStarSelection(starIcons, rating) {
 
 function renderAverageStars(rating = 0) {
   const rounded = Math.round(rating);
-  return Array.from(
-    { length: 5 },
-    (_, index) => (index < rounded ? FILLED_STAR : EMPTY_STAR),
+  return Array.from({ length: 5 }, (_, index) =>
+    index < rounded ? FILLED_STAR : EMPTY_STAR,
   ).join("");
 }
 
@@ -394,9 +440,20 @@ function updateReviewSummary(summary = null) {
     4: Number(summary?.count4) || 0,
     5: Number(summary?.count5) || 0,
   };
+function updateReviewSummary(summary = null) {
+  const average = Number(summary?.averageRating) || 0;
+  const total = Number(summary?.totalReviews) || 0;
+  const ratingCounts = {
+    1: Number(summary?.count1) || 0,
+    2: Number(summary?.count2) || 0,
+    3: Number(summary?.count3) || 0,
+    4: Number(summary?.count4) || 0,
+    5: Number(summary?.count5) || 0,
+  };
   const averageRatingEl = document.getElementById("averageRating");
   const averageStarsEl = document.getElementById("averageStars");
   const reviewTotalEl = document.getElementById("reviewTotal");
+  const reviewCountEl = document.getElementById("reviewCount");
   const reviewCountEl = document.getElementById("reviewCount");
 
   if (averageRatingEl) averageRatingEl.textContent = average.toFixed(1);
@@ -436,10 +493,25 @@ function buildPaginationItems(currentPage, totalPages) {
   }
 
   if (currentPage >= totalPages - 2) {
-    return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    return [
+      1,
+      "...",
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
   }
 
-  return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+  return [
+    1,
+    "...",
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    "...",
+    totalPages,
+  ];
 }
 
 function renderReviewPagination(currentPage, totalPages) {
@@ -479,9 +551,19 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
     container.innerHTML =
       '<p class="review-empty">No reviews yet. Be the first to review!</p>';
     renderReviewPagination(1, 0);
+    container.innerHTML =
+      '<p class="review-empty">No reviews yet. Be the first to review!</p>';
+    renderReviewPagination(1, 0);
     return;
   }
 
+  container.innerHTML = reviews
+    .map((r) => {
+      const canEdit = currentUserId && r.userId === currentUserId;
+      const canDelete = canEdit || isAdmin;
+      const actions =
+        canEdit || canDelete
+          ? `
   container.innerHTML = reviews
     .map((r) => {
       const canEdit = currentUserId && r.userId === currentUserId;
@@ -494,13 +576,19 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
         ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Delete</button>` : ""}
       </div>`
           : "";
+        ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Edit</button>` : ""}
+        ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Delete</button>` : ""}
+      </div>`
+          : "";
 
+      return `
       return `
       <div class="review-item" data-review-id="${r.id}">
         ${renderLetterAvatar(r.userName)}
         <div class="review-body">
           <div class="stars">${renderStars(r.rating)}</div>
           <p class="review-meta">
+            <strong>${r.userName}</strong> - ${formatDate(r.createdAt)}
             <strong>${r.userName}</strong> - ${formatDate(r.createdAt)}
           </p>
           <p class="review-text">${r.comment}</p>
@@ -509,10 +597,14 @@ function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
       </div>`;
     })
     .join("");
+    })
+    .join("");
 }
 
 function getProductId() {
-  const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
+  const pathMatch = window.location.pathname.match(
+    PRODUCT_DETAIL_ROUTE_PATTERN,
+  );
   if (pathMatch) return Number(pathMatch[1]);
   return Number(new URLSearchParams(window.location.search).get("id"));
 }
@@ -522,6 +614,8 @@ const setupReviews = () => {
   if (!productId) return;
 
   let activeRating = null;
+  let currentPage = 1;
+  const reviewsPerPage = 5;
   let currentPage = 1;
   const reviewsPerPage = 5;
   const currentUser = authAPI.getUser();
@@ -549,8 +643,31 @@ const setupReviews = () => {
       renderReviewList(safeResponse.items || [], currentUserId, isAdmin);
       renderReviewPagination(currentPage, totalPages);
       updateReviewSummary(safeResponse.summary);
+      const response = await reviewAPI.getByProduct(productId, {
+        rating,
+        page: currentPage - 1,
+        size: reviewsPerPage,
+      });
+
+      const safeResponse = response || {};
+      const totalPages = Number(safeResponse.totalPages) || 0;
+
+      if (totalPages > 0 && currentPage > totalPages) {
+        currentPage = totalPages;
+        await loadReviews(rating);
+        return;
+      }
+
+      renderReviewList(safeResponse.items || [], currentUserId, isAdmin);
+      renderReviewPagination(currentPage, totalPages);
+      updateReviewSummary(safeResponse.summary);
     } catch {
       const container = document.getElementById("reviewList");
+      if (container)
+        container.innerHTML =
+          '<p class="review-empty">Failed to load reviews.</p>';
+      renderReviewPagination(1, 0);
+      updateReviewSummary(null);
       if (container)
         container.innerHTML =
           '<p class="review-empty">Failed to load reviews.</p>';
@@ -569,6 +686,7 @@ const setupReviews = () => {
       btn.classList.add("active");
       const val = btn.dataset.rating;
       activeRating = val === "all" ? null : Number(val);
+      currentPage = 1;
       currentPage = 1;
       loadReviews(activeRating);
     });
@@ -594,14 +712,17 @@ const setupReviews = () => {
     star.addEventListener("mouseenter", () => {
       const val = Number(star.dataset.value);
       paintStarSelection(starIcons, val);
+      paintStarSelection(starIcons, val);
     });
 
     star.addEventListener("mouseleave", () => {
+      paintStarSelection(starIcons, selectedRating);
       paintStarSelection(starIcons, selectedRating);
     });
 
     star.addEventListener("click", () => {
       selectedRating = Number(star.dataset.value);
+      paintStarSelection(starIcons, selectedRating);
       paintStarSelection(starIcons, selectedRating);
     });
   });
@@ -629,6 +750,7 @@ const setupReviews = () => {
         reviewForm.reset();
         selectedRating = 0;
         paintStarSelection(starIcons, selectedRating);
+        paintStarSelection(starIcons, selectedRating);
         loadReviews(activeRating);
       } catch {
         // error toast handled by request.js
@@ -637,6 +759,7 @@ const setupReviews = () => {
   }
 
   const reviewList = document.getElementById("reviewList");
+  const reviewPagination = document.getElementById("reviewPagination");
   const reviewPagination = document.getElementById("reviewPagination");
   if (reviewList) {
     reviewList.addEventListener("click", async (e) => {
@@ -662,11 +785,13 @@ const setupReviews = () => {
         if (!reviewItem) return;
 
         // Prevent duplicate inline forms
+        // Prevent duplicate inline forms
         if (reviewItem.querySelector(".inline-edit-form")) return;
 
         let editRating = oldRating;
         const starsHtml = Array.from({ length: 5 }, (_, i) => {
           const v = i + 1;
+          return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? FILLED_STAR : EMPTY_STAR}</span>`;
           return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? FILLED_STAR : EMPTY_STAR}</span>`;
         }).join("");
 
@@ -683,12 +808,15 @@ const setupReviews = () => {
         reviewItem.appendChild(form);
 
         // Star interaction inside inline form
+        // Star interaction inside inline form
         form.querySelectorAll(".star-icon-edit").forEach((s) => {
           s.addEventListener("click", () => {
             editRating = Number(s.dataset.value);
             form.querySelectorAll(".star-icon-edit").forEach((x) => {
               x.textContent =
-                Number(x.dataset.value) <= editRating ? FILLED_STAR : EMPTY_STAR;
+                Number(x.dataset.value) <= editRating
+                  ? FILLED_STAR
+                  : EMPTY_STAR;
             });
           });
         });
@@ -696,7 +824,28 @@ const setupReviews = () => {
         form
           .querySelector(".review-btn-cancel")
           .addEventListener("click", () => form.remove());
+        form
+          .querySelector(".review-btn-cancel")
+          .addEventListener("click", () => form.remove());
 
+        form
+          .querySelector(".review-btn-save")
+          .addEventListener("click", async () => {
+            const comment = form
+              .querySelector(".inline-edit-textarea")
+              .value.trim();
+            if (!comment) {
+              showToast("Comment cannot be empty.", "warning");
+              return;
+            }
+            try {
+              await reviewAPI.update(reviewId, { rating: editRating, comment });
+              showToast("Review updated.", "success");
+              loadReviews(activeRating);
+            } catch {
+              // handled by request.js
+            }
+          });
         form
           .querySelector(".review-btn-save")
           .addEventListener("click", async () => {
@@ -725,7 +874,11 @@ const setupReviews = () => {
       if (!target || target.disabled) return;
 
       const nextPage = Number(target.dataset.page);
-      if (!Number.isFinite(nextPage) || nextPage < 1 || nextPage === currentPage) {
+      if (
+        !Number.isFinite(nextPage) ||
+        nextPage < 1 ||
+        nextPage === currentPage
+      ) {
         return;
       }
 
@@ -739,13 +892,20 @@ const backToTopBtn = document.getElementById("backToTop");
 
 // Theo dõi sự kiện cuộn chuột
 window.onscroll = function () {
+window.onscroll = function () {
   scrollFunction();
 };
 
 function scrollFunction() {
   if (!backToTopBtn) return;
 
+  if (!backToTopBtn) return;
+
   // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
+  if (
+    document.body.scrollTop > 300 ||
+    document.documentElement.scrollTop > 300
+  ) {
   if (
     document.body.scrollTop > 300 ||
     document.documentElement.scrollTop > 300
@@ -759,8 +919,10 @@ function scrollFunction() {
 // Khi người dùng nhấn vào nút
 if (backToTopBtn) {
   backToTopBtn.onclick = function () {
+  backToTopBtn.onclick = function () {
     window.scrollTo({
       top: 0,
+      behavior: "smooth",
       behavior: "smooth",
     });
   };

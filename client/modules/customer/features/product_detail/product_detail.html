@@ -8,6 +8,7 @@
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -31,12 +32,15 @@
         style="font-size: 14px"
         id="productBreadcrumb"
       >
+      <p
+        class="breadcrumb text-muted"
+        style="font-size: 14px"
+        id="productBreadcrumb"
+      >
         <a href="/" style="color: #999; text-decoration: none">Home</a> >
         <span class="text-dark" id="breadcrumbName">iPhone 15 Pro Max</span>
       </p>
     </div>
-
-    
 
     <main class="container section-padding">
       <section id="productSkeleton" class="product-skeleton" aria-hidden="true">
@@ -134,35 +138,49 @@
           <div class="skeleton-line skeleton-line-section"></div>
           <div class="grid-5">
             <article class="product-card-simple">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
-            </div>
+            </article>
           </div>
         </section>
       </section>
 
-      <div id="productContent" class="product-content is-hidden" aria-busy="true">
+      <div
+        id="productContent"
+        class="product-content is-hidden"
+        aria-busy="true"
+      >
         <!-- Product Layout -->
         <div class="product-layout">
           <!-- Gallery -->
@@ -231,67 +249,87 @@
             <p class="selected-variant-label" id="selectedVariantLabel"></p>
             <p class="p-price" id="productPrice"></p>
             <p class="p-short-desc" id="productDescription"></p>
+          <!-- Product Details -->
+          <div class="product-details">
+            <h1 class="p-title" id="productTitle"></h1>
+            <p class="selected-variant-label" id="selectedVariantLabel"></p>
+            <p class="p-price" id="productPrice"></p>
+            <p class="p-short-desc" id="productDescription"></p>
 
-          <!-- Meta Info -->
-          <div class="p-meta">
-            <p>
-              <strong>Category:</strong> <span id="productCategory">Phone</span>
-            </p>
-          </div>
-
-          <!-- Color Options -->
-          <div class="p-variation">
-            <span class="v-label">COLOR</span>
-            <div class="v-options" id="colorOptions"></div>
-          </div>
-
-          <!-- Variant Options -->
-          <div class="p-variation">
-            <span class="v-label">VARIANT</span>
-            <div class="v-options" id="variantOptions">
-              <button class="v-btn active">Default</button>
+            <!-- Meta Info -->
+            <div class="p-meta">
+              <p>
+                <strong>Category:</strong>
+                <span id="productCategory">Phone</span>
+              </p>
             </div>
-          </div>
 
-          <!-- Stock -->
-          <p class="p-stock" id="productStock">2 in stock</p>
+            <!-- Color Options -->
+            <div class="p-variation">
+              <span class="v-label">COLOR</span>
+              <div class="v-options" id="colorOptions"></div>
+            </div>
 
-          <!-- Action Bar -->
-          <div class="action-bar">
-            <div class="qty-control">
-              <button
-                type="button"
-                onclick="window.changeQty(-1)"
-                aria-label="Decrease quantity"
-              >
-                -
-              </button>
-              <input
-                type="text"
-                id="quantity"
-                value="1"
-                readonly
-                aria-label="Quantity"
-              />
-              <button
-                type="button"
-                onclick="window.changeQty(1)"
-                aria-label="Increase quantity"
-              >
-                +
+            <!-- Variant Options -->
+            <div class="p-variation">
+              <span class="v-label">VARIANT</span>
+              <div class="v-options" id="variantOptions">
+                <button class="v-btn active">Default</button>
+              </div>
+            </div>
+
+            <!-- Stock -->
+            <p class="p-stock" id="productStock">2 in stock</p>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+              <div class="qty-control">
+                <button
+                  type="button"
+                  onclick="window.changeQty(-1)"
+                  aria-label="Decrease quantity"
+                >
+                  -
+                </button>
+                <input
+                  type="text"
+                  id="quantity"
+                  value="1"
+                  readonly
+                  aria-label="Quantity"
+                />
+                <button
+                  type="button"
+                  onclick="window.changeQty(1)"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+              <button class="btn-primary">ORDER NOW</button>
+              <button class="btn-secondary">ADD TO CART</button>
+              <button class="btn-wishlist" aria-label="Add to wishlist">
+                <i class="far fa-heart"></i>
               </button>
             </div>
-            <button class="btn-primary">ORDER NOW</button>
-            <button class="btn-secondary">ADD TO CART</button>
-            <button class="btn-wishlist" aria-label="Add to wishlist">
-              <i class="far fa-heart"></i>
-            </button>
-          </div>
 
-          <div class="divider-slanted"></div>
+            <div class="divider-slanted"></div>
+          </div>
         </div>
-      </div>
 
+        <!-- Tabs Section -->
+        <div class="tabs-section">
+          <div class="tabs-header">
+            <span class="tab-link active" data-tab="description"
+              >DESCRIPTION</span
+            >
+            <span class="tab-link" data-tab="information"
+              >ADDITIONAL INFORMATION</span
+            >
+            <span class="tab-link" data-tab="reviews"
+              >REVIEWS (<span id="reviewCount">0</span>)</span
+            >
+          </div>
         <!-- Tabs Section -->
         <div class="tabs-section">
           <div class="tabs-header">
@@ -314,282 +352,293 @@
                 <div id="attributeTableContainer"></div>
               </div>
             </div>
+          <!-- Tab Content -->
+          <div class="tabs-content">
+            <!-- Description Tab -->
+            <div class="tab-pane active" id="tab-description">
+              <div class="attributes-wrapper">
+                <div id="attributeTableContainer"></div>
+              </div>
+            </div>
 
             <!-- Information Tab -->
             <div class="tab-pane" id="tab-information" style="display: none">
               <h4>Customer Information Privacy Policy</h4>
+            <!-- Information Tab -->
+            <div class="tab-pane" id="tab-information" style="display: none">
+              <h4>Customer Information Privacy Policy</h4>
 
-            <h5>1. Purpose of Information Collection</h5>
-            <p>
-              TechGadget is committed to protecting customer information. We may
-              collect basic personal information such as name, phone number,
-              email address, shipping address, and purchase history. This
-              information is used to:
-            </p>
-            <ul>
-              <li>Process and confirm customer orders</li>
-              <li>Provide customer support</li>
-              <li>Deliver products and update order status</li>
-              <li>
-                Send promotions and special offers (with customer consent)
-              </li>
-              <li>Improve our services and shopping experience</li>
-            </ul>
+              <h5>1. Purpose of Information Collection</h5>
+              <p>
+                TechGadget is committed to protecting customer information. We
+                may collect basic personal information such as name, phone
+                number, email address, shipping address, and purchase history.
+                This information is used to:
+              </p>
+              <ul>
+                <li>Process and confirm customer orders</li>
+                <li>Provide customer support</li>
+                <li>Deliver products and update order status</li>
+                <li>
+                  Send promotions and special offers (with customer consent)
+                </li>
+                <li>Improve our services and shopping experience</li>
+              </ul>
 
-            <h5>2. Use of Information</h5>
-            <p>
-              Customer information is used only within TechGadget and trusted
-              delivery partners for shipping purposes. We commit to:
-            </p>
-            <ul>
-              <li>
-                Not selling or sharing customer information with third parties
-              </li>
-              <li>Only providing information when required by law</li>
-              <li>Using data only for the purposes stated above</li>
-            </ul>
+              <h5>2. Use of Information</h5>
+              <p>
+                Customer information is used only within TechGadget and trusted
+                delivery partners for shipping purposes. We commit to:
+              </p>
+              <ul>
+                <li>
+                  Not selling or sharing customer information with third parties
+                </li>
+                <li>Only providing information when required by law</li>
+                <li>Using data only for the purposes stated above</li>
+              </ul>
 
-            <h5>3. Data Storage</h5>
-            <p>
-              Customer information will be stored until the customer requests
-              deletion or automatically removed after 5 years from the last
-              interaction. Customers can request data deletion at any time.
-            </p>
+              <h5>3. Data Storage</h5>
+              <p>
+                Customer information will be stored until the customer requests
+                deletion or automatically removed after 5 years from the last
+                interaction. Customers can request data deletion at any time.
+              </p>
 
-            <h5>4. Company Information</h5>
-            <p>
-              <strong>TechGadget Vietnam Co., Ltd</strong><br />
-              Address: 123 XYZ Street, Binh Thanh District, Ho Chi Minh City,
-              Vietnam<br />
-              Email: support@techgadget.vn<br />
-              Hotline: 1900 1234 (8:00 - 22:00 daily)
-            </p>
+              <h5>4. Company Information</h5>
+              <p>
+                <strong>TechGadget Vietnam Co., Ltd</strong><br />
+                Address: 123 XYZ Street, Binh Thanh District, Ho Chi Minh City,
+                Vietnam<br />
+                Email: support@techgadget.vn<br />
+                Hotline: 1900 1234 (8:00 - 22:00 daily)
+              </p>
 
-            <h5>5. Access and Update Information</h5>
-            <p>Customers can review or update their personal information by:</p>
-            <ul>
-              <li>Logging into their TechGadget account</li>
-              <li>Contacting customer support via email or hotline</li>
-              <li>Submitting a request through the support form</li>
-            </ul>
+              <h5>5. Access and Update Information</h5>
+              <p>
+                Customers can review or update their personal information by:
+              </p>
+              <ul>
+                <li>Logging into their TechGadget account</li>
+                <li>Contacting customer support via email or hotline</li>
+                <li>Submitting a request through the support form</li>
+              </ul>
 
-            <h5>6. Security Commitment</h5>
-            <p>
-              TechGadget uses modern security measures to protect customer data,
-              including SSL encryption, firewall systems, and regular data
-              backups.
-            </p>
+              <h5>6. Security Commitment</h5>
+              <p>
+                TechGadget uses modern security measures to protect customer
+                data, including SSL encryption, firewall systems, and regular
+                data backups.
+              </p>
 
-            <h5>7. Security Incident Handling</h5>
-            <p>
-              If a security issue occurs, TechGadget will notify affected
-              customers and work with authorities to resolve the issue and
-              improve system security.
-            </p>
+              <h5>7. Security Incident Handling</h5>
+              <p>
+                If a security issue occurs, TechGadget will notify affected
+                customers and work with authorities to resolve the issue and
+                improve system security.
+              </p>
 
-            <p>
-              <em>
-                This privacy policy was last updated on January 1, 2026.
-                TechGadget may update this policy and will notify customers
-                through the website or email.
-              </em>
-            </p>
+              <p>
+                <em>
+                  This privacy policy was last updated on January 1, 2026.
+                  TechGadget may update this policy and will notify customers
+                  through the website or email.
+                </em>
+              </p>
             </div>
 
             <!-- Reviews Tab -->
             <div class="tab-pane" id="tab-reviews" style="display: none">
               <div class="reviews-wrapper">
-              <div class="review-top-grid">
-                <div class="review-summary">
-                  <p class="review-score-label">Product Rating</p>
-                  <div class="review-score-card">
-                    <h2 id="averageRating">0.0</h2>
-                    <div class="avg-stars" id="averageStars">
-                      ★★★★★
+                <div class="review-top-grid">
+                  <div class="review-summary">
+                    <p class="review-score-label">Product Rating</p>
+                    <div class="review-score-card">
+                      <h2 id="averageRating">0.0</h2>
+                      <div class="avg-stars" id="averageStars">★★★★★</div>
+                      <p class="review-total">
+                        <span id="reviewTotal">0</span> reviews
+                      </p>
                     </div>
-                    <p class="review-total">
-                      <span id="reviewTotal">0</span> reviews
+
+                    <div class="rating-breakdown">
+                      <div class="rating-row">
+                        <span>5 ★</span>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar5"></div>
+                        </div>
+                        <span id="count5">0</span>
+                      </div>
+                      <div class="rating-row">
+                        <span>4 ★</span>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar4"></div>
+                        </div>
+                        <span id="count4">0</span>
+                      </div>
+                      <div class="rating-row">
+                        <span>3 ★</span>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar3"></div>
+                        </div>
+                        <span id="count3">0</span>
+                      </div>
+                      <div class="rating-row">
+                        <span>2 ★</span>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar2"></div>
+                        </div>
+                        <span id="count2">0</span>
+                      </div>
+                      <div class="rating-row">
+                        <span>1 ★</span>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar1"></div>
+                        </div>
+                        <span id="count1">0</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="review-list-panel">
+                    <!-- Star Filter -->
+                    <div class="review-filter" id="reviewFilter">
+                      <button class="filter-btn active" data-rating="all">
+                        All
+                      </button>
+                      <button class="filter-btn" data-rating="5">5 ★</button>
+                      <button class="filter-btn" data-rating="4">4 ★</button>
+                      <button class="filter-btn" data-rating="3">3 ★</button>
+                      <button class="filter-btn" data-rating="2">2 ★</button>
+                      <button class="filter-btn" data-rating="1">1 ★</button>
+                    </div>
+
+                    <!-- Dynamic Review List -->
+                    <div id="reviewList">
+                      <p class="review-empty">Loading reviews...</p>
+                    </div>
+                    <div class="review-pagination" id="reviewPagination"></div>
+                  </div>
+                </div>
+
+                <!-- Add Review Section -->
+                <div class="add-review-section">
+                  <h3 class="section-title-slanted">Write a Review</h3>
+
+                  <!-- Shown when NOT logged in -->
+                  <div id="reviewLoginPrompt" style="display: none">
+                    <p class="form-note">
+                      You must be logged in to submit a review.
                     </p>
+                    <a
+                      href="/login"
+                      class="btn-primary text-uppercase review-login-btn"
+                    >
+                      Login to review
+                    </a>
                   </div>
 
-                  <div class="rating-breakdown">
-                    <div class="rating-row">
-                      <span>5 ★</span>
-                      <div class="rating-bar">
-                        <div class="rating-bar-fill" id="bar5"></div>
+                  <!-- Shown when logged in -->
+                  <div id="reviewFormWrapper">
+                    <form class="review-form" id="reviewForm">
+                      <div class="rating-input">
+                        <span>Your rating *</span>
+                        <div class="stars-input" id="ratingStars">
+                          <span class="star-icon" data-value="1">
+                            <svg
+                              viewBox="0 0 17 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                stroke-linejoin="round"
+                              ></path>
+                            </svg>
+                          </span>
+
+                          <span class="star-icon" data-value="2">
+                            <svg
+                              viewBox="0 0 17 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                stroke-linejoin="round"
+                              ></path>
+                            </svg>
+                          </span>
+
+                          <span class="star-icon" data-value="3">
+                            <svg
+                              viewBox="0 0 17 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                stroke-linejoin="round"
+                              ></path>
+                            </svg>
+                          </span>
+
+                          <span class="star-icon" data-value="4">
+                            <svg
+                              viewBox="0 0 17 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                stroke-linejoin="round"
+                              ></path>
+                            </svg>
+                          </span>
+
+                          <span class="star-icon" data-value="5">
+                            <svg
+                              viewBox="0 0 17 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                stroke-linejoin="round"
+                              ></path>
+                            </svg>
+                          </span>
+                        </div>
                       </div>
-                      <span id="count5">0</span>
-                    </div>
-                    <div class="rating-row">
-                      <span>4 ★</span>
-                      <div class="rating-bar">
-                        <div class="rating-bar-fill" id="bar4"></div>
-                      </div>
-                      <span id="count4">0</span>
-                    </div>
-                    <div class="rating-row">
-                      <span>3 ★</span>
-                      <div class="rating-bar">
-                        <div class="rating-bar-fill" id="bar3"></div>
-                      </div>
-                      <span id="count3">0</span>
-                    </div>
-                    <div class="rating-row">
-                      <span>2 ★</span>
-                      <div class="rating-bar">
-                        <div class="rating-bar-fill" id="bar2"></div>
-                      </div>
-                      <span id="count2">0</span>
-                    </div>
-                    <div class="rating-row">
-                      <span>1 ★</span>
-                      <div class="rating-bar">
-                        <div class="rating-bar-fill" id="bar1"></div>
-                      </div>
-                      <span id="count1">0</span>
-                    </div>
+
+                      <textarea
+                        id="reviewText"
+                        placeholder="Write your review here..."
+                        rows="5"
+                        required
+                      ></textarea>
+
+                      <button type="submit" class="btn-primary text-uppercase">
+                        SUBMIT REVIEW
+                      </button>
+                    </form>
                   </div>
                 </div>
-
-                <div class="review-list-panel">
-                  <!-- Star Filter -->
-                  <div class="review-filter" id="reviewFilter">
-                    <button class="filter-btn active" data-rating="all">
-                      All
-                    </button>
-                    <button class="filter-btn" data-rating="5">5 ★</button>
-                    <button class="filter-btn" data-rating="4">4 ★</button>
-                    <button class="filter-btn" data-rating="3">3 ★</button>
-                    <button class="filter-btn" data-rating="2">2 ★</button>
-                    <button class="filter-btn" data-rating="1">1 ★</button>
-                  </div>
-
-                  <!-- Dynamic Review List -->
-                  <div id="reviewList">
-                    <p class="review-empty">Loading reviews...</p>
-                  </div>
-                  <div class="review-pagination" id="reviewPagination"></div>
-                </div>
-              </div>
-
-              <!-- Add Review Section -->
-              <div class="add-review-section">
-                <h3 class="section-title-slanted">Write a Review</h3>
-
-                <!-- Shown when NOT logged in -->
-                <div id="reviewLoginPrompt" style="display: none">
-                  <p class="form-note">
-                    You must be logged in to submit a review.
-                  </p>
-                  <a
-                    href="/login"
-                    class="btn-primary text-uppercase review-login-btn"
-                  >
-                    Login to review
-                  </a>
-                </div>
-
-                <!-- Shown when logged in -->
-                <div id="reviewFormWrapper">
-                  <form class="review-form" id="reviewForm">
-                    <div class="rating-input">
-                      <span>Your rating *</span>
-                      <div class="stars-input" id="ratingStars">
-                        <span class="star-icon" data-value="1">
-                          <svg
-                            viewBox="0 0 17 15"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
-                              fill="currentColor"
-                              stroke="currentColor"
-                              stroke-width="0.5"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </span>
-
-                        <span class="star-icon" data-value="2">
-                          <svg
-                            viewBox="0 0 17 15"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
-                              fill="currentColor"
-                              stroke="currentColor"
-                              stroke-width="0.5"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </span>
-
-                        <span class="star-icon" data-value="3">
-                          <svg
-                            viewBox="0 0 17 15"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
-                              fill="currentColor"
-                              stroke="currentColor"
-                              stroke-width="0.5"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </span>
-
-                        <span class="star-icon" data-value="4">
-                          <svg
-                            viewBox="0 0 17 15"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
-                              fill="currentColor"
-                              stroke="currentColor"
-                              stroke-width="0.5"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </span>
-
-                        <span class="star-icon" data-value="5">
-                          <svg
-                            viewBox="0 0 17 15"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M7.6939 2.10179C8.02403 1.43287 8.97789 1.43287 9.30802 2.10179L10.8291 5.18384L14.2304 5.67807C14.9685 5.78534 15.2633 6.69251 14.7291 7.2132L12.268 9.61224L12.849 12.9997C12.9751 13.735 12.2034 14.2956 11.5431 13.9485L8.50096 12.3491L5.45879 13.9485C4.79853 14.2956 4.02684 13.735 4.15294 12.9997L4.73394 9.61224L2.27277 7.2132C1.73861 6.69251 2.03336 5.78534 2.77156 5.67807L6.17281 5.18384L7.6939 2.10179Z"
-                              fill="currentColor"
-                              stroke="currentColor"
-                              stroke-width="0.5"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-
-                    <textarea
-                      id="reviewText"
-                      placeholder="Write your review here..."
-                      rows="5"
-                      required
-                    ></textarea>
-
-                    <button type="submit" class="btn-primary text-uppercase">
-                      SUBMIT REVIEW
-                    </button>
-                  </form>
-                </div>
-              </div>
               </div>
             </div>
           </div>
@@ -600,7 +649,14 @@
           <h3 class="section-title-slanted">RELATED ITEMS</h3>
           <div class="grid-5" id="relatedProductsGrid"></div>
         </section>
+        <!-- Related Products -->
+        <section class="related-products">
+          <h3 class="section-title-slanted">RELATED ITEMS</h3>
+          <div class="grid-5" id="relatedProductsGrid"></div>
+        </section>
 
+        <!-- Customer Reviews Grid -->
+      </div>
         <!-- Customer Reviews Grid -->
       </div>
     </main>
@@ -613,6 +669,8 @@
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
     <button id="backToTop" title="Lên đầu trang">
+      <span class="arrow"></span>
+    </button>
       <span class="arrow"></span>
     </button>
   </body>
