@@ -1043,102 +1043,6 @@ body {
     color: var(--accent);
 }
 
-/* RESPONSIVE */
-@media (max-width: 992px) {
-    .product-layout {
-        flex-direction: column;
-    }
-    
-    .product-gallery,
-    .product-details {
-        width: 100%;
-    }
-    
-    .grid-5 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .footer-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .product-gallery {
-        flex-direction: column;
-    }
-
-    .gallery-top {
-        flex-direction: column;
-        gap: 16px;
-    }
-    
-    .thumbnail-vertical {
-        flex-direction: row;
-        justify-content: center;
-    }
-    
-    .tabs-header {
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    
-    .action-bar {
-        justify-content: center;
-    }
-    
-    .grid-2-cols {
-        grid-template-columns: 1fr;
-    }
-    
-    .grid-3 {
-        grid-template-columns: 1fr;
-    }
-
-    .review-top-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .review-summary,
-    .review-list-panel,
-    .add-review-section {
-        padding: 22px;
-    }
-    
-    .add-review-section {
-        padding: 25px;
-    }
-}
-
-@media (max-width: 600px) {
-    .grid-5 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    
-    .footer-info p {
-        margin: 15px auto;
-    }
-    
-    .review-item {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .thumbnail-vertical img {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .p-title {
-        font-size: 28px;
-    }
-}
 
 #backToTop {
   /* Vị trí cố định */
@@ -1342,3 +1246,246 @@ body {
 }
 
 .inline-edit-btns { display: flex; gap: 8px; }
+
+/* --- RESPONSIVE CHO MOBILE (Dưới 768px) --- */
+@media (max-width: 768px) {
+    .container {
+        width: 95%; /* Tăng không gian hiển thị trên màn hình hẹp */
+    }
+
+    /* 1. Chuyển Layout chính sang 1 cột */
+    .product-layout {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .product-gallery, 
+    .product-details {
+        width: 100%;
+    }
+
+    /* 2. Điều chỉnh Gallery ảnh */
+    .gallery-top {
+        flex-direction: column-reverse; /* Đưa ảnh nhỏ xuống dưới ảnh lớn */
+        gap: 15px;
+    }
+
+    .thumbnail-vertical {
+        flex-direction: row; /* Chuyển ảnh nhỏ từ dọc sang ngang */
+        overflow-x: auto; /* Cho phép vuốt ngang nếu nhiều ảnh */
+        padding-bottom: 5px;
+        justify-content: flex-start;
+    }
+
+    .thumbnail-vertical img {
+        width: 70px;
+        height: 70px;
+        flex-shrink: 0; /* Không cho ảnh bị ép nhỏ lại */
+    }
+
+    /* 3. Điều chỉnh tiêu đề và giá */
+    .p-title {
+        font-size: 24px; /* Giảm cỡ chữ tiêu đề */
+        margin-top: 10px;
+    }
+
+    .p-price {
+        font-size: 22px;
+    }
+
+    /* 4. Tối ưu Highlight Cards (Tiện ích) */
+    .product-highlights {
+        grid-template-columns: 1fr; /* Mỗi tiện ích 1 dòng */
+        gap: 10px;
+    }
+
+    /* 5. Action Bar (Nút mua hàng) */
+    .action-bar {
+        position: fixed; /* Ghim nút mua hàng dưới cùng màn hình (tùy chọn) */
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        padding: 10px;
+        margin: 0;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        justify-content: space-between;
+    }
+
+    /* Nếu không muốn ghim (sticky), bỏ đoạn position: fixed ở trên đi */
+    .action-bar .btn-primary, 
+    .action-bar .btn-secondary {
+        flex: 1;
+        padding: 0 15px;
+        font-size: 12px;
+    }
+
+    .qty-control {
+        height: 40px;
+    }
+
+    /* 6. Tabs Section */
+    .tabs-header {
+        gap: 20px;
+        overflow-x: auto;
+        justify-content: flex-start;
+        white-space: nowrap;
+        padding-bottom: 10px;
+    }
+
+    .tab-link {
+        font-size: 12px;
+    }
+
+    /* 7. Review Section */
+    .review-top-grid {
+        grid-template-columns: 1fr; /* Summary lên trên, List xuống dưới */
+    }
+
+    .review-summary {
+        text-align: center;
+    }
+
+    .rating-row {
+        grid-template-columns: 40px 1fr 35px;
+    }
+
+    .review-item {
+        flex-direction: column; /* Avatar lên trên nội dung review */
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Tránh nội dung bị đè bởi nút ghim dưới cùng */
+    body {
+        padding-bottom: 80px; 
+    }
+}
+
+/* Cho màn hình cực nhỏ (iPhone SE,...) */
+@media (max-width: 480px) {
+    .p-title {
+        font-size: 20px;
+    }
+    .action-bar .btn-wishlist {
+        display: none; /* Ẩn wishlist nếu quá chật */
+    }
+}
+
+/* --- RESPONSIVE CHO REVIEWS & RELATED ITEMS (Mobile < 768px) --- */
+@media (max-width: 768px) {
+    
+    /* 1. Phần Review (Đánh giá) */
+    .review-top-grid {
+        grid-template-columns: 1fr; /* Đưa bảng điểm lên trên, danh sách review xuống dưới */
+        gap: 20px;
+    }
+
+    .review-summary {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .review-score-card h2 {
+        font-size: 48px; /* Giảm cỡ chữ điểm số một chút */
+    }
+
+    .rating-row {
+        grid-template-columns: 45px 1fr 35px; /* Thu gọn các thanh bar */
+        gap: 8px;
+    }
+
+    .review-list-panel {
+        padding: 15px;
+    }
+
+    .review-item {
+        flex-direction: column; /* Avatar nằm trên nội dung cho thoáng */
+        align-items: flex-start;
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .letter-avatar {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .review-filter {
+        gap: 6px;
+        justify-content: center; /* Căn giữa bộ lọc sao cho dễ bấm */
+    }
+
+    .filter-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    /* 2. Phần Related Items (Sản phẩm liên quan) */
+    .related-products {
+        padding-top: 40px;
+    }
+
+    .grid-5 {
+        display: grid;
+        /* Chuyển sang 2 cột thay vì 5 cột như PC */
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px;
+    }
+
+    /* Tùy chọn: Nếu bạn muốn Related Items dạng VUỐT NGANG (Scroll ngang) 
+       thì dùng đoạn code này thay cho grid-5 ở trên:
+    */
+    /*
+    .grid-5 {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding-bottom: 15px;
+        scroll-snap-type: x mandatory;
+    }
+    .grid-5 > div { 
+        min-width: 160px; 
+        scroll-snap-align: start;
+    }
+    */
+
+    .section-title-slanted {
+        font-size: 18px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* 3. Form viết Review */
+    .add-review-section {
+        padding: 20px;
+    }
+
+    .stars-input {
+        gap: 5px;
+    }
+
+    .stars-input .star-icon svg {
+        width: 25px; /* Tăng kích thước sao cho dễ chạm bằng tay */
+        height: 25px;
+    }
+
+    #reviewText {
+        font-size: 16px; /* Tránh iOS tự động zoom vào input khi gõ */
+    }
+}
+
+/* Màn hình siêu nhỏ */
+@media (max-width: 480px) {
+    .grid-5 {
+        grid-template-columns: repeat(2, 1fr); /* Giữ 2 cột nhưng thu nhỏ gap */
+        gap: 10px;
+    }
+    
+    .review-score-card h2 {
+        font-size: 40px;
+    }
+}
+

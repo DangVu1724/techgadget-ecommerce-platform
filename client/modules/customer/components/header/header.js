@@ -34,7 +34,7 @@ if (searchInput) {
     if (searchInput.value.trim() === '') {
       const history = getSearchHistory();
       if (history.length > 0) {
-        let html = '<div class="history-header">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+        let html = '<div class="history-header">History</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
         suggestionsDiv.innerHTML = html;
         suggestionsDiv.classList.add("active");
       }
@@ -52,7 +52,7 @@ if (searchInput) {
         // Show history if empty
         const history = getSearchHistory();
         if (history.length > 0) {
-          let html = '<div class="history-header">Lịch sử tìm kiếm</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
+          let html = '<div class="history-header">History</div>' + history.map(item => `<div class="suggestion-item history-item" data-keyword="${escapeHtml(item)}"><i class="fas fa-history"></i><span>${escapeHtml(item)}</span></div>`).join('');
           suggestionsDiv.innerHTML = html;
           suggestionsDiv.classList.add("active");
         } else {
@@ -106,7 +106,7 @@ async function loadSuggestions(keyword) {
 
     if (!products.length) {
       suggestionsDiv.innerHTML =
-        '<div class="no-suggestions">Không tìm thấy sản phẩm</div>';
+        '<div class="no-suggestions">No products found</div>';
       suggestionsDiv.classList.add("active");
       return;
     }
@@ -148,7 +148,7 @@ async function loadSuggestions(keyword) {
   } catch (error) {
     console.error("Error loading suggestions:", error);
     suggestionsDiv.innerHTML =
-      '<div class="no-suggestions">Lỗi khi tìm kiếm</div>';
+      '<div class="no-suggestions">Error occurred while searching</div>';
     suggestionsDiv.classList.add("active");
   }
 }

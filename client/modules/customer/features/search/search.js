@@ -29,7 +29,7 @@ const elements = {
 };
 
 const formatPrice = (value) => {
-  if (!value || isNaN(value)) return "Liên hệ";
+  if (!value || isNaN(value)) return "Contact Us";
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -91,7 +91,7 @@ async function loadProducts() {
     renderPagination(response?.totalPages || 1);
   } catch (error) {
     console.error("Error loading search products:", error);
-    showErrorMessage("Lỗi khi tải sản phẩm. Vui lòng thử lại.");
+    showErrorMessage("Error loading products. Please try again.");
   } finally {
     elements.loading.style.display = "none";
   }
@@ -118,7 +118,7 @@ function renderProducts(products) {
           <img src="${image}" alt="${escapeHtml(product.name || "Product")}" loading="lazy" />
           <div class="product-overlay">
             <button class="btn-quick-view" data-product-id="${product.id}">
-              <i class="fas fa-eye"></i> Xem chi tiết
+              <i class="fas fa-eye"></i> Details
             </button>
           </div>
         </div>
@@ -129,7 +129,7 @@ function renderProducts(products) {
           <p class="product-desc">${escapeHtml(description)}</p>
           <div class="product-price">${priceHtml}</div>
           <button class="btn-add-cart" data-product-id="${product.id}">
-            <i class="fas fa-shopping-bag"></i> Thêm vào giỏ
+            <i class="fas fa-shopping-bag"></i> Add to Cart
           </button>
         </div>
       </div>
@@ -162,7 +162,7 @@ function renderPagination(totalPages) {
 
   let html =
     state.currentPage > 0
-      ? `<button class="pagination-btn" data-page="${state.currentPage - 1}">Trang trước</button>`
+      ? `<button class="pagination-btn" data-page="${state.currentPage - 1}">Previous</button>`
       : "";
 
   for (let page = 0; page < totalPages; page += 1) {
@@ -171,7 +171,7 @@ function renderPagination(totalPages) {
 
   html +=
     state.currentPage < totalPages - 1
-      ? `<button class="pagination-btn" data-page="${state.currentPage + 1}">Trang sau</button>`
+      ? `<button class="pagination-btn" data-page="${state.currentPage + 1}">Next</button>`
       : "";
 
   elements.pagination.innerHTML = html;
@@ -224,8 +224,8 @@ function getProductDescription(product) {
   if (product.categoryName && product.brandName) {
     return `${product.brandName} - ${product.categoryName}`;
   }
-  if (product.categoryName) return `Danh mục: ${product.categoryName}`;
-  return "Sản phẩm công nghệ chính hãng, bảo hành tốt.";
+  if (product.categoryName) return `Category: ${product.categoryName}`;
+  return "Genuine tech products with good warranty.";
 }
 
 // Lấy thẻ button
@@ -262,9 +262,9 @@ function escapeHtml(text) {
 function showErrorMessage(message) {
   elements.emptyState.innerHTML = `
     <i class="fas fa-exclamation-triangle"></i>
-    <h3>Lỗi</h3>
+    <h3>Error</h3>
     <p>${message}</p>
-    <a href="/shop" class="btn-back">Quay lại cửa hàng</a>
+    <a href="/shop" class="btn-back">Back to Shop</a>
   `;
   elements.emptyState.style.display = "flex";
 }

@@ -735,30 +735,7 @@ letter-spacing:2px;
   transform: scale(1.05);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .promo-container {
-    grid-template-columns: 1fr;
-    padding: 35px;
-    gap: 30px;
-  }
 
-  .promo-image {
-    min-height: 280px;
-  }
-
-  .promo-text h2 {
-    font-size: 32px;
-  }
-
-  .promo-text p {
-    font-size: 14px;
-  }
-
-  .promo-actions {
-    flex-wrap: wrap;
-  }
-}
 
 
 .newsletter{
@@ -1031,44 +1008,9 @@ cursor:pointer;
     color: inherit;
 }
 
-@media (max-width: 768px) {
-    .promo-popup {
-        max-width: 100%;
-    }
 
-    .promo-popup-media {
-        max-height: 320px;
-    }
-}
 
-/* Responsive */
-@media (min-width: 768px) {
-  .promo-video {
-    height: 400px;
-  }
-}
 
-/* RESPONSIVE */
-
-@media(max-width:768px){
-
-    .grid-4,
-    .grid-5,
-    .grid-6,
-    .grid-3{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:768px){
-
-.footer-grid{
-    grid-template-columns:repeat(2,1fr);
-    gap:30px;
-}
-
-}
 #backToTop {
   /* Vị trí cố định */
   position: fixed;
@@ -1107,4 +1049,163 @@ cursor:pointer;
   transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
   -webkit-transform: rotate(-135deg);
   margin-top: 5px;
+}
+
+/* --- RESPONSIVE TỐI ƯU CHO HOME PAGE (Mobile) --- */
+@media (max-width: 768px) {
+    /* 1. Tối ưu Hero Slider */
+    .slider-container {
+        height: 300px; /* Giảm chiều cao banner */
+    }
+
+    .slide-content {
+        left: 5%;
+        max-width: 80%;
+    }
+
+    .slide-content h2 {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .slide-content p {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .btn-shop {
+        padding: 10px 25px;
+        font-size: 13px;
+    }
+
+    /* 2. Biến Grid thành dạng Cuộn ngang (Scrollable) */
+    /* Áp dụng cho Categories, Best Selling, New Items */
+    #categoryList, 
+    #bestSellingProductList, 
+    #newProductList {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding: 10px 5px 20px;
+        scrollbar-width: none; /* Ẩn scrollbar trên Firefox */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Ẩn thanh cuộn trên Chrome/Safari */
+    #categoryList::-webkit-scrollbar,
+    #bestSellingProductList::-webkit-scrollbar,
+    #newProductList::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Đảm bảo các thẻ con không bị co lại */
+    .cat-card {
+        flex: 0 0 140px; /* Cố định độ rộng cho Category */
+        padding: 15px;
+    }
+
+    .home-product-card {
+        flex: 0 0 200px; /* Cố định độ rộng cho thẻ sản phẩm trên mobile */
+    }
+
+    /* 3. Tối ưu Features (Truck, Returns, Support) */
+    .features.grid-4 {
+        grid-template-columns: repeat(2, 1fr); /* Chia 2 cột thay vì 4 */
+        gap: 15px;
+        padding: 20px 0;
+    }
+
+    .f-item {
+        padding: 5px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .f-item i {
+        font-size: 24px;
+    }
+
+    /* 4. Tối ưu Modern Banner (iPhone 17 Section) */
+    .banner-container {
+        grid-template-columns: 1fr; /* Xếp chồng lên nhau */
+    }
+
+    .banner-side {
+        flex-direction: row; /* Hai banner nhỏ nằm cạnh nhau */
+        height: 180px;
+    }
+
+    .banner-overlay h2 {
+        font-size: 20px;
+    }
+
+    /* 5. Tối ưu Promo Banner (Video section) */
+    .promo-container {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .promo-video {
+        height: 200px;
+    }
+
+    .promo-text h2 {
+        font-size: 26px;
+    }
+
+    /* 6. Newsletter */
+    .newsletter-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .newsletter-form input {
+        width: 100%;
+        margin: 0;
+    }
+
+    /* 7. Brands Bar */
+    .brands-bar {
+        display: flex;
+        overflow-x: auto;
+        gap: 10px;
+        padding: 15px 0;
+        scrollbar-width: none;
+    }
+
+    .brand-item {
+        flex: 0 0 auto;
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+}
+
+/* --- Màn hình siêu nhỏ (iPhone SE/Mini) --- */
+@media (max-width: 480px) {
+    .section-header {
+        font-size: 12px;
+        margin-bottom: 20px;
+    }
+
+    .slider-container {
+        height: 220px;
+    }
+
+    .home-product-card {
+        flex: 0 0 170px; /* Thẻ sản phẩm hẹp hơn một chút */
+    }
+
+    .product-img {
+        padding: 10px;
+    }
+
+    .product-img img {
+        height: 120px;
+    }
+
+    .banner-side {
+        height: 140px;
+    }
 }

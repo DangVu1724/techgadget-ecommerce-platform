@@ -888,35 +888,7 @@ body:not(.filter-panel-open) .category-brands-wrapper {
   background: #ff6f42;
 }
 
-/* ===== Responsive Design ===== */
-@media (max-width: 768px) {
-  .advanced-filters {
-    max-width: 100%;
-    width: 100%;
-  }
-  
-  .filter-panel-header {
-    padding: 20px 16px 16px;
-  }
-  
-  .filter-panel-content {
-    padding: 0;
-  }
-  
-  .filter-section {
-    padding: 16px;
-  }
-  
-  .filter-panel-footer {
-    padding: 16px;
-  }
-  
-  .btn-clear,
-  .btn-apply {
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-}
+
 
 /* Product Grid */
 .grid-5 {
@@ -1195,46 +1167,7 @@ body:not(.filter-panel-open) .category-brands-wrapper {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .filter-bar {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-  
-  .filter-right {
-    flex-direction: column;
-    align-items: stretch;
-  }
 
-  .filter-dropdown {
-    width: 100%;
-  }
-
-  .toggle-filters {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .advanced-filters.show {
-    width: 100%;
-  }
-
-  .advanced-filters {
-    position: static;
-    width: 100%;
-  }
-  
-  .list-view .product-main {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  
-  .list-view .p-img-box {
-    width: 100%;
-    height: auto;
-  }
-}
 
 #backToTop {
   /* Vị trí cố định */
@@ -1274,4 +1207,61 @@ body:not(.filter-panel-open) .category-brands-wrapper {
   transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
   -webkit-transform: rotate(-135deg);
   margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 95%; /* Tăng độ rộng để tận dụng màn hình nhỏ */
+    margin: 10px auto;
+  }
+}
+@media (max-width: 768px) {
+  .grid-5 {
+    grid-template-columns: repeat(2, 1fr) !important; /* Buộc chia 2 cột đều nhau */
+    gap: 10px; /* Thu hẹp khoảng cách giữa các máy */
+  }
+
+  .p-img-box {
+    height: 140px; /* Giảm chiều cao ảnh cho cân đối */
+  }
+}
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column; /* Xếp chồng các nhóm lọc */
+    align-items: stretch;
+  }
+
+  .filter-right {
+    display: flex;
+    gap: 8px; /* Cho nút Filter và Sort nằm cạnh nhau */
+  }
+
+  .filter-dropdown, .sort-dropdown {
+    flex: 1; /* Mỗi nút chiếm 50% chiều ngang */
+  }
+
+  .toggle-filters {
+    min-width: unset; /* Bỏ giới hạn độ rộng tối thiểu */
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .advanced-filters {
+    max-width: 100%; /* Chiếm toàn bộ chiều ngang điện thoại */
+    width: 100%;
+  }
+  
+  .price-presets {
+    grid-template-columns: 1fr; /* Các mức giá xếp dọc cho dễ bấm bằng ngón tay */
+  }
+}
+@media (max-width: 768px) {
+  .shop-promo-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .promo-message {
+    font-size: 13px; /* Giảm cỡ chữ để không bị nhảy dòng quá nhiều */
+  }
 }

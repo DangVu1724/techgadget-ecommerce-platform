@@ -701,64 +701,6 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
   font-size: 14px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .coupon-input-row {
-    flex-direction: column;
-  }
-  
-  .coupon-apply-btn {
-    padding: 12px;
-  }
-  
-  .voucher-modal-container {
-    width: 95%;
-    max-height: 90vh;
-  }
-  
-  .voucher-modal-header h3 {
-    font-size: 18px;
-  }
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .checkout-wrapper {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .checkout-summary-section {
-        position: static;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .payment-options {
-        gap: 12px;
-    }
-
-    .payment-option {
-        padding: 12px;
-    }
-
-    .coupon-input-row {
-        grid-template-columns: 1fr;
-    }
-
-    .coupon-apply-btn {
-        width: 100%;
-    }
-
-    .coupon-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 6px;
-    }
-}
-
 /* Scrollbar styling */
 .summary-items::-webkit-scrollbar {
     width: 6px;
@@ -816,4 +758,140 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
   transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
   -webkit-transform: rotate(-135deg);
   margin-top: 5px;
+}
+
+/* --- RESPONSIVE TỐI ƯU CHO CHECKOUT PAGE (Mobile < 768px) --- */
+@media (max-width: 768px) {
+    
+    /* 1. Đảo ngược thứ tự: Tóm tắt đơn hàng hiện lên trước để khách kiểm tra giá */
+    .checkout-wrapper {
+        display: flex;
+        flex-direction: column-reverse; /* Đẩy Order Summary lên trên Form */
+        gap: 20px;
+    }
+
+    /* 2. Điều chỉnh Header */
+    .checkout-header-section > div {
+        padding: 20px 0;
+    }
+
+    .checkout-header-section h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .checkout-header-section p {
+        text-align: center;
+    }
+
+    /* 3. Tóm tắt đơn hàng (Order Summary) */
+    .checkout-summary-section {
+        padding: 15px;
+        background: #fff;
+        border: 1px solid var(--border-grey);
+        position: static; /* Bỏ sticky trên mobile để không bị che khuất nội dung */
+    }
+
+    .order-summary {
+        padding: 15px;
+        border: none;
+    }
+
+    .summary-items {
+        max-height: 200px; /* Thu gọn danh sách để không chiếm quá nhiều chỗ */
+    }
+
+    .summary-item {
+        padding: 10px 0;
+    }
+
+    /* 4. Tối ưu Form nhập liệu */
+    .form-row {
+        grid-template-columns: 1fr; /* Luôn là 1 cột trên điện thoại */
+        gap: 0;
+    }
+
+    .form-section {
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        font-size: 14px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--accent); /* Làm nổi bật tiêu đề phần */
+        display: inline-block;
+        width: 100%;
+    }
+
+    .form-group input, 
+    .form-group textarea {
+        font-size: 16px; /* Chống auto-zoom trên iPhone */
+        padding: 12px;
+    }
+
+    /* 5. Phương thức thanh toán */
+    .payment-option {
+        padding: 12px;
+    }
+
+    .payment-name {
+        font-size: 13px;
+    }
+
+    /* 6. Phần Coupon/Voucher */
+    .coupon-section {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .coupon-input-row {
+        flex-direction: row; /* Giữ input và button trên cùng hàng nếu đủ chỗ */
+        gap: 8px;
+    }
+
+    .coupon-apply-btn {
+        padding: 0 15px;
+        white-space: nowrap;
+    }
+
+    /* 7. Modal Voucher */
+    .voucher-modal-container {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .voucher-modal-header {
+        padding: 15px;
+    }
+
+    /* 8. Nút đặt hàng cuối cùng */
+    .btn-checkout-submit {
+        position: sticky;
+        bottom: 10px; /* Nút "dính" ở dưới màn hình để luôn sẵn sàng bấm */
+        z-index: 10;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        height: 50px;
+        font-size: 14px;
+    }
+    
+    .btn-back-to-cart {
+        background: transparent;
+        border: 1px solid #ddd;
+        margin-bottom: 40px;
+    }
+}
+
+/* Màn hình nhỏ hơn 480px */
+@media (max-width: 480px) {
+    .container {
+        width: 94%;
+    }
+
+    .summary-title {
+        font-size: 15px;
+    }
+
+    .main-total span:last-child {
+        font-size: 20px;
+    }
 }
