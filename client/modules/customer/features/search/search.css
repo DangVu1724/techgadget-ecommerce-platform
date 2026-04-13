@@ -338,8 +338,8 @@ body {
 }
 
 .product-card:hover {
-  border-color: #2ebdbd;
-  box-shadow: 0 15px 30px rgba(46, 189, 189, 0.15);
+  border-color: var(--orange);
+  box-shadow: 0 15px 30px rgba(160, 82, 42, 0.15);
   transform: translateY(-8px);
 }
 
@@ -429,7 +429,7 @@ body {
 }
 
 .product-name a:hover {
-  color: #2ebdbd;
+  color: var(--orange);
 }
 
 .product-desc {
@@ -448,14 +448,14 @@ body {
   margin-top: auto;
   font-size: 22px;
   font-weight: 700;
-  color: #2ebdbd;
+  color: var(--orange);
   padding: 12px 0;
 }
 
 .btn-add-cart {
   width: 100%;
   padding: 12px;
-  background: #2ebdbd;
+  background: var(--orange);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -470,7 +470,7 @@ body {
 }
 
 .btn-add-cart:hover {
-  background: #239999;
+  background: #a0522a;
   transform: translateY(-2px);
 }
 
@@ -636,88 +636,7 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 1400px) {
-  .main-content {
-    margin: 0 220px;
-  }
-  
-  .ad-banner-left,
-  .ad-banner-right {
-    width: 200px;
-  }
-  
-  .product-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-  }
-}
 
-@media (max-width: 1200px) {
-  .main-content {
-    margin: 0 180px;
-  }
-  
-  .ad-banner-left,
-  .ad-banner-right {
-    width: 160px;
-  }
-  
-  .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 992px) {
-  .ad-banner-left,
-  .ad-banner-right {
-    display: none;
-  }
-  
-  .main-content {
-    margin: 0 20px;
-  }
-  
-  .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    margin: 0 15px;
-  }
-  
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-  
-  .product-card {
-    padding: 15px;
-  }
-  
-  .product-price {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-content {
-    margin: 0 10px;
-  }
-  
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .sort-options {
-    justify-content: center;
-  }
-  
-  .product-name {
-    font-size: 15px;
-  }
-}
 #backToTop {
   /* Vị trí cố định */
   position: fixed;
@@ -756,4 +675,117 @@ body {
   transform: rotate(-135deg); /* Quay góc để tạo hình mũi tên hướng lên */
   -webkit-transform: rotate(-135deg);
   margin-top: 5px;
+}
+
+/* =============================================
+   PHẦN SỬA RESPONSIVE CHO GIAO DIỆN SEARCH
+   ============================================= */
+
+@media (max-width: 992px) {
+    /* 1. Ẩn hoàn toàn các banner quảng cáo cố định ở 2 bên */
+    .ad-banner-left, 
+    .ad-banner-right {
+        display: none !important;
+    }
+
+    /* 2. Đưa nội dung chính về full màn hình (Bỏ margin 260px) */
+    .main-content {
+        margin: 0 !important;
+        padding: 0 15px;
+    }
+
+    /* 3. Tối ưu Header Search */
+    .search-header h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .search-info {
+        flex-direction: column; /* Xếp chồng số lượng kết quả và ô tìm kiếm */
+        gap: 15px;
+    }
+
+    .search-header .search-box {
+        max-width: 100%; /* Ô search chiếm hết chiều ngang */
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    /* 4. Lưới sản phẩm: Chia 2 cột (Layout chuẩn mobile) */
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 10px 0;
+    }
+
+    /* 5. Thu nhỏ Product Card để vừa màn hình bé */
+    .product-card {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .product-name {
+        font-size: 14px;
+        min-height: 40px; /* Giảm độ cao tiêu đề */
+    }
+
+    .product-desc {
+        display: none; /* Ẩn mô tả ngắn trên mobile để tránh dài dòng */
+    }
+
+    .product-price {
+        font-size: 16px;
+        padding: 8px 0;
+    }
+
+    .btn-add-cart {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    /* 6. Tối ưu bộ lọc Sort */
+    .sort-options {
+        justify-content: space-between;
+        padding: 10px;
+    }
+    
+    .sort-options select {
+        flex: 1;
+        margin-left: 10px;
+    }
+
+    /* 7. Modal (Quick view/Related products) */
+    .modal-products-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Modal cũng hiện 2 cột */
+        padding: 15px;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* 8. Cho màn hình siêu nhỏ */
+    .breadcrumb {
+        display: none; /* Ẩn breadcrumb cho gọn */
+    }
+
+    .product-grid {
+        gap: 8px !important;
+    }
+
+    .product-name {
+        font-size: 13px;
+    }
+
+    .product-price {
+        font-size: 15px;
+    }
+    
+    /* Thu nhỏ nút Back to top trên mobile */
+    #backToTop {
+        width: 40px;
+        height: 40px;
+        bottom: 20px;
+        right: 20px;
+    }
 }

@@ -146,4 +146,120 @@ body { font-family: var(--font-main); color: var(--text-dark); line-height: 1.6;
   margin-top: 5px;
 }
 
+/* Responsive - Giữ nguyên layout form */
+/* --- RESPONSIVE TỐI ƯU CHO CART PAGE --- */
+@media (max-width: 768px) {
+    /* 1. Ẩn tiêu đề bảng (thead) vì không còn phù hợp với dạng thẻ */
+    .cart-thead {
+        display: none;
+    }
 
+    /* 2. Chuyển Cart Item thành dạng Card */
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        position: relative;
+        padding: 20px 0;
+        gap: 15px;
+    }
+
+    /* Đẩy thông tin sản phẩm lên trên cùng */
+    .product-info-cell {
+        width: 100%;
+        gap: 15px;
+    }
+
+    .product-img-box {
+        width: 80px;
+        height: 100px;
+        flex-shrink: 0;
+    }
+
+    .product-detail-cell h4 {
+        font-size: 15px;
+        padding-right: 30px; /* Chừa chỗ cho nút xóa */
+    }
+
+    /* 3. Nút xóa: Đưa lên góc trên bên phải của Card */
+    .remove-cell {
+        position: absolute;
+        top: 20px;
+        right: 0;
+        width: auto;
+    }
+
+    /* 4. Nhóm Số lượng và Thành tiền nằm cạnh nhau */
+    .qty-cell, 
+    .subtotal-cell {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+
+    /* Gắn nhãn giả cho dễ hiểu khi mất tiêu đề bảng */
+    .qty-cell::before {
+        content: "Quatity:";
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .subtotal-cell::before {
+        content: "Subtotal:";
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--text-dark);
+    }
+
+    .subtotal-cell {
+        border-top: 1px dashed var(--border-grey);
+        padding-top: 10px;
+        font-size: 18px !important;
+    }
+
+    /* 5. Cart Totals & Actions */
+    .cart-totals-section {
+        margin-top: 30px;
+        background: #fdfdfd;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .cart-actions {
+        flex-direction: column-reverse; /* Nút Mua ngay lên trên, Tiếp tục mua sắm xuống dưới */
+        gap: 10px;
+    }
+
+    .btn-cart-primary, 
+    .btn-cart-secondary {
+        max-width: 100%;
+        width: 100%;
+        height: 45px;
+        font-size: 12px;
+    }
+
+    .slanted-divider {
+        margin-bottom: 15px;
+    }
+}
+
+/* Tối ưu cho màn hình siêu nhỏ (<480px) */
+@media (max-width: 480px) {
+    .product-img-box {
+        width: 70px;
+        height: 85px;
+    }
+
+    .product-detail-cell h4 {
+        font-size: 13px;
+    }
+
+    .qty-picker {
+        height: 35px;
+    }
+
+    .subtotal-cell {
+        font-size: 16px !important;
+    }
+}
