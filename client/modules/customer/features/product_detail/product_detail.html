@@ -24,11 +24,6 @@
         style="font-size: 14px"
         id="productBreadcrumb"
       >
-      <p
-        class="breadcrumb text-muted"
-        style="font-size: 14px"
-        id="productBreadcrumb"
-      >
         <a href="/" style="color: #999; text-decoration: none">Home</a> >
         <span class="text-dark" id="breadcrumbName">Product</span>
       </p>
@@ -119,22 +114,30 @@
           <div class="skeleton-line skeleton-line-section"></div>
           <div class="grid-5">
             <article class="product-card-simple skeleton-related-card">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple skeleton-related-card">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple skeleton-related-card">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
             <article class="product-card-simple skeleton-related-card">
-              <div class="p-img-box"><div class="skeleton-box skeleton-fill"></div></div>
+              <div class="p-img-box">
+                <div class="skeleton-box skeleton-fill"></div>
+              </div>
               <div class="skeleton-line skeleton-line-md"></div>
               <div class="skeleton-line skeleton-line-sm"></div>
             </article>
@@ -271,9 +274,6 @@
             <div class="divider-slanted"></div>
           </div>
         </div>
-            <div class="divider-slanted"></div>
-          </div>
-        </div>
 
         <div class="tabs-section">
           <div class="tabs-header">
@@ -354,27 +354,37 @@
                     <div class="rating-breakdown">
                       <div class="rating-row">
                         <span>5 ★</span>
-                        <div class="rating-bar"><div class="rating-bar-fill" id="bar5"></div></div>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar5"></div>
+                        </div>
                         <span id="count5">0</span>
                       </div>
                       <div class="rating-row">
                         <span>4 ★</span>
-                        <div class="rating-bar"><div class="rating-bar-fill" id="bar4"></div></div>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar4"></div>
+                        </div>
                         <span id="count4">0</span>
                       </div>
                       <div class="rating-row">
                         <span>3 ★</span>
-                        <div class="rating-bar"><div class="rating-bar-fill" id="bar3"></div></div>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar3"></div>
+                        </div>
                         <span id="count3">0</span>
                       </div>
                       <div class="rating-row">
                         <span>2 ★</span>
-                        <div class="rating-bar"><div class="rating-bar-fill" id="bar2"></div></div>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar2"></div>
+                        </div>
                         <span id="count2">0</span>
                       </div>
                       <div class="rating-row">
                         <span>1 ★</span>
-                        <div class="rating-bar"><div class="rating-bar-fill" id="bar1"></div></div>
+                        <div class="rating-bar">
+                          <div class="rating-bar-fill" id="bar1"></div>
+                        </div>
                         <span id="count1">0</span>
                       </div>
                     </div>
@@ -382,7 +392,9 @@
 
                   <div class="review-list-panel">
                     <div class="review-filter" id="reviewFilter">
-                      <button class="filter-btn active" data-rating="all">All</button>
+                      <button class="filter-btn active" data-rating="all">
+                        All
+                      </button>
                       <button class="filter-btn" data-rating="5">5 ★</button>
                       <button class="filter-btn" data-rating="4">4 ★</button>
                       <button class="filter-btn" data-rating="3">3 ★</button>
@@ -417,11 +429,21 @@
                       <div class="rating-input">
                         <span>Your rating *</span>
                         <div class="stars-input" id="ratingStars">
-                          <span class="star-icon" data-value="1"><i class="fas fa-star"></i></span>
-                          <span class="star-icon" data-value="2"><i class="fas fa-star"></i></span>
-                          <span class="star-icon" data-value="3"><i class="fas fa-star"></i></span>
-                          <span class="star-icon" data-value="4"><i class="fas fa-star"></i></span>
-                          <span class="star-icon" data-value="5"><i class="fas fa-star"></i></span>
+                          <span class="star-icon" data-value="1"
+                            ><i class="fas fa-star"></i
+                          ></span>
+                          <span class="star-icon" data-value="2"
+                            ><i class="fas fa-star"></i
+                          ></span>
+                          <span class="star-icon" data-value="3"
+                            ><i class="fas fa-star"></i
+                          ></span>
+                          <span class="star-icon" data-value="4"
+                            ><i class="fas fa-star"></i
+                          ></span>
+                          <span class="star-icon" data-value="5"
+                            ><i class="fas fa-star"></i
+                          ></span>
                         </div>
                       </div>
 
@@ -431,19 +453,7 @@
                         rows="5"
                         required
                       ></textarea>
-                      <textarea
-                        id="reviewText"
-                        placeholder="Write your review here..."
-                        rows="5"
-                        required
-                      ></textarea>
 
-                      <button type="submit" class="btn-primary text-uppercase">
-                        SUBMIT REVIEW
-                      </button>
-                    </form>
-                  </div>
-                </div>
                       <button type="submit" class="btn-primary text-uppercase">
                         SUBMIT REVIEW
                       </button>
@@ -469,8 +479,6 @@
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
     <button id="backToTop" title="Lên đầu trang">
-      <span class="arrow"></span>
-    </button>
       <span class="arrow"></span>
     </button>
   </body>

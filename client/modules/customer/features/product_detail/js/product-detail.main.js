@@ -61,65 +61,9 @@ const escapeHtml = (value = "") =>
     .replaceAll("'", "&#39;");
 
 const getProductId = () => {
-  const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
-  if (pathMatch?.[1]) return Number(pathMatch[1]);
-
-  const searchId = new URLSearchParams(window.location.search).get("id");
-  return Number(searchId || 0);
-};
-
-const applyVariantSelection = (product, variant) => {
-  selectedVariant = variant || null;
-
-  if (variant) {
-    setText("#productPrice", formatPrice(variant.price));
-    setText("#productStock", formatStock(variant.stock));
-    updateVariantDetail(product, variant);
-    updateAttributesTable(variant.attributes || product.attributes || []);
-    return;
-  }
-
-  setText("#productPrice", formatPrice(product.minPrice || 0));
-  setText("#productStock", formatStock(product.stock || 0));
-  updateVariantDetail(product, null);
-  updateAttributesTable(product.attributes || []);
-};
-const FILLED_STAR = "\u2605";
-const EMPTY_STAR = "\u2606";
-const PRODUCT_DETAIL_ROUTE_PATTERN = /\/product\/(\d+)/;
-const REVIEWS_PER_PAGE = 5;
-const AVATAR_COLORS = [
-  "#E74C3C",
-  "#3498DB",
-  "#2ECC71",
-  "#F39C12",
-  "#9B59B6",
-  "#1ABC9C",
-  "#E67E22",
-  "#34495E",
-];
-
-const setProductLoading = (isLoading) => {
-  const skeleton = document.getElementById("productSkeleton");
-  const content = document.getElementById("productContent");
-  const breadcrumb = document.getElementById("productBreadcrumb");
-
-  skeleton?.classList.toggle("is-hidden", !isLoading);
-  content?.classList.toggle("is-hidden", isLoading);
-  content?.setAttribute("aria-busy", String(isLoading));
-  breadcrumb?.setAttribute("aria-busy", String(isLoading));
-};
-
-const escapeHtml = (value = "") =>
-  String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-
-const getProductId = () => {
-  const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
+  const pathMatch = window.location.pathname.match(
+    PRODUCT_DETAIL_ROUTE_PATTERN,
+  );
   if (pathMatch?.[1]) return Number(pathMatch[1]);
 
   const searchId = new URLSearchParams(window.location.search).get("id");
@@ -156,8 +100,7 @@ const renderRelatedProducts = (products = []) => {
 
   container.innerHTML = relatedItems
     .map((item) => {
-      const image =
-        item.image || "/modules/customer/assets/images/macbook.png";
+      const image = item.image || "/modules/customer/assets/images/macbook.png";
       return `
         <a class="product-card-link" href="/product/${item.id}">
           <article class="product-card-simple">
@@ -190,10 +133,6 @@ const loadProductFromDb = async () => {
       showToast("Product not found.", "warning");
       return;
     }
-    if (!product) {
-      showToast("Product not found.", "warning");
-      return;
-    }
 
     currentProduct = product;
     const productName = product.name || "Product";
@@ -222,9 +161,6 @@ const loadProductFromDb = async () => {
     const colorVariation = document
       .getElementById("colorOptions")
       ?.closest(".p-variation");
-    const colorVariation = document
-      .getElementById("colorOptions")
-      ?.closest(".p-variation");
     const colorLabel = colorVariation?.querySelector(".v-label");
 
     if (isSmartphone && variants.length > 0) {
@@ -244,7 +180,10 @@ const loadProductFromDb = async () => {
         renderSmartphoneColors(firstGroup, (variant) => {
           applyVariantSelection(product, variant);
         });
-        applyVariantSelection(product, getColorsFromGroup(firstGroup)[0]?.variant);
+        applyVariantSelection(
+          product,
+          getColorsFromGroup(firstGroup)[0]?.variant,
+        );
       }
     } else {
       renderRegularVariants(variants, product, (variant) => {
@@ -257,8 +196,6 @@ const loadProductFromDb = async () => {
   } catch (error) {
     console.error("Failed to load product:", error);
     showToast("Unable to load product details.", "error");
-  } finally {
-    setProductLoading(false);
   } finally {
     setProductLoading(false);
   }
@@ -505,7 +442,11 @@ const renderReviewPagination = (currentPage, totalPages) => {
   `;
 };
 
-const renderReviewList = (reviews = [], currentUserId = null, isAdmin = false) => {
+const renderReviewList = (
+  reviews = [],
+  currentUserId = null,
+  isAdmin = false,
+) => {
   const container = document.getElementById("reviewList");
   if (!container) return;
 
@@ -520,7 +461,6 @@ const renderReviewList = (reviews = [], currentUserId = null, isAdmin = false) =
       const canEdit = currentUserId && review.userId === currentUserId;
       const canDelete = canEdit || isAdmin;
 
-      return `
       return `
         <div class="review-item" data-review-id="${review.id}">
           ${renderLetterAvatar(review.userName || "?")}
@@ -632,7 +572,6 @@ const setupReviews = () => {
     star.addEventListener("click", () => {
       selectedRating = Number(star.dataset.value);
       paintStarSelection(starIcons, selectedRating);
-      paintStarSelection(starIcons, selectedRating);
     });
   });
 
@@ -673,7 +612,9 @@ const setupReviews = () => {
     if (editButton) {
       const reviewId = Number(editButton.dataset.id);
       const initialRating = Number(editButton.dataset.rating || 0);
-      const initialComment = decodeURIComponent(editButton.dataset.comment || "");
+      const initialComment = decodeURIComponent(
+        editButton.dataset.comment || "",
+      );
       const nextRating = Number(
         window.prompt("Rating (1-5):", String(initialRating)) || initialRating,
       );
