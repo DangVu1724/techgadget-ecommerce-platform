@@ -8,7 +8,10 @@ class HeaderComponent {
 
   async loadHeader() {
     try {
-      const response = await fetch("/modules/customer/components/header/header.html");
+      await this.loadHeaderCSS();
+      const response = await fetch(
+        "/modules/customer/components/header/header.html",
+      );
       const headerHtml = await response.text();
 
       document.querySelector("header")?.remove();
@@ -17,9 +20,8 @@ class HeaderComponent {
       document.body.insertAdjacentHTML("afterbegin", headerHtml);
       this.initSearch();
       this.updateUserAccount();
-      this.loadHeaderCSS();
       await this.loadCartCount();
-      
+
       // Trigger event to notify header.js script that DOM is ready
       window.dispatchEvent(new Event("header-loaded"));
     } catch (error) {
@@ -55,7 +57,8 @@ class HeaderComponent {
 
     try {
       const cart = await cartAPI.getCart();
-      const totalItems = cart.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
+      const totalItems =
+        cart.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
       cartCountEl.textContent = totalItems > 0 ? totalItems : "";
       cartCountEl.style.display = totalItems > 0 ? "inline-block" : "none";
     } catch (error) {
@@ -73,17 +76,25 @@ class HeaderComponent {
   }
 
   loadHeaderCSS() {
-    if (document.querySelector('link[href*="header.css"]')) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/modules/customer/assets/css/header.css";
-    document.head.appendChild(link);
+    const existingLink = document.querySelector('link[href*="header.css"]');
+    if (existingLink) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "/modules/customer/assets/css/header.css";
+      link.onload = () => resolve();
+      link.onerror = () => {
+        console.error("Failed to load header CSS:", link.href);
+        resolve();
+      };
+      document.head.appendChild(link);
+    });
   }
 
   init() {
     const load = () => {
       this.loadHeader();
-      this.loadCartCount();
     };
 
     if (document.readyState === "loading") {

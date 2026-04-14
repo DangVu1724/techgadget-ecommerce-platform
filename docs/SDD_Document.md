@@ -90,9 +90,9 @@ Hệ thống sử dụng Layered Architecture theo mô hình MVC:
 Client (Browser) → Controller → Service → Repository → Database (PostgreSQL)
 ```
 
-![architecture](images/architecture_simple.png)
+![architecture](diagrams/architecture_simple.png)
 
-![architecture](images/architecture.png)
+![architecture](diagrams/architecture.png)
 
 Lợi ích:
 
@@ -158,7 +158,7 @@ Lợi ích:
 | promotion_popups         | Popup khuyến mãi                           |
 | pending_payments         | Trạng thái thanh toán QR đang chờ xử lý   |
 
-![ERD](images/erd.png)
+![ERD](erd.png)
 
 ## 3.2 Chi tiết các bảng chính
 
@@ -298,7 +298,7 @@ Hệ thống tổ chức theo các nhóm lớp sau, mỗi nhóm gồm Controller
 | Đánh giá              | ReviewController              | ReviewService              | ReviewRepository              |
 | Promotion Popup       | PromotionPopupController      | PromotionPopupService      | PromotionPopupRepository      |
 
-![Class](images/class.png)
+![Class](diagrams/class.png)
 
 ---
 
@@ -317,11 +317,11 @@ Chức năng:
 
 ### 5.1.2 Sequence – Đăng ký
 
-![Sequence Register](images/register.png)
+![Sequence Register](diagrams/register.png)
 
 ### 5.1.3 Sequence – Đăng nhập
 
-![Sequence Login](images/login.png)
+![Sequence Login](diagrams/login.png)
 
 ---
 
@@ -338,19 +338,19 @@ Chức năng:
 
 ### 5.2.2 Sequence – Xem danh sách sản phẩm
 
-![Sequence View List](images/view-list.png)
+![Sequence View List](diagrams/view-list.png)
 
 ### 5.2.3 Sequence – Lọc sản phẩm
 
-![Sequence Filter](images/filter.png)
+![Sequence Filter](diagrams/filter.png)
 
 ### 5.2.4 Sequence – Tìm kiếm sản phẩm
 
-![Sequence Search](images/search.png)
+![Sequence Search](diagrams/search.png)
 
 ### 5.2.5 Sequence – Xem chi tiết sản phẩm
 
-![Sequence Detail](images/detail.png)
+![Sequence Detail](diagrams/detail.png)
 
 ---
 
@@ -370,15 +370,15 @@ Trạng thái đơn hàng: `PENDING → CONFIRMED → PROCESSING → SHIPPING �
 
 ### 5.3.2 Sequence – Tạo đơn hàng
 
-![Sequence Create Order](images/create-order.png)
+![Sequence Create Order](diagrams/create-order.png)
 
 ### 5.3.3 Sequence – Xem lịch sử đơn hàng
 
-![Sequence Order History](images/history-order.png)
+![Sequence Order History](diagrams/history-order.png)
 
 ### 5.3.4 Sequence – Theo dõi trạng thái đơn hàng
 
-![Sequence Track Order](images/track-order.png)
+![Sequence Track Order](diagrams/track-order.png)
 
 ---
 
@@ -395,15 +395,15 @@ Chức năng:
 
 ### 5.4.2 Sequence – Thêm vào giỏ hàng
 
-![Sequence Add Cart](images/add_cart.png)
+![Sequence Add Cart](diagrams/add_cart.png)
 
 ### 5.4.3 Sequence – Cập nhật số lượng
 
-![Sequence Update Cart](images/update_cart.png)
+![Sequence Update Cart](diagrams/update_cart.png)
 
 ### 5.4.4 Sequence – Xóa sản phẩm khỏi giỏ hàng
 
-![Sequence Remove Cart](images/delete_cart.png)
+![Sequence Remove Cart](diagrams/delete_cart.png)
 
 ---
 
@@ -423,11 +423,11 @@ Chức năng:
 
 ### 5.5.2 Sequence – Thêm sản phẩm
 
-![Sequence Add Product](images/add-product.png)
+![Sequence Add Product](diagrams/add-product.png)
 
 ### 5.5.3 Sequence – Cập nhật thông tin sản phẩm
 
-![Sequence Update Product](images/update-product.png)
+![Sequence Update Product](diagrams/update-product.png)
 
 ---
 
@@ -445,7 +445,7 @@ Chức năng:
 
 Luồng xem đánh giá được tích hợp trong sequence xem chi tiết sản phẩm (mục 5.2.5).
 
-![Sequence](images/review.png)
+![Sequence](diagrams/review.png)
 
 
 ---
@@ -469,4 +469,4 @@ Chức năng:
 
 ---
 
-**Ghi chú:** Các file ảnh sequence diagram được lưu trong thư mục `docs/images/`.
+**Ghi chú:** Các file ảnh sequence diagram được lưu trong thư mục `docs/diagrams/`.

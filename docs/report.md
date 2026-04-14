@@ -85,7 +85,7 @@ Sự kết hợp giữa sức mạnh của hệ sinh thái Java và các công c
 
 ### 3.1 ERD
 
-- Chèn ảnh hoặc link sơ đồ
+![ERD](erd.png)
 
 ### 3.2 Các bảng chính
 
@@ -517,6 +517,13 @@ Trong quá trình thực hiện dự án, nhóm đã rút ra được nhiều ki
 
 - **Giải quyết vấn đề:**
   Cải thiện khả năng debug, xử lý lỗi và tối ưu logic trong quá trình phát triển.
+
+![](images/home.png)
+
+![](images/product_detail.png)
+
+![](images/checkout.png)
+
 
 ---
 
