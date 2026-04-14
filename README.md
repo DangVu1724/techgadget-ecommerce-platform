@@ -1,220 +1,114 @@
 # TechGadget E-Commerce
 
-TechGadget là dự án web bán hàng thiết bị công nghệ với 2 phần chính:
+TechGadget là dự án web thương mại điện tử dành cho thiết bị công nghệ, bao gồm hai phần chính:
 
-- `client/`: frontend viết bằng HTML, CSS, JavaScript thuần
-- `server/`: backend REST API viết bằng Java 17 và Spring Boot
+* `client/`: frontend viết bằng HTML, CSS, JavaScript thuần
+* `server/`: backend REST API sử dụng Java 17 và Spring Boot
 
-Hệ thống hiện có cả giao diện khách hàng và giao diện quản trị, hỗ trợ quản lý sản phẩm, biến thể, giỏ hàng, đơn hàng, coupon, popup khuyến mãi, đánh giá và thanh toán online.
+Hệ thống cung cấp cả giao diện khách hàng và quản trị, hỗ trợ quản lý sản phẩm, giỏ hàng, đơn hàng, thanh toán và các chức năng liên quan.
+
+---
 
 ## Link deploy
 
-- Frontend: `https://techgadget-ecommerce-platform.vercel.app/`
-- Backend: `https://techgadget-ecommerce-platform.onrender.com/`
+* Frontend: [https://techgadget-ecommerce-platform.vercel.app/](https://techgadget-ecommerce-platform.vercel.app/)
+* Backend: [https://techgadget-ecommerce-platform.onrender.com/](https://techgadget-ecommerce-platform.onrender.com/)
 
-## Tính năng hiện có
+---
+
+## Tài khoản demo
 
 ### Khách hàng
 
-- Trang chủ, shop, tìm kiếm và chi tiết sản phẩm
-- Đăng ký, đăng nhập, xem tài khoản
-- Giỏ hàng và checkout
-- Thanh toán qua PayOS
-- Theo dõi đơn hàng và xem chi tiết đơn
-- Đánh giá sản phẩm
-- Tìm kiếm nâng cao, lọc và sắp xếp sản phẩm
+* Email: [dangvu@gmail.com](mailto:dangvu@gmail.com)
+* Mật khẩu: 123456
+
+### Quản trị viên
+
+* Email: [admin@gmail.com](mailto:admin@gmail.com)
+* Mật khẩu: admin123
+
+---
+
+## Tính năng
+
+### Khách hàng
+
+* Xem danh sách và chi tiết sản phẩm
+* Tìm kiếm, lọc và sắp xếp sản phẩm
+* Đăng ký, đăng nhập
+* Giỏ hàng và đặt hàng
+* Thanh toán qua PayOS
+* Theo dõi đơn hàng
+* Đánh giá sản phẩm
 
 ### Quản trị
 
-- Dashboard quản trị
-- Đăng nhập admin
-- Quản lý danh mục, thương hiệu, thuộc tính
-- Quản lý sản phẩm và biến thể
-- Quản lý coupon và popup khuyến mãi
-- Quản lý đơn hàng
-- Quản lý người dùng
+* Dashboard quản lý
+* Quản lý sản phẩm và biến thể
+* Quản lý danh mục, thương hiệu, thuộc tính
+* Quản lý đơn hàng
+* Quản lý người dùng
+* Quản lý mã giảm giá và popup
+
+---
 
 ## Công nghệ sử dụng
 
 ### Frontend
 
-- HTML5
-- CSS3
-- JavaScript ES Modules
-- Vercel rewrites cho routing phía client
+* HTML5
+* CSS3
+* JavaScript (ES Modules)
 
 ### Backend
 
-- Java 17
-- Spring Boot 4
-- Spring Web
-- Spring Data JPA
-- Spring Security
-- PostgreSQL
-- Maven
+* Java 17
+* Spring Boot
+* Spring Data JPA
+* Spring Security
+* PostgreSQL
 
-### Tích hợp ngoài
+### Tích hợp
 
-- PayOS cho thanh toán
-- Meilisearch cho tìm kiếm sản phẩm
+* PayOS (thanh toán)
+---
 
 ## Cấu trúc thư mục
 
 ```text
 techgadget-ecommerce/
 |-- client/
-|   |-- index.html
-|   |-- vercel.json
-|   |-- modules/
-|   |   |-- customer/
-|   |   |   |-- assets/
-|   |   |   |-- components/
-|   |   |   |-- core/
-|   |   |   `-- features/
-|   |   `-- admin/
-|   |       |-- components/
-|   |       |-- core/
-|   |       `-- features/
-|   `-- shared/
-|
 |-- server/
-|   |-- src/main/java/com/techgadget/server/
-|   |   |-- config/
-|   |   |-- controller/
-|   |   |-- exception/
-|   |   |-- model/
-|   |   |-- repository/
-|   |   `-- service/
-|   |-- src/main/resources/
-|   |   `-- application.properties
-|   |-- Dockerfile
-|   `-- pom.xml
-|
 |-- docs/
 `-- README.md
 ```
 
-## Routing frontend hiện tại
+---
 
-Frontend dùng `client/vercel.json` để map URL đẹp sang các file HTML tương ứng.
+## Chạy dự án
 
-### Public routes
-
-- `/home`
-- `/login`
-- `/register`
-- `/account`
-- `/cart`
-- `/checkout`
-- `/checkout/success`
-- `/checkout/cancel`
-- `/shop`
-- `/search`
-- `/products/:id`
-
-### Admin routes
-
-- `/admin`
-- `/admin/login`
-- `/admin/dashboard`
-- `/admin/category`
-- `/admin/brands`
-- `/admin/attributes`
-- `/admin/products`
-- `/admin/products/:id`
-- `/admin/popups`
-- `/admin/discounts`
-- `/admin/order`
-- `/admin/order/:id`
-- `/admin/users`
-
-## Backend modules chính
-
-Các controller hiện có trong backend:
-
-- `AuthController`
-- `ProductController`
-- `CategoryController`
-- `BrandController`
-- `VariantController`
-- `CartController`
-- `OrderController`
-- `PaymentController`
-- `CouponController`
-- `ReviewController`
-- `UserController`
-- `PromotionPopupPublicController`
-- admin: `CouponController`, `PromotionPopupController`
-
-## Chạy dự án local
-
-### 1. Chạy backend
+### Backend
 
 Yêu cầu:
 
-- Java 17
-- Maven
-- PostgreSQL
-
-Từ thư mục `server/`:
+* Java 17
+* Maven
+* PostgreSQL
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Hoặc trên Windows:
+### Frontend
 
-```powershell
-.\mvnw.cmd spring-boot:run
-```
+* Có thể chạy bằng Vercel hoặc mở trực tiếp file HTML
 
-Backend production hiện tại:
-
-```text
-https://techgadget-ecommerce-platform.onrender.com
-```
-
-### 2. Chạy frontend
-
-Frontend là static site. Có 2 cách phổ biến:
-
-1. Deploy/chạy bằng Vercel để dùng đúng rewrites trong `vercel.json`
-2. Serve trực tiếp file HTML nếu chỉ cần kiểm tra giao diện
-
-Entry mặc định:
-
-```text
-client/index.html -> redirect sang /home
-```
-
-Nếu không dùng Vercel rewrites, có thể mở trực tiếp các file trong:
-
-- `client/modules/customer/features/...`
-- `client/modules/admin/features/...`
-
-Frontend production hiện tại:
-
-```text
-https://techgadget-ecommerce-platform.vercel.app
-```
+---
 
 ## Cấu hình môi trường
 
-Hiện backend đọc cấu hình từ `server/src/main/resources/application.properties`.
-
-Các nhóm cấu hình chính đang được sử dụng:
-
-- `spring.datasource.*`: kết nối PostgreSQL
-- `payos.*`: cấu hình thanh toán PayOS
-- `meilisearch.*`: cấu hình tìm kiếm
-- `app.upload.dir`: thư mục upload
-- `spring.servlet.multipart.*`: giới hạn file upload
-
-Nên chuyển các giá trị nhạy cảm như database credentials, API keys và checksum keys sang biến môi trường trước khi deploy production.
-
-## Gợi ý biến môi trường
-
-Các biến môi trường đáng tách ra:
+Các biến môi trường cần thiết:
 
 ```text
 PORT
@@ -225,24 +119,28 @@ PAYOS_RETURN_URL
 PAYOS_CANCEL_URL
 MEILISEARCH_HOST_URL
 MEILISEARCH_API_KEY
-MEILISEARCH_PRODUCT_INDEX_UID
-MEILISEARCH_SYNC_BATCH_SIZE
 ```
 
-## Ghi chú triển khai
+---
 
-- Frontend đang deploy trên Vercel
-- Backend có `Dockerfile`, phù hợp deploy trên Render hoặc môi trường container khác
-- Thư mục `uploads/` dùng để lưu file upload
-- Thư mục `docs/` chứa tài liệu và hình minh họa dự án
+## Triển khai
 
-## Trạng thái hiện tại của repo
+* Frontend: Vercel
+* Backend: Render (Docker)
+* Database: Supabase PostgreSQL
 
-Repo hiện không phải dạng SPA framework mà là multi-page app với:
+---
 
-- frontend thuần, chia module rõ cho `customer` và `admin`
-- backend REST API tách riêng
-- routing public/admin qua Vercel rewrites
-- tích hợp thanh toán và tìm kiếm ngoài hệ thống
+## Ghi chú
 
-README này được cập nhật theo cấu trúc code hiện tại của repo, không còn theo cấu trúc cũ kiểu `client/js`, `client/css`, `client/pages`.
+* Backend có thể được đóng gói bằng Docker để deploy
+* Dữ liệu và cấu hình nên tách ra bằng biến môi trường
+* Hệ thống được xây dựng theo mô hình Monolith với REST API
+
+---
+
+## Trạng thái dự án
+
+* Ứng dụng đã hoàn thiện các chức năng chính
+* Phù hợp cho mục đích học tập và demo
+* Có thể mở rộng thêm trong tương lai
