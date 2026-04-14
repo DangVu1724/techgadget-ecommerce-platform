@@ -84,6 +84,64 @@ const applyVariantSelection = (product, variant) => {
   updateVariantDetail(product, null);
   updateAttributesTable(product.attributes || []);
 };
+const FILLED_STAR = "\u2605";
+const EMPTY_STAR = "\u2606";
+const PRODUCT_DETAIL_ROUTE_PATTERN = /\/product\/(\d+)/;
+const REVIEWS_PER_PAGE = 5;
+const AVATAR_COLORS = [
+  "#E74C3C",
+  "#3498DB",
+  "#2ECC71",
+  "#F39C12",
+  "#9B59B6",
+  "#1ABC9C",
+  "#E67E22",
+  "#34495E",
+];
+
+const setProductLoading = (isLoading) => {
+  const skeleton = document.getElementById("productSkeleton");
+  const content = document.getElementById("productContent");
+  const breadcrumb = document.getElementById("productBreadcrumb");
+
+  skeleton?.classList.toggle("is-hidden", !isLoading);
+  content?.classList.toggle("is-hidden", isLoading);
+  content?.setAttribute("aria-busy", String(isLoading));
+  breadcrumb?.setAttribute("aria-busy", String(isLoading));
+};
+
+const escapeHtml = (value = "") =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+
+const getProductId = () => {
+  const pathMatch = window.location.pathname.match(PRODUCT_DETAIL_ROUTE_PATTERN);
+  if (pathMatch?.[1]) return Number(pathMatch[1]);
+
+  const searchId = new URLSearchParams(window.location.search).get("id");
+  return Number(searchId || 0);
+};
+
+const applyVariantSelection = (product, variant) => {
+  selectedVariant = variant || null;
+
+  if (variant) {
+    setText("#productPrice", formatPrice(variant.price));
+    setText("#productStock", formatStock(variant.stock));
+    updateVariantDetail(product, variant);
+    updateAttributesTable(variant.attributes || product.attributes || []);
+    return;
+  }
+
+  setText("#productPrice", formatPrice(product.minPrice || 0));
+  setText("#productStock", formatStock(product.stock || 0));
+  updateVariantDetail(product, null);
+  updateAttributesTable(product.attributes || []);
+};
 
 const renderRelatedProducts = (products = []) => {
   const container = document.getElementById("relatedProductsGrid");
@@ -132,6 +190,10 @@ const loadProductFromDb = async () => {
       showToast("Product not found.", "warning");
       return;
     }
+    if (!product) {
+      showToast("Product not found.", "warning");
+      return;
+    }
 
     currentProduct = product;
     const productName = product.name || "Product";
@@ -157,6 +219,9 @@ const loadProductFromDb = async () => {
 
     const variants = Array.isArray(product.variants) ? product.variants : [];
     const isSmartphone = isSmartphoneCategory(product.category);
+    const colorVariation = document
+      .getElementById("colorOptions")
+      ?.closest(".p-variation");
     const colorVariation = document
       .getElementById("colorOptions")
       ?.closest(".p-variation");
@@ -192,6 +257,8 @@ const loadProductFromDb = async () => {
   } catch (error) {
     console.error("Failed to load product:", error);
     showToast("Unable to load product details.", "error");
+  } finally {
+    setProductLoading(false);
   } finally {
     setProductLoading(false);
   }
@@ -392,7 +459,14 @@ const buildPaginationItems = (currentPage, totalPages) => {
 
   if (currentPage <= 3) return [1, 2, 3, 4, "...", totalPages];
   if (currentPage >= totalPages - 2) {
-    return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    return [
+      1,
+      "...",
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
   }
 
   return [
@@ -446,6 +520,7 @@ const renderReviewList = (reviews = [], currentUserId = null, isAdmin = false) =
       const canEdit = currentUserId && review.userId === currentUserId;
       const canDelete = canEdit || isAdmin;
 
+      return `
       return `
         <div class="review-item" data-review-id="${review.id}">
           ${renderLetterAvatar(review.userName || "?")}
@@ -556,6 +631,7 @@ const setupReviews = () => {
 
     star.addEventListener("click", () => {
       selectedRating = Number(star.dataset.value);
+      paintStarSelection(starIcons, selectedRating);
       paintStarSelection(starIcons, selectedRating);
     });
   });

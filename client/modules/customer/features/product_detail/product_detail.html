@@ -24,6 +24,11 @@
         style="font-size: 14px"
         id="productBreadcrumb"
       >
+      <p
+        class="breadcrumb text-muted"
+        style="font-size: 14px"
+        id="productBreadcrumb"
+      >
         <a href="/" style="color: #999; text-decoration: none">Home</a> >
         <span class="text-dark" id="breadcrumbName">Product</span>
       </p>
@@ -266,6 +271,9 @@
             <div class="divider-slanted"></div>
           </div>
         </div>
+            <div class="divider-slanted"></div>
+          </div>
+        </div>
 
         <div class="tabs-section">
           <div class="tabs-header">
@@ -423,7 +431,19 @@
                         rows="5"
                         required
                       ></textarea>
+                      <textarea
+                        id="reviewText"
+                        placeholder="Write your review here..."
+                        rows="5"
+                        required
+                      ></textarea>
 
+                      <button type="submit" class="btn-primary text-uppercase">
+                        SUBMIT REVIEW
+                      </button>
+                    </form>
+                  </div>
+                </div>
                       <button type="submit" class="btn-primary text-uppercase">
                         SUBMIT REVIEW
                       </button>
@@ -449,6 +469,8 @@
     <script type="module" src="/modules/customer/assets/js/header.js"></script>
     <script type="module" src="/modules/customer/assets/js/footer.js"></script>
     <button id="backToTop" title="Lên đầu trang">
+      <span class="arrow"></span>
+    </button>
       <span class="arrow"></span>
     </button>
   </body>
