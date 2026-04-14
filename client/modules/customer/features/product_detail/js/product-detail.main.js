@@ -23,12 +23,23 @@ import {
 import { showToast } from "/shared/ui/toast.js";
 
 let currentProduct = null;
-let variantGroups = null;
 let selectedVariant = null;
+
 const BUY_NOW_KEY = "buyNowCheckoutItem";
 const FILLED_STAR = "\u2605";
 const EMPTY_STAR = "\u2606";
 const PRODUCT_DETAIL_ROUTE_PATTERN = /\/product\/(\d+)/;
+const REVIEWS_PER_PAGE = 5;
+const AVATAR_COLORS = [
+  "#E74C3C",
+  "#3498DB",
+  "#2ECC71",
+  "#F39C12",
+  "#9B59B6",
+  "#1ABC9C",
+  "#E67E22",
+  "#34495E",
+];
 
 const setProductLoading = (isLoading) => {
   const skeleton = document.getElementById("productSkeleton");
@@ -37,34 +48,43 @@ const setProductLoading = (isLoading) => {
 
   skeleton?.classList.toggle("is-hidden", !isLoading);
   content?.classList.toggle("is-hidden", isLoading);
-
-  if (content) {
-    content.setAttribute("aria-busy", String(isLoading));
-  }
-
-  if (breadcrumb) {
-    breadcrumb.setAttribute("aria-busy", String(isLoading));
-  }
+  content?.setAttribute("aria-busy", String(isLoading));
+  breadcrumb?.setAttribute("aria-busy", String(isLoading));
 };
-const FILLED_STAR = "\u2605";
-const EMPTY_STAR = "\u2606";
-const PRODUCT_DETAIL_ROUTE_PATTERN = /\/product\/(\d+)/;
 
-const setProductLoading = (isLoading) => {
-  const skeleton = document.getElementById("productSkeleton");
-  const content = document.getElementById("productContent");
-  const breadcrumb = document.getElementById("productBreadcrumb");
+const escapeHtml = (value = "") =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 
-  skeleton?.classList.toggle("is-hidden", !isLoading);
-  content?.classList.toggle("is-hidden", isLoading);
+const getProductId = () => {
+  const pathMatch = window.location.pathname.match(
+    PRODUCT_DETAIL_ROUTE_PATTERN,
+  );
+  if (pathMatch?.[1]) return Number(pathMatch[1]);
 
-  if (content) {
-    content.setAttribute("aria-busy", String(isLoading));
+  const searchId = new URLSearchParams(window.location.search).get("id");
+  return Number(searchId || 0);
+};
+
+const applyVariantSelection = (product, variant) => {
+  selectedVariant = variant || null;
+
+  if (variant) {
+    setText("#productPrice", formatPrice(variant.price));
+    setText("#productStock", formatStock(variant.stock));
+    updateVariantDetail(product, variant);
+    updateAttributesTable(variant.attributes || product.attributes || []);
+    return;
   }
 
-  if (breadcrumb) {
-    breadcrumb.setAttribute("aria-busy", String(isLoading));
-  }
+  setText("#productPrice", formatPrice(product.minPrice || 0));
+  setText("#productStock", formatStock(product.stock || 0));
+  updateVariantDetail(product, null);
+  updateAttributesTable(product.attributes || []);
 };
 
 const renderRelatedProducts = (products = []) => {
@@ -78,154 +98,104 @@ const renderRelatedProducts = (products = []) => {
     return;
   }
 
-      container.innerHTML = relatedItems
-    .map(
-      (item) => `
-      <a class="product-card-link" href="/product/${item.id}">
-      <a class="product-card-link" href="/product/${item.id}">
-        <article class="product-card-simple">
-          <div class="p-img-box">
-            <img
-              src="${item.image || "/modules/customer/assets/images/macbook.png"}"
-              alt="${item.name || "Related product"}"
-            />
-          </div>
-          <h4>${item.name || "Unnamed product"}</h4>
-          <p class="p-price">${formatPrice(item.minPrice || 0)}</p>
-        </article>
-      </a>
-    `,
-    )
+  container.innerHTML = relatedItems
+    .map((item) => {
+      const image = item.image || "/modules/customer/assets/images/macbook.png";
+      return `
+        <a class="product-card-link" href="/product/${item.id}">
+          <article class="product-card-simple">
+            <div class="p-img-box">
+              <img src="${escapeHtml(image)}" alt="${escapeHtml(item.name || "Related product")}" />
+            </div>
+            <h4>${escapeHtml(item.name || "Unnamed product")}</h4>
+            <p class="p-price">${formatPrice(item.minPrice || 0)}</p>
+          </article>
+        </a>
+      `;
+    })
     .join("");
 };
 
 const loadProductFromDb = async () => {
+  const productId = getProductId();
+
+  if (!productId) {
+    showToast("Product ID is missing.", "warning");
+    setProductLoading(false);
+    return;
+  }
+
   setProductLoading(true);
-  setProductLoading(true);
+
   try {
-    // Extract product ID from URL path (/product/:id) or query string (?id=123)
-    // Extract product ID from URL path (/product/:id) or query string (?id=123)
-    let productId = null;
-
-    // Try URL path first: /product/123
-    const pathMatch = window.location.pathname.match(
-      PRODUCT_DETAIL_ROUTE_PATTERN,
-    );
-    if (pathMatch && pathMatch[1]) {
-      productId = pathMatch[1];
-    } else {
-      // Fallback to query string: ?id=123
-      const params = new URLSearchParams(window.location.search);
-      productId = params.get("id");
-    }
-
-    if (!productId) {
-      showToast("Product ID is missing.", "warning");
-      setProductLoading(false);
-      return;
-    }
-
     const product = await productApi.getById(productId);
-    if (!product) {
-      showToast("Product not found.", "warning");
-      return;
-    }
     if (!product) {
       showToast("Product not found.", "warning");
       return;
     }
 
     currentProduct = product;
-    const productName = product.name || "No name";
+    const productName = product.name || "Product";
 
     setText("#productTitle", productName);
     setText("#breadcrumbName", productName);
-    document.title = `${productName} | TechGadget`;
     setText(
       "#productDescription",
       product.description || "No description available.",
     );
-    setText(
-      "#descriptionText",
-      product.description || "No description available.",
-    );
     setText("#productCategory", product.category?.name || "Unknown");
-    setText("#productStars", "★★★★★");
+    document.title = `${productName} | TechGadget`;
+
+    updateThumbnails(buildGalleryImages(product));
+
     try {
       const related = await productApi.getRelated(product.id, 5);
       renderRelatedProducts(related || []);
     } catch (error) {
       console.error("Failed to load related products:", error);
-      renderRelatedProducts(product.relatedProducts || []);
+      renderRelatedProducts([]);
     }
 
-    const images = buildGalleryImages(product);
-
-    updateThumbnails(images);
-
+    const variants = Array.isArray(product.variants) ? product.variants : [];
     const isSmartphone = isSmartphoneCategory(product.category);
     const colorVariation = document
       .getElementById("colorOptions")
       ?.closest(".p-variation");
     const colorLabel = colorVariation?.querySelector(".v-label");
-    if (colorLabel) {
-      colorLabel.style.display = isSmartphone ? "block" : "none";
-    }
 
-    const variants = product.variants || [];
     if (isSmartphone && variants.length > 0) {
-      variantGroups = groupSmartphoneVariants(variants);
+      const variantGroups = groupSmartphoneVariants(variants);
+      const firstGroup = Array.from(variantGroups.values())[0];
 
       renderSmartphoneGroups(variantGroups, product, (group) => {
         renderSmartphoneColors(group, (variant) => {
-          selectedVariant = variant;
-          updateVariantDetail(product, variant);
+          applyVariantSelection(product, variant);
         });
 
-        const colors = getColorsFromGroup(group);
-        if (colors.length > 0) {
-          selectedVariant = colors[0].variant;
-          updateVariantDetail(product, colors[0].variant);
-        }
+        applyVariantSelection(product, getColorsFromGroup(group)[0]?.variant);
       });
 
-      const firstGroup = Array.from(variantGroups.values())[0];
+      if (colorLabel) colorLabel.style.display = "block";
       if (firstGroup) {
         renderSmartphoneColors(firstGroup, (variant) => {
-          selectedVariant = variant;
-          updateVariantDetail(product, variant);
+          applyVariantSelection(product, variant);
         });
-
-        const firstColors = getColorsFromGroup(firstGroup);
-        if (firstColors.length > 0) {
-          selectedVariant = firstColors[0].variant;
-          updateVariantDetail(product, firstColors[0].variant);
-        }
+        applyVariantSelection(
+          product,
+          getColorsFromGroup(firstGroup)[0]?.variant,
+        );
       }
+    } else {
+      renderRegularVariants(variants, product, (variant) => {
+        applyVariantSelection(product, variant);
+      });
 
-      return;
+      if (colorLabel) colorLabel.style.display = "none";
+      applyVariantSelection(product, variants[0] || null);
     }
-
-    renderRegularVariants(variants, product, (variant) => {
-      selectedVariant = variant;
-      updateVariantDetail(product, variant);
-      setText("#productPrice", formatPrice(variant.price));
-      setText("#productStock", formatStock(variant.stock));
-    });
-
-    if (variants.length > 0) {
-      selectedVariant = variants[0];
-      updateVariantDetail(product, variants[0]);
-      setText("#productPrice", formatPrice(variants[0].price));
-      setText("#productStock", formatStock(variants[0].stock));
-    }
-
-    updateAttributesTable(variants[0]?.attributes || product.attributes || []);
   } catch (error) {
     console.error("Failed to load product:", error);
     showToast("Unable to load product details.", "error");
-  } finally {
-    setProductLoading(false);
   } finally {
     setProductLoading(false);
   }
@@ -237,16 +207,15 @@ const setupWishlist = () => {
 
   wishlistBtn.addEventListener("click", function () {
     const icon = this.querySelector("i");
-    icon?.classList.toggle("fas");
-    icon?.classList.toggle("far");
-    this.style.backgroundColor = icon?.classList.contains("fas")
-      ? "#FF6F42"
-      : "";
+    const isActive = icon?.classList.toggle("fas");
+
+    icon?.classList.toggle("far", !isActive);
+    this.style.backgroundColor = isActive ? "#FF6F42" : "";
   });
 };
 
 const setupTabs = () => {
-  const tabs = document.querySelectorAll(".tab-link");
+  const tabs = Array.from(document.querySelectorAll(".tab-link"));
   const panes = {
     description: document.getElementById("tab-description"),
     information: document.getElementById("tab-information"),
@@ -256,14 +225,13 @@ const setupTabs = () => {
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       tabs.forEach((item) => item.classList.remove("active"));
+      Object.values(panes).forEach((pane) => {
+        if (pane) pane.style.display = "none";
+      });
+
       tab.classList.add("active");
-      Object.values(panes).forEach(
-        (pane) => pane && (pane.style.display = "none"),
-      );
-      const tabId = tab.dataset.tab;
-      if (panes[tabId]) {
-        panes[tabId].style.display = "block";
-      }
+      const targetPane = panes[tab.dataset.tab];
+      if (targetPane) targetPane.style.display = "block";
     });
   });
 };
@@ -272,38 +240,39 @@ window.changeQty = (amount) => {
   const input = document.getElementById("quantity");
   if (!input) return;
 
-  const current = parseInt(input.value || "1", 10);
+  const current = Number.parseInt(input.value || "1", 10);
   const nextValue = current + amount;
   if (nextValue >= 1 && nextValue <= 99) {
-    input.value = nextValue;
+    input.value = String(nextValue);
   }
 };
+
+const requireLogin = async () => {
+  if (authAPI.isLoggedIn()) return true;
+
+  localStorage.setItem("redirectAfterLogin", window.location.href);
+  await showLoginModal(() => {
+    window.location.href = "/login";
+  });
+  return false;
+};
+
+const getSelectedQuantity = () =>
+  Number.parseInt(document.getElementById("quantity")?.value || "1", 10);
 
 const setupAddToCart = () => {
   const addToCartBtn = document.querySelector(".btn-secondary");
   if (!addToCartBtn) return;
 
   addToCartBtn.addEventListener("click", async () => {
-    if (!authAPI.isLoggedIn()) {
-      localStorage.setItem("redirectAfterLogin", window.location.href);
-      await showLoginModal(() => {
-        window.location.href = "/login";
-      });
-      return;
-    }
-
+    if (!(await requireLogin())) return;
     if (!selectedVariant) {
       showToast("Please select a variant first.", "warning");
       return;
     }
 
-    const quantity = parseInt(
-      document.getElementById("quantity")?.value || "1",
-      10,
-    );
-
     try {
-      await cartAPI.addToCart(selectedVariant.id, quantity);
+      await cartAPI.addToCart(selectedVariant.id, getSelectedQuantity());
       showToast("Item added to cart.", "success");
       window.dispatchEvent(new Event("cartUpdated", { bubbles: true }));
     } catch (error) {
@@ -317,23 +286,13 @@ const setupOrderNow = () => {
   if (!orderNowBtn) return;
 
   orderNowBtn.addEventListener("click", async () => {
-    if (!authAPI.isLoggedIn()) {
-      localStorage.setItem("redirectAfterLogin", window.location.href);
-      await showLoginModal(() => {
-        window.location.href = "/login";
-      });
-      return;
-    }
-
+    if (!(await requireLogin())) return;
     if (!selectedVariant) {
       showToast("Please select a variant first.", "warning");
       return;
     }
 
-    const quantity = parseInt(
-      document.getElementById("quantity")?.value || "1",
-      10,
-    );
+    const quantity = getSelectedQuantity();
     if (quantity < 1) {
       showToast("Invalid quantity.", "warning");
       return;
@@ -364,73 +323,35 @@ const setupOrderNow = () => {
   });
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadProductFromDb();
-  setupWishlist();
-  setupTabs();
-  setupAddToCart();
-  setupOrderNow();
-  setupReviews();
-});
-
-// ─── Review Feature ───────────────────────────────────────────────────────────
-
-const AVATAR_COLORS = [
-  "#E74C3C",
-  "#3498DB",
-  "#2ECC71",
-  "#F39C12",
-  "#9B59B6",
-  "#1ABC9C",
-  "#E67E22",
-  "#34495E",
-  "#E74C3C",
-  "#3498DB",
-  "#2ECC71",
-  "#F39C12",
-  "#9B59B6",
-  "#1ABC9C",
-  "#E67E22",
-  "#34495E",
-];
-
-function getAvatarColor(name = "") {
-  const code = name.charCodeAt(0) || 0;
+const getAvatarColor = (name = "") => {
+  const code = name.trim().toUpperCase().charCodeAt(0) || 0;
   return AVATAR_COLORS[code % AVATAR_COLORS.length];
-}
+};
 
-function renderLetterAvatar(name = "?") {
+const renderLetterAvatar = (name = "?") => {
   const letter = name.trim().charAt(0).toUpperCase() || "?";
-  const bg = getAvatarColor(name);
-  return `<div class="letter-avatar" style="background:${bg}">${letter}</div>`;
-}
+  return `<div class="letter-avatar" style="background:${getAvatarColor(name)}">${letter}</div>`;
+};
 
-function renderStars(rating = 0) {
-  return Array.from(
+const renderStars = (rating = 0) =>
+  Array.from(
     { length: 5 },
-    (_, i) =>
-      `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${FILLED_STAR}</span>`,
-  return Array.from(
-    { length: 5 },
-    (_, i) =>
-      `<span style="color:${i < rating ? "#F39C12" : "#ccc"}">${FILLED_STAR}</span>`,
+    (_, index) =>
+      `<span style="color:${index < rating ? "#F39C12" : "#D6D6D6"}">${FILLED_STAR}</span>`,
   ).join("");
-}
 
-function paintStarSelection(starIcons, rating) {
+const renderAverageStars = (rating = 0) =>
+  Array.from({ length: 5 }, (_, index) =>
+    index < Math.round(rating) ? FILLED_STAR : EMPTY_STAR,
+  ).join("");
+
+const paintStarSelection = (starIcons, rating) => {
   starIcons.forEach((star) => {
     star.classList.toggle("active", Number(star.dataset.value) <= rating);
   });
-}
+};
 
-function renderAverageStars(rating = 0) {
-  const rounded = Math.round(rating);
-  return Array.from({ length: 5 }, (_, index) =>
-    index < rounded ? FILLED_STAR : EMPTY_STAR,
-  ).join("");
-}
-
-function updateReviewSummary(summary = null) {
+const updateReviewSummary = (summary = null) => {
   const average = Number(summary?.averageRating) || 0;
   const total = Number(summary?.totalReviews) || 0;
   const ratingCounts = {
@@ -440,26 +361,11 @@ function updateReviewSummary(summary = null) {
     4: Number(summary?.count4) || 0,
     5: Number(summary?.count5) || 0,
   };
-function updateReviewSummary(summary = null) {
-  const average = Number(summary?.averageRating) || 0;
-  const total = Number(summary?.totalReviews) || 0;
-  const ratingCounts = {
-    1: Number(summary?.count1) || 0,
-    2: Number(summary?.count2) || 0,
-    3: Number(summary?.count3) || 0,
-    4: Number(summary?.count4) || 0,
-    5: Number(summary?.count5) || 0,
-  };
-  const averageRatingEl = document.getElementById("averageRating");
-  const averageStarsEl = document.getElementById("averageStars");
-  const reviewTotalEl = document.getElementById("reviewTotal");
-  const reviewCountEl = document.getElementById("reviewCount");
-  const reviewCountEl = document.getElementById("reviewCount");
 
-  if (averageRatingEl) averageRatingEl.textContent = average.toFixed(1);
-  if (averageStarsEl) averageStarsEl.textContent = renderAverageStars(average);
-  if (reviewTotalEl) reviewTotalEl.textContent = String(total);
-  if (reviewCountEl) reviewCountEl.textContent = String(total);
+  setText("#averageRating", average.toFixed(1));
+  setText("#averageStars", renderAverageStars(average));
+  setText("#reviewTotal", String(total));
+  setText("#reviewCount", String(total));
 
   Object.entries(ratingCounts).forEach(([rating, count]) => {
     const countEl = document.getElementById(`count${rating}`);
@@ -469,29 +375,26 @@ function updateReviewSummary(summary = null) {
     if (countEl) countEl.textContent = String(count);
     if (barEl) barEl.style.width = `${percentage}%`;
   });
-}
+};
 
-function formatDate(dateStr) {
+const formatDate = (dateStr) => {
   if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("en-US", {
+
+  return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
-}
+};
 
-function buildPaginationItems(currentPage, totalPages) {
+const buildPaginationItems = (currentPage, totalPages) => {
   if (totalPages <= 5) {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
 
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, "...", totalPages];
-  }
-
+  if (currentPage <= 3) return [1, 2, 3, 4, "...", totalPages];
   if (currentPage >= totalPages - 2) {
     return [
       1,
@@ -512,24 +415,22 @@ function buildPaginationItems(currentPage, totalPages) {
     "...",
     totalPages,
   ];
-}
+};
 
-function renderReviewPagination(currentPage, totalPages) {
+const renderReviewPagination = (currentPage, totalPages) => {
   const container = document.getElementById("reviewPagination");
   if (!container) return;
 
   if (totalPages <= 1) {
-    container.innerHTML = "";
     container.hidden = true;
+    container.innerHTML = "";
     return;
   }
 
   const items = buildPaginationItems(currentPage, totalPages);
   container.hidden = false;
   container.innerHTML = `
-    <button class="review-page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>
-      Prev
-    </button>
+    <button class="review-page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>
     ${items
       .map((item) =>
         item === "..."
@@ -537,393 +438,226 @@ function renderReviewPagination(currentPage, totalPages) {
           : `<button class="review-page-btn ${item === currentPage ? "active" : ""}" data-page="${item}">${item}</button>`,
       )
       .join("")}
-    <button class="review-page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>
-      Next
-    </button>
+    <button class="review-page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>
   `;
-}
+};
 
-function renderReviewList(reviews = [], currentUserId = null, isAdmin = false) {
+const renderReviewList = (
+  reviews = [],
+  currentUserId = null,
+  isAdmin = false,
+) => {
   const container = document.getElementById("reviewList");
   if (!container) return;
 
   if (!reviews.length) {
     container.innerHTML =
       '<p class="review-empty">No reviews yet. Be the first to review!</p>';
-    renderReviewPagination(1, 0);
-    container.innerHTML =
-      '<p class="review-empty">No reviews yet. Be the first to review!</p>';
-    renderReviewPagination(1, 0);
     return;
   }
 
   container.innerHTML = reviews
-    .map((r) => {
-      const canEdit = currentUserId && r.userId === currentUserId;
+    .map((review) => {
+      const canEdit = currentUserId && review.userId === currentUserId;
       const canDelete = canEdit || isAdmin;
-      const actions =
-        canEdit || canDelete
-          ? `
-  container.innerHTML = reviews
-    .map((r) => {
-      const canEdit = currentUserId && r.userId === currentUserId;
-      const canDelete = canEdit || isAdmin;
-      const actions =
-        canEdit || canDelete
-          ? `
-      <div class="review-actions">
-        ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Edit</button>` : ""}
-        ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Delete</button>` : ""}
-      </div>`
-          : "";
-        ${canEdit ? `<button class="review-btn-edit" data-id="${r.id}" data-rating="${r.rating}" data-comment="${encodeURIComponent(r.comment)}">Edit</button>` : ""}
-        ${canDelete ? `<button class="review-btn-delete" data-id="${r.id}">Delete</button>` : ""}
-      </div>`
-          : "";
 
       return `
-      return `
-      <div class="review-item" data-review-id="${r.id}">
-        ${renderLetterAvatar(r.userName)}
-        <div class="review-body">
-          <div class="stars">${renderStars(r.rating)}</div>
-          <p class="review-meta">
-            <strong>${r.userName}</strong> - ${formatDate(r.createdAt)}
-            <strong>${r.userName}</strong> - ${formatDate(r.createdAt)}
-          </p>
-          <p class="review-text">${r.comment}</p>
-          ${actions}
+        <div class="review-item" data-review-id="${review.id}">
+          ${renderLetterAvatar(review.userName || "?")}
+          <div class="review-body">
+            <div class="stars">${renderStars(Number(review.rating) || 0)}</div>
+            <p class="review-meta">
+              <strong>${escapeHtml(review.userName || "Anonymous")}</strong> - ${escapeHtml(formatDate(review.createdAt))}
+            </p>
+            <p class="review-text">${escapeHtml(review.comment || "")}</p>
+            ${
+              canEdit || canDelete
+                ? `<div class="review-actions">
+                    ${canEdit ? `<button class="review-btn-edit" data-id="${review.id}" data-rating="${review.rating}" data-comment="${encodeURIComponent(review.comment || "")}">Edit</button>` : ""}
+                    ${canDelete ? `<button class="review-btn-delete" data-id="${review.id}">Delete</button>` : ""}
+                  </div>`
+                : ""
+            }
+          </div>
         </div>
-      </div>`;
+      `;
     })
     .join("");
-    })
-    .join("");
-}
-
-function getProductId() {
-  const pathMatch = window.location.pathname.match(
-    PRODUCT_DETAIL_ROUTE_PATTERN,
-  );
-  if (pathMatch) return Number(pathMatch[1]);
-  return Number(new URLSearchParams(window.location.search).get("id"));
-}
+};
 
 const setupReviews = () => {
   const productId = getProductId();
   if (!productId) return;
 
-  let activeRating = null;
-  let currentPage = 1;
-  const reviewsPerPage = 5;
-  let currentPage = 1;
-  const reviewsPerPage = 5;
   const currentUser = authAPI.getUser();
   const currentUserId = currentUser?.id ?? null;
   const isAdmin = currentUser?.role === "ADMIN";
+  const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+  const reviewList = document.getElementById("reviewList");
+  const reviewPagination = document.getElementById("reviewPagination");
+  const reviewForm = document.getElementById("reviewForm");
+  const starIcons = Array.from(document.querySelectorAll(".star-icon"));
+  const formWrapper = document.getElementById("reviewFormWrapper");
+  const loginPrompt = document.getElementById("reviewLoginPrompt");
 
-  // Load reviews from API
-  const loadReviews = async (rating = null) => {
+  let activeRating = null;
+  let currentPage = 1;
+  let selectedRating = 0;
+
+  const loadReviews = async () => {
     try {
       const response = await reviewAPI.getByProduct(productId, {
-        rating,
+        rating: activeRating,
         page: currentPage - 1,
-        size: reviewsPerPage,
+        size: REVIEWS_PER_PAGE,
       });
 
-      const safeResponse = response || {};
-      const totalPages = Number(safeResponse.totalPages) || 0;
-
+      const totalPages = Number(response?.totalPages) || 0;
       if (totalPages > 0 && currentPage > totalPages) {
         currentPage = totalPages;
-        await loadReviews(rating);
-        return;
+        return loadReviews();
       }
 
-      renderReviewList(safeResponse.items || [], currentUserId, isAdmin);
+      renderReviewList(response?.items || [], currentUserId, isAdmin);
       renderReviewPagination(currentPage, totalPages);
-      updateReviewSummary(safeResponse.summary);
-      const response = await reviewAPI.getByProduct(productId, {
-        rating,
-        page: currentPage - 1,
-        size: reviewsPerPage,
-      });
-
-      const safeResponse = response || {};
-      const totalPages = Number(safeResponse.totalPages) || 0;
-
-      if (totalPages > 0 && currentPage > totalPages) {
-        currentPage = totalPages;
-        await loadReviews(rating);
-        return;
+      updateReviewSummary(response?.summary || null);
+    } catch (error) {
+      console.error("Failed to load reviews:", error);
+      if (reviewList) {
+        reviewList.innerHTML =
+          '<p class="review-empty">Failed to load reviews.</p>';
       }
-
-      renderReviewList(safeResponse.items || [], currentUserId, isAdmin);
-      renderReviewPagination(currentPage, totalPages);
-      updateReviewSummary(safeResponse.summary);
-    } catch {
-      const container = document.getElementById("reviewList");
-      if (container)
-        container.innerHTML =
-          '<p class="review-empty">Failed to load reviews.</p>';
-      renderReviewPagination(1, 0);
-      updateReviewSummary(null);
-      if (container)
-        container.innerHTML =
-          '<p class="review-empty">Failed to load reviews.</p>';
-      renderReviewPagination(1, 0);
+      if (reviewPagination) {
+        reviewPagination.hidden = true;
+        reviewPagination.innerHTML = "";
+      }
       updateReviewSummary(null);
     }
   };
 
-  loadReviews();
+  if (authAPI.isLoggedIn()) {
+    if (formWrapper) formWrapper.style.display = "block";
+    if (loginPrompt) loginPrompt.style.display = "none";
+  } else {
+    if (formWrapper) formWrapper.style.display = "none";
+    if (loginPrompt) loginPrompt.style.display = "block";
+  }
 
-  // Filter buttons
-  const filterBtns = document.querySelectorAll(".filter-btn");
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      const val = btn.dataset.rating;
-      activeRating = val === "all" ? null : Number(val);
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      filterButtons.forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      activeRating =
+        button.dataset.rating === "all"
+          ? null
+          : Number(button.dataset.rating || 0);
       currentPage = 1;
-      currentPage = 1;
-      loadReviews(activeRating);
+      loadReviews();
     });
   });
 
-  // Auth gate: show form or login prompt
-  const formWrapper = document.getElementById("reviewFormWrapper");
-  const loginPrompt = document.getElementById("reviewLoginPrompt");
+  reviewPagination?.addEventListener("click", (event) => {
+    const button = event.target.closest(".review-page-btn");
+    if (!button || button.disabled) return;
 
-  if (authAPI.isLoggedIn()) {
-    formWrapper && (formWrapper.style.display = "block");
-    loginPrompt && (loginPrompt.style.display = "none");
-  } else {
-    formWrapper && (formWrapper.style.display = "none");
-    loginPrompt && (loginPrompt.style.display = "block");
-  }
-
-  // Star rating interaction
-  let selectedRating = 0;
-  const starIcons = document.querySelectorAll(".star-icon");
+    currentPage = Number(button.dataset.page || currentPage);
+    loadReviews();
+  });
 
   starIcons.forEach((star) => {
     star.addEventListener("mouseenter", () => {
-      const val = Number(star.dataset.value);
-      paintStarSelection(starIcons, val);
-      paintStarSelection(starIcons, val);
-    });
-
-    star.addEventListener("mouseleave", () => {
-      paintStarSelection(starIcons, selectedRating);
-      paintStarSelection(starIcons, selectedRating);
+      paintStarSelection(starIcons, Number(star.dataset.value));
     });
 
     star.addEventListener("click", () => {
       selectedRating = Number(star.dataset.value);
       paintStarSelection(starIcons, selectedRating);
-      paintStarSelection(starIcons, selectedRating);
     });
   });
 
-  // Form submit (create)
-  const reviewForm = document.getElementById("reviewForm");
-  if (reviewForm) {
-    reviewForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  document.getElementById("ratingStars")?.addEventListener("mouseleave", () => {
+    paintStarSelection(starIcons, selectedRating);
+  });
 
-      if (!selectedRating) {
-        showToast("Please select a star rating.", "warning");
-        return;
-      }
+  reviewForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-      const comment = document.getElementById("reviewText")?.value?.trim();
-      if (!comment) {
-        showToast("Please write your review.", "warning");
-        return;
-      }
+    const comment = document.getElementById("reviewText")?.value?.trim();
+    if (!selectedRating) {
+      showToast("Please select a star rating.", "warning");
+      return;
+    }
+    if (!comment) {
+      showToast("Please write your review.", "warning");
+      return;
+    }
+
+    try {
+      await reviewAPI.create({ productId, rating: selectedRating, comment });
+      reviewForm.reset();
+      selectedRating = 0;
+      paintStarSelection(starIcons, selectedRating);
+      showToast("Review submitted successfully.", "success");
+      currentPage = 1;
+      loadReviews();
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+    }
+  });
+
+  reviewList?.addEventListener("click", async (event) => {
+    const editButton = event.target.closest(".review-btn-edit");
+    const deleteButton = event.target.closest(".review-btn-delete");
+
+    if (editButton) {
+      const reviewId = Number(editButton.dataset.id);
+      const initialRating = Number(editButton.dataset.rating || 0);
+      const initialComment = decodeURIComponent(
+        editButton.dataset.comment || "",
+      );
+      const nextRating = Number(
+        window.prompt("Rating (1-5):", String(initialRating)) || initialRating,
+      );
+      const nextComment = window.prompt("Edit your review:", initialComment);
+
+      if (!nextComment || nextRating < 1 || nextRating > 5) return;
 
       try {
-        await reviewAPI.create({ productId, rating: selectedRating, comment });
-        showToast("Review submitted successfully.", "success");
-        reviewForm.reset();
-        selectedRating = 0;
-        paintStarSelection(starIcons, selectedRating);
-        paintStarSelection(starIcons, selectedRating);
-        loadReviews(activeRating);
-      } catch {
-        // error toast handled by request.js
-      }
-    });
-  }
-
-  const reviewList = document.getElementById("reviewList");
-  const reviewPagination = document.getElementById("reviewPagination");
-  const reviewPagination = document.getElementById("reviewPagination");
-  if (reviewList) {
-    reviewList.addEventListener("click", async (e) => {
-      // DELETE
-      if (e.target.classList.contains("review-btn-delete")) {
-        const reviewId = Number(e.target.dataset.id);
-        if (!confirm("Delete this review?")) return;
-        try {
-          await reviewAPI.delete(reviewId);
-          showToast("Review deleted.", "success");
-          loadReviews(activeRating);
-        } catch {
-          // handled by request.js
-        }
-      }
-
-      // EDIT — open inline edit form
-      if (e.target.classList.contains("review-btn-edit")) {
-        const reviewId = Number(e.target.dataset.id);
-        const oldRating = Number(e.target.dataset.rating);
-        const oldComment = decodeURIComponent(e.target.dataset.comment);
-        const reviewItem = e.target.closest(".review-item");
-        if (!reviewItem) return;
-
-        // Prevent duplicate inline forms
-        // Prevent duplicate inline forms
-        if (reviewItem.querySelector(".inline-edit-form")) return;
-
-        let editRating = oldRating;
-        const starsHtml = Array.from({ length: 5 }, (_, i) => {
-          const v = i + 1;
-          return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? FILLED_STAR : EMPTY_STAR}</span>`;
-          return `<span class="star-icon-edit" data-value="${v}" style="cursor:pointer;font-size:22px;color:#F39C12">${v <= oldRating ? FILLED_STAR : EMPTY_STAR}</span>`;
-        }).join("");
-
-        const form = document.createElement("div");
-        form.className = "inline-edit-form";
-        form.innerHTML = `
-          <div class="inline-edit-stars">${starsHtml}</div>
-          <textarea class="inline-edit-textarea">${oldComment}</textarea>
-          <div class="inline-edit-btns">
-            <button class="review-btn-save" data-id="${reviewId}">Save</button>
-            <button class="review-btn-cancel">Cancel</button>
-          </div>`;
-
-        reviewItem.appendChild(form);
-
-        // Star interaction inside inline form
-        // Star interaction inside inline form
-        form.querySelectorAll(".star-icon-edit").forEach((s) => {
-          s.addEventListener("click", () => {
-            editRating = Number(s.dataset.value);
-            form.querySelectorAll(".star-icon-edit").forEach((x) => {
-              x.textContent =
-                Number(x.dataset.value) <= editRating
-                  ? FILLED_STAR
-                  : EMPTY_STAR;
-            });
-          });
+        await reviewAPI.update(reviewId, {
+          productId,
+          rating: nextRating,
+          comment: nextComment.trim(),
         });
-
-        form
-          .querySelector(".review-btn-cancel")
-          .addEventListener("click", () => form.remove());
-        form
-          .querySelector(".review-btn-cancel")
-          .addEventListener("click", () => form.remove());
-
-        form
-          .querySelector(".review-btn-save")
-          .addEventListener("click", async () => {
-            const comment = form
-              .querySelector(".inline-edit-textarea")
-              .value.trim();
-            if (!comment) {
-              showToast("Comment cannot be empty.", "warning");
-              return;
-            }
-            try {
-              await reviewAPI.update(reviewId, { rating: editRating, comment });
-              showToast("Review updated.", "success");
-              loadReviews(activeRating);
-            } catch {
-              // handled by request.js
-            }
-          });
-        form
-          .querySelector(".review-btn-save")
-          .addEventListener("click", async () => {
-            const comment = form
-              .querySelector(".inline-edit-textarea")
-              .value.trim();
-            if (!comment) {
-              showToast("Comment cannot be empty.", "warning");
-              return;
-            }
-            try {
-              await reviewAPI.update(reviewId, { rating: editRating, comment });
-              showToast("Review updated.", "success");
-              loadReviews(activeRating);
-            } catch {
-              // handled by request.js
-            }
-          });
+        showToast("Review updated.", "success");
+        loadReviews();
+      } catch (error) {
+        console.error("Failed to update review:", error);
       }
-    });
-  }
+      return;
+    }
 
-  if (reviewPagination) {
-    reviewPagination.addEventListener("click", (e) => {
-      const target = e.target.closest(".review-page-btn");
-      if (!target || target.disabled) return;
+    if (deleteButton) {
+      const reviewId = Number(deleteButton.dataset.id);
+      if (!window.confirm("Delete this review?")) return;
 
-      const nextPage = Number(target.dataset.page);
-      if (
-        !Number.isFinite(nextPage) ||
-        nextPage < 1 ||
-        nextPage === currentPage
-      ) {
-        return;
+      try {
+        await reviewAPI.delete(reviewId);
+        showToast("Review deleted.", "success");
+        loadReviews();
+      } catch (error) {
+        console.error("Failed to delete review:", error);
       }
+    }
+  });
 
-      currentPage = nextPage;
-      loadReviews(activeRating);
-    });
-  }
-};
-// Lấy thẻ button
-const backToTopBtn = document.getElementById("backToTop");
-
-// Theo dõi sự kiện cuộn chuột
-window.onscroll = function () {
-window.onscroll = function () {
-  scrollFunction();
+  loadReviews();
 };
 
-function scrollFunction() {
-  if (!backToTopBtn) return;
-
-  if (!backToTopBtn) return;
-
-  // Nếu cuộn xuống quá 300px thì hiện nút, ngược lại thì ẩn
-  if (
-    document.body.scrollTop > 300 ||
-    document.documentElement.scrollTop > 300
-  ) {
-  if (
-    document.body.scrollTop > 300 ||
-    document.documentElement.scrollTop > 300
-  ) {
-    backToTopBtn.style.display = "flex";
-  } else {
-    backToTopBtn.style.display = "none";
-  }
-}
-
-// Khi người dùng nhấn vào nút
-if (backToTopBtn) {
-  backToTopBtn.onclick = function () {
-  backToTopBtn.onclick = function () {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-      behavior: "smooth",
-    });
-  };
-}
+document.addEventListener("DOMContentLoaded", () => {
+  loadProductFromDb();
+  setupWishlist();
+  setupTabs();
+  setupAddToCart();
+  setupOrderNow();
+  setupReviews();
+});
